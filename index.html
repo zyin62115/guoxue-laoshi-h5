@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#fff9f1" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>国学老师</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <div class="design-canvas">
+        <header class="topbar" aria-label="页面导航">
+          <button class="icon-button menu-button pressable" type="button" data-action="menu" aria-label="打开菜单">
+            <svg viewBox="0 0 44 38" aria-hidden="true">
+              <path d="M3 4h34M3 19h28M3 34h22" />
+            </svg>
+          </button>
+          <h1 class="brand">国学老师</h1>
+
+          <div class="quota" id="home-quota" aria-live="polite" aria-label="今日还可免费对话十次">
+            <span>今日还可免费对话</span><strong>10</strong><span>次</span>
+          </div>
+        </header>
+
+        <section class="hero" aria-labelledby="guide-title">
+          <img class="hero-left artwork" src="./assets/hero-left-hd.png" alt="" />
+          <img class="birds artwork" src="./assets/birds.png" alt="" />
+          <img class="top-mountain artwork" src="./assets/top-mountain-hd-alpha.png" alt="" />
+          <img class="right-mountains artwork" src="./assets/right-mountains-hd-alpha.png" alt="" />
+
+          <div class="guide-heading">
+            <img src="./assets/guide-mark.png" alt="" />
+            <h2 id="guide-title">今日指引</h2>
+          </div>
+
+          <svg class="date-birds artwork" viewBox="0 0 96 30" aria-hidden="true">
+            <path d="M3 17c6-7 12-7 18 0 6-7 12-7 18 0" />
+            <path d="M38 8c5-5 10-5 15 0 5-5 10-5 15 0" />
+            <path d="M67 21c4-4 8-4 12 0 4-4 8-4 12 0" />
+          </svg>
+
+          <img
+            class="date-badge"
+            src="./assets/date-badge.png"
+            alt="乙巳年六月初五"
+          />
+
+          <p class="guidance">
+            顺势而为，稳中求进，保持平和心态，<br />
+            善用耐心，方能见长远之效。
+          </p>
+
+          <div class="advice-row" aria-label="今日宜忌">
+            <div class="advice advice-good">
+              <span class="advice-seal" aria-hidden="true">宜</span>
+              <span>静心学习</span>
+            </div>
+            <span class="advice-divider" aria-hidden="true"></span>
+            <div class="advice advice-avoid">
+              <span class="advice-seal" aria-hidden="true">忌</span>
+              <span>急躁冲动</span>
+            </div>
+          </div>
+        </section>
+
+        <nav class="feature-list" aria-label="国学功能">
+          <button class="feature-card pressable" type="button" data-action="professional-chart">
+            <img src="./assets/candidates/simple-luopan.png" alt="" />
+            <span class="feature-title">专业排盘</span>
+            <span class="feature-desc">精准排盘，洞察命局</span>
+            <span class="chevron" aria-hidden="true"></span>
+          </button>
+
+          <button class="feature-card pressable" type="button" data-action="interpretation">
+            <img src="./assets/candidates/simple-taiji.png" alt="" />
+            <span class="feature-title">国心解读</span>
+            <span class="feature-desc">解你疑惑，指点迷津</span>
+            <span class="chevron" aria-hidden="true"></span>
+          </button>
+
+          <button class="feature-card pressable" type="button" data-action="learning-materials">
+            <img src="./assets/candidates/simple-book.png" alt="" />
+            <span class="feature-title">学习资料</span>
+            <span class="feature-desc">精选资料，易学易懂</span>
+            <span class="chevron" aria-hidden="true"></span>
+          </button>
+        </nav>
+
+        <section class="inline-chat" id="inline-chat" aria-label="与国学老师的对话" hidden>
+          <time class="chat-start-time" id="chat-start-time"></time>
+          <div
+            class="inline-message-list"
+            id="inline-message-list"
+            aria-live="polite"
+          ></div>
+        </section>
+      </div>
+    </main>
+
+    <div class="voice-dock" aria-label="对话工具栏">
+      <button
+        class="dock-icon mic-button pressable"
+        type="button"
+        data-action="voice-mode"
+        aria-label="切换到语音输入"
+      >
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <rect x="23" y="8" width="18" height="34" rx="9" />
+          <path d="M15 31c0 10 7.6 18 17 18s17-8 17-18M32 49v8M23 57h18" />
+        </svg>
+      </button>
+
+      <input
+        id="home-question"
+        class="text-input"
+        type="text"
+        data-action="text-input"
+        aria-label="文字输入"
+        placeholder="请输入问题"
+        autocomplete="off"
+      />
+
+      <button
+        id="home-action"
+        class="dock-icon plus-button home-action pressable"
+        type="button"
+        data-action="more"
+        aria-label="更多功能"
+      >
+        <svg class="plus-icon" viewBox="0 0 72 72" aria-hidden="true">
+          <circle cx="36" cy="36" r="30" />
+          <path d="M36 20v32M20 36h32" />
+        </svg>
+        <svg class="send-icon" viewBox="0 0 72 72" aria-hidden="true">
+          <circle cx="36" cy="36" r="30" />
+          <path d="M23 36h25M39 26l10 10-10 10" />
+        </svg>
+      </button>
+
+      <p class="membership-guide" id="home-membership-guide" hidden>
+        今日免费对话次数已用完，开通会员即可获得更多对话次数。
+      </p>
+    </div>
+
+    <button
+      class="scroll-top-button pressable"
+      id="scroll-top-button"
+      type="button"
+      data-action="scroll-top"
+      aria-label="返回页面顶部"
+      aria-hidden="true"
+      tabindex="-1"
+    >
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M18 37 32 23l14 14M32 24v25" />
+      </svg>
+    </button>
+
+    <script src="./shared.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

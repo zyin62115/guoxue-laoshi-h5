@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#fff9f1" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>八字档案</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="profile-page">
+    <main class="profile-page-shell">
+      <header class="profile-page-header">
+        <a class="profile-back pressable" href="./index.html#menu" aria-label="返回个人中心"></a>
+        <h1 id="profile-page-title">新增八字档案</h1>
+        <span aria-hidden="true"></span>
+      </header>
+
+      <section class="profile-intro" aria-label="档案说明">
+        <strong>出生信息</strong>
+        <p>用于保存个人八字资料。本版本不会自动换算历法或生成排盘，请按所选历法准确填写。</p>
+      </section>
+
+      <form class="profile-form" id="profile-form" novalidate>
+        <label class="form-field">
+          <span>姓名或称呼<i class="required-mark" aria-hidden="true">*</i></span>
+          <input
+            id="profile-name"
+            name="name"
+            type="text"
+            maxlength="24"
+            autocomplete="name"
+            placeholder="例如：我、妈妈、张先生"
+            required
+          />
+        </label>
+
+        <fieldset class="form-field choice-field">
+          <legend>性别<i class="required-mark" aria-hidden="true">*</i></legend>
+          <div class="segmented-choice">
+            <label>
+              <input type="radio" name="gender" value="male" checked />
+              <span>男</span>
+            </label>
+            <label>
+              <input type="radio" name="gender" value="female" />
+              <span>女</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-field choice-field">
+          <legend>历法<i class="required-mark" aria-hidden="true">*</i></legend>
+          <div class="segmented-choice">
+            <label>
+              <input type="radio" name="calendar" value="solar" checked />
+              <span>公历</span>
+            </label>
+            <label>
+              <input type="radio" name="calendar" value="lunar" />
+              <span>农历</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="form-field">
+          <span>出生日期<i class="required-mark" aria-hidden="true">*</i></span>
+          <div class="birth-date-grid">
+            <label>
+              <span class="sr-only">出生年份</span>
+              <input
+                id="birth-year"
+                name="birthYear"
+                type="number"
+                inputmode="numeric"
+                min="1900"
+                max="2100"
+                placeholder="年份"
+                required
+              />
+            </label>
+            <label>
+              <span class="sr-only">出生月份</span>
+              <input
+                id="birth-month"
+                name="birthMonth"
+                type="number"
+                inputmode="numeric"
+                min="1"
+                max="12"
+                placeholder="月"
+                required
+              />
+            </label>
+            <label>
+              <span class="sr-only">出生日期</span>
+              <input
+                id="birth-day"
+                name="birthDay"
+                type="number"
+                inputmode="numeric"
+                min="1"
+                max="31"
+                placeholder="日"
+                required
+              />
+            </label>
+          </div>
+        </div>
+
+        <label class="leap-month-field" id="leap-month-field" hidden>
+          <input id="is-leap-month" name="isLeapMonth" type="checkbox" />
+          <span>该月为闰月</span>
+        </label>
+
+        <label class="form-field">
+          <span>出生时间<i class="required-mark" aria-hidden="true">*</i></span>
+          <input id="birth-time" name="birthTime" type="time" required />
+        </label>
+
+        <label class="form-field">
+          <span>出生地<i class="required-mark" aria-hidden="true">*</i></span>
+          <input
+            id="birthplace"
+            name="birthplace"
+            type="text"
+            maxlength="60"
+            autocomplete="address-level2"
+            placeholder="例如：浙江省杭州市"
+            required
+          />
+        </label>
+
+        <p class="form-error" id="form-error" role="alert" aria-live="polite"></p>
+
+        <div class="profile-actions">
+          <button class="profile-action profile-cancel pressable" type="button" id="cancel-profile">
+            取消
+          </button>
+          <button class="profile-action profile-save pressable" type="submit">
+            保存档案
+          </button>
+        </div>
+
+        <button class="profile-delete pressable" type="button" id="delete-profile" hidden>
+          删除这份档案
+        </button>
+      </form>
+    </main>
+
+    <script src="./shared.js"></script>
+    <script src="./profile.js"></script>
+  </body>
+</html>

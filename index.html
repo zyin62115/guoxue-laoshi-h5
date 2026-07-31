@@ -14,7 +14,14 @@
   <body>
     <main class="page-shell">
       <header class="topbar" aria-label="页面导航">
-        <button class="icon-button menu-button pressable" type="button" data-action="menu" aria-label="打开菜单">
+        <button
+          class="icon-button menu-button pressable"
+          type="button"
+          data-action="menu"
+          aria-label="打开个人中心"
+          aria-controls="personal-drawer"
+          aria-expanded="false"
+        >
           <svg viewBox="0 0 44 38" aria-hidden="true">
             <path d="M3 4h34M3 19h28M3 34h22" />
           </svg>
@@ -101,6 +108,101 @@
         </section>
       </div>
     </main>
+
+    <div class="edge-swipe-zone" aria-hidden="true"></div>
+
+    <div class="drawer-layer" id="drawer-layer" aria-hidden="true">
+      <button
+        class="drawer-scrim"
+        type="button"
+        data-action="close-drawer"
+        aria-label="关闭个人中心"
+        tabindex="-1"
+      ></button>
+
+      <aside
+        class="personal-drawer"
+        id="personal-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="drawer-title"
+        tabindex="-1"
+      >
+        <div class="drawer-scroll">
+          <header class="drawer-profile">
+            <button
+              class="guest-avatar pressable"
+              type="button"
+              data-action="account-placeholder"
+              aria-label="个人资料"
+            >
+              <svg viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="24" r="11" />
+                <path d="M13 55c2-12 9-18 19-18s17 6 19 18" />
+              </svg>
+            </button>
+            <button
+              class="guest-copy pressable"
+              type="button"
+              data-action="account-placeholder"
+            >
+              <strong id="drawer-title">访客</strong>
+              <span>个人资料与设置 <i aria-hidden="true"></i></span>
+            </button>
+            <button
+              class="drawer-close pressable"
+              type="button"
+              data-action="close-drawer"
+              aria-label="关闭个人中心"
+            >
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M8 8l16 16M24 8 8 24" />
+              </svg>
+            </button>
+          </header>
+
+          <button
+            class="membership-card pressable"
+            type="button"
+            data-action="membership-placeholder"
+          >
+            <span class="membership-mark" aria-hidden="true">
+              <svg viewBox="0 0 48 48">
+                <path d="m8 15 9 8 7-13 7 13 9-8-4 23H12L8 15Z" />
+              </svg>
+            </span>
+            <span class="membership-copy">
+              <strong>免费版</strong>
+              <small>升级会员，解锁更多国学问答</small>
+            </span>
+            <span class="membership-action">了解会员</span>
+          </button>
+
+          <section class="drawer-section archive-section" aria-labelledby="archive-title">
+            <div class="drawer-section-heading">
+              <div>
+                <h2 id="archive-title">八字档案</h2>
+                <p>选择本次对话所使用的档案</p>
+              </div>
+              <a class="section-link pressable" href="./profile.html">添加</a>
+            </div>
+            <div class="profile-list" id="profile-list"></div>
+          </section>
+
+          <section class="drawer-section history-section" aria-labelledby="history-title">
+            <div class="drawer-section-heading history-heading">
+              <div>
+                <h2 id="history-title">对话记录</h2>
+                <p>每天自动整理为一段会话</p>
+              </div>
+            </div>
+            <div class="conversation-list" id="conversation-list"></div>
+          </section>
+        </div>
+      </aside>
+    </div>
+
+    <div class="app-toast" id="app-toast" role="status" aria-live="polite"></div>
 
     <div class="voice-dock" aria-label="对话工具栏">
       <button

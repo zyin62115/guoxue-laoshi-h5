@@ -10,11 +10,22 @@ const inlineChat = document.querySelector("#inline-chat");
 const chatStartTime = document.querySelector("#chat-start-time");
 const messageList = document.querySelector("#inline-message-list");
 const scrollTopButton = document.querySelector("#scroll-top-button");
+const menuButton = document.querySelector('[data-action="menu"]');
+const drawerLayer = document.querySelector("#drawer-layer");
+const drawer = document.querySelector("#personal-drawer");
+const drawerScrim = document.querySelector(".drawer-scrim");
+const profileList = document.querySelector("#profile-list");
+const conversationList = document.querySelector("#conversation-list");
+const appToast = document.querySelector("#app-toast");
 
 let isComposing = false;
 let isReplying = false;
 let replyTimer = null;
 let scrollTicking = false;
+let isDrawerOpen = false;
+let toastTimer = null;
+let drawerGesture = null;
+let suppressClickUntil = 0;
 
 const MOCK_RULES = [
   {
@@ -219,6 +230,7 @@ function finishReply(question) {
   isReplying = false;
   replyTimer = null;
   syncQuotaState();
+  renderDrawerContent();
   scrollToLatest();
 
   if (!questionInput.disabled) questionInput.focus({ preventScroll: true });
@@ -249,14 +261,21 @@ function submitQuestion() {
     return;
   }
 
+  const previousConversationId = appState.getActiveConversation()?.id;
   const message = appState.appendMessage("user", content);
+  const currentConversationId = appState.getActiveConversation()?.id;
   const history = appState.getHistory();
   ensureConversationTime(history);
   inlineChat.hidden = false;
   document.body.classList.add("has-inline-chat");
-  messageList.append(createMessageRow(message));
+  if (previousConversationId && previousConversationId !== currentConversationId) {
+    renderHistory();
+  } else {
+    messageList.append(createMessageRow(message));
+  }
   questionInput.value = "";
   syncQuotaState();
+  renderDrawerContent();
   scrollToLatest();
   scheduleReply(content);
 }
@@ -276,6 +295,398 @@ function queueScrollStateUpdate() {
     scrollTicking = false;
   });
 }
+
+function showToast(message) {
+  window.clearTimeout(toastTimer);
+  appToast.textContent = message;
+  appToast.classList.add("is-visible");
+  toastTimer = window.setTimeout(() => {
+    appToast.classList.remove("is-visible");
+  }, 1800);
+}
+
+function formatProfileBirth(profile) {
+  const { year, month, day } = profile.birthDate;
+  const calendar = profile.calendar === "lunar" ? "农历" : "公历";
+  const leap = profile.calendar === "lunar" && profile.isLeapMonth ? "闰" : "";
+  return `${calendar} ${year}年${leap}${month}月${day}日 ${profile.birthTime}`;
+}
+
+function renderProfiles() {
+  const profiles = appState.getProfiles();
+  const activeId = appState.getActiveProfileId();
+  const fragment = document.createDocumentFragment();
+
+  if (!profiles.length) {
+    const empty = document.createElement("a");
+    empty.className = "profile-empty pressable";
+    empty.href = "./profile.html";
+
+    const mark = document.createElement("span");
+    mark.className = "profile-empty-mark";
+    mark.textContent = "+";
+
+    const copy = document.createElement("span");
+    const title = document.createElement("strong");
+    title.textContent = "添加第一份八字档案";
+    const description = document.createElement("small");
+    description.textContent = "保存出生信息，方便后续问答";
+    copy.append(title, description);
+    empty.append(mark, copy);
+    fragment.append(empty);
+    profileList.replaceChildren(fragment);
+    return;
+  }
+
+  profiles.forEach((profile) => {
+    const card = document.createElement("article");
+    card.className = "archive-card";
+    card.classList.toggle("is-active", profile.id === activeId);
+
+    const select = document.createElement("button");
+    select.className = "archive-select pressable";
+    select.type = "button";
+    select.dataset.profileId = profile.id;
+    select.setAttribute(
+      "aria-label",
+      `${profile.id === activeId ? "当前档案，" : ""}选择${profile.name}的八字档案`,
+    );
+
+    const avatar = document.createElement("span");
+    avatar.className = "archive-avatar";
+    avatar.textContent = profile.name.slice(0, 1);
+
+    const copy = document.createElement("span");
+    copy.className = "archive-copy";
+    const name = document.createElement("strong");
+    name.textContent = profile.name;
+    const detail = document.createElement("small");
+    detail.textContent = formatProfileBirth(profile);
+    copy.append(name, detail);
+
+    const check = document.createElement("span");
+    check.className = "archive-check";
+    check.setAttribute("aria-hidden", "true");
+    check.textContent = "✓";
+    select.append(avatar, copy, check);
+
+    const edit = document.createElement("a");
+    edit.className = "archive-edit pressable";
+    edit.href = `./profile.html?id=${encodeURIComponent(profile.id)}`;
+    edit.textContent = "编辑";
+    edit.setAttribute("aria-label", `编辑${profile.name}的八字档案`);
+    card.append(select, edit);
+    fragment.append(card);
+  });
+
+  profileList.replaceChildren(fragment);
+}
+
+function dateGroupLabel(dateKey) {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  if (dateKey === appState.localDateKey(today)) return "今天";
+  if (dateKey === appState.localDateKey(yesterday)) return "昨天";
+  return "更早";
+}
+
+function formatConversationDate(conversation) {
+  const updated = new Date(conversation.updatedAt);
+  if (conversation.dateKey === appState.localDateKey()) {
+    return updated.toLocaleTimeString("zh-CN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  }
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (conversation.dateKey === appState.localDateKey(yesterday)) {
+    return updated.toLocaleTimeString("zh-CN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  }
+  return `${updated.getMonth() + 1}月${updated.getDate()}日`;
+}
+
+function renderConversations() {
+  const conversations = appState
+    .getConversations()
+    .filter((conversation) => conversation.messages.some((message) => message.role === "user"));
+  const activeId = appState.getActiveConversation()?.id;
+  const fragment = document.createDocumentFragment();
+
+  if (!conversations.length) {
+    const empty = document.createElement("div");
+    empty.className = "conversation-empty";
+    const symbol = document.createElement("span");
+    symbol.textContent = "聊";
+    const title = document.createElement("strong");
+    title.textContent = "还没有对话记录";
+    const description = document.createElement("small");
+    description.textContent = "在首页提问后，会自动保存在这里";
+    empty.append(symbol, title, description);
+    fragment.append(empty);
+    conversationList.replaceChildren(fragment);
+    return;
+  }
+
+  const groups = new Map();
+  conversations.forEach((conversation) => {
+    const label = dateGroupLabel(conversation.dateKey);
+    if (!groups.has(label)) groups.set(label, []);
+    groups.get(label).push(conversation);
+  });
+
+  ["今天", "昨天", "更早"].forEach((label) => {
+    const entries = groups.get(label);
+    if (!entries?.length) return;
+
+    const group = document.createElement("section");
+    group.className = "conversation-group";
+    const heading = document.createElement("h3");
+    heading.textContent = label;
+    group.append(heading);
+
+    entries.forEach((conversation) => {
+      const button = document.createElement("button");
+      button.className = "conversation-item pressable";
+      button.classList.toggle("is-active", conversation.id === activeId);
+      button.type = "button";
+      button.dataset.conversationId = conversation.id;
+
+      const copy = document.createElement("span");
+      const title = document.createElement("strong");
+      title.textContent = conversation.title;
+      const preview = document.createElement("small");
+      const lastMessage = conversation.messages.at(-1);
+      preview.textContent = lastMessage?.content || "";
+      copy.append(title, preview);
+
+      const time = document.createElement("time");
+      time.dateTime = conversation.updatedAt;
+      time.textContent = formatConversationDate(conversation);
+      button.append(copy, time);
+      group.append(button);
+    });
+    fragment.append(group);
+  });
+
+  conversationList.replaceChildren(fragment);
+}
+
+function renderDrawerContent() {
+  renderProfiles();
+  renderConversations();
+}
+
+function drawerFocusableElements() {
+  return [...drawer.querySelectorAll('a[href], button:not([disabled]), [tabindex="0"]')];
+}
+
+function openDrawer(options = {}) {
+  if (isDrawerOpen) return;
+  isDrawerOpen = true;
+  renderDrawerContent();
+  drawerLayer.classList.add("is-visible");
+  drawerLayer.setAttribute("aria-hidden", "false");
+  document.body.classList.add("drawer-open");
+  menuButton.setAttribute("aria-expanded", "true");
+  drawerScrim.tabIndex = 0;
+  drawer.style.removeProperty("transform");
+  drawerScrim.style.removeProperty("opacity");
+  requestAnimationFrame(() => drawerLayer.classList.add("is-open"));
+  if (options.focus !== false) {
+    window.setTimeout(() => drawer.focus({ preventScroll: true }), 220);
+  }
+}
+
+function closeDrawer(options = {}) {
+  if (!isDrawerOpen && !drawerLayer.classList.contains("is-visible")) return;
+  isDrawerOpen = false;
+  drawerLayer.classList.remove("is-open", "is-dragging");
+  drawerLayer.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("drawer-open");
+  menuButton.setAttribute("aria-expanded", "false");
+  drawerScrim.tabIndex = -1;
+  drawer.style.removeProperty("transform");
+  drawerScrim.style.removeProperty("opacity");
+  if (globalThis.location.hash === "#menu") {
+    window.history.replaceState(null, "", `${location.pathname}${location.search}`);
+  }
+  window.setTimeout(() => {
+    if (!isDrawerOpen) drawerLayer.classList.remove("is-visible");
+  }, 320);
+  if (options.restoreFocus !== false) menuButton.focus({ preventScroll: true });
+}
+
+function setDrawerGestureProgress(progress) {
+  const clamped = Math.max(0, Math.min(1, progress));
+  drawerLayer.classList.add("is-visible", "is-dragging");
+  drawer.style.transform = `translate3d(${(clamped - 1) * 100}%, 0, 0)`;
+  drawerScrim.style.opacity = String(clamped);
+  document.body.classList.add("drawer-open");
+  return clamped;
+}
+
+function beginDrawerGesture(event, mode) {
+  if (event.pointerType === "mouse" && event.button !== 0) return;
+  drawerGesture = {
+    mode,
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    lastX: event.clientX,
+    lastAt: performance.now(),
+    velocity: 0,
+    axis: null,
+    progress: mode === "open" ? 0 : 1,
+  };
+}
+
+function updateDrawerGesture(event) {
+  if (!drawerGesture || event.pointerId !== drawerGesture.pointerId) return;
+  const dx = event.clientX - drawerGesture.startX;
+  const dy = event.clientY - drawerGesture.startY;
+  const distance = Math.hypot(dx, dy);
+
+  if (!drawerGesture.axis && distance >= 8) {
+    drawerGesture.axis = Math.abs(dx) > Math.abs(dy) * 1.15 ? "x" : "y";
+    if (drawerGesture.axis === "y") {
+      drawerGesture = null;
+      return;
+    }
+  }
+  if (drawerGesture.axis !== "x") return;
+
+  event.preventDefault();
+  const now = performance.now();
+  const elapsed = Math.max(1, now - drawerGesture.lastAt);
+  drawerGesture.velocity = (event.clientX - drawerGesture.lastX) / elapsed;
+  drawerGesture.lastX = event.clientX;
+  drawerGesture.lastAt = now;
+
+  const width = Math.max(1, drawer.getBoundingClientRect().width);
+  const progress =
+    drawerGesture.mode === "open"
+      ? Math.max(0, dx) / width
+      : 1 + Math.min(0, dx) / width;
+  drawerGesture.progress = setDrawerGestureProgress(progress);
+}
+
+function finishDrawerGesture(event) {
+  if (!drawerGesture || event.pointerId !== drawerGesture.pointerId) return;
+  const gesture = drawerGesture;
+  drawerGesture = null;
+  if (gesture.axis !== "x") {
+    if (gesture.mode === "open") {
+      drawerLayer.classList.remove("is-visible", "is-dragging");
+      document.body.classList.remove("drawer-open");
+    }
+    return;
+  }
+
+  suppressClickUntil = performance.now() + 350;
+  drawerLayer.classList.remove("is-dragging");
+  drawer.style.removeProperty("transform");
+  drawerScrim.style.removeProperty("opacity");
+  const shouldOpen =
+    gesture.mode === "open"
+      ? gesture.progress >= 0.28 || gesture.velocity > 0.55
+      : !(gesture.progress <= 0.72 || gesture.velocity < -0.55);
+
+  if (shouldOpen) {
+    isDrawerOpen = false;
+    openDrawer({ focus: true });
+  } else if (gesture.mode === "close") {
+    closeDrawer();
+  } else {
+    document.body.classList.remove("drawer-open");
+    drawerLayer.classList.remove("is-visible");
+  }
+}
+
+menuButton.addEventListener("click", () => openDrawer());
+drawerLayer.addEventListener("click", (event) => {
+  const action = event.target.closest("[data-action]")?.dataset.action;
+  if (action === "close-drawer") closeDrawer();
+  if (action === "account-placeholder") showToast("个人资料功能开发中");
+  if (action === "membership-placeholder") showToast("会员服务功能开发中");
+});
+
+drawer.addEventListener(
+  "click",
+  (event) => {
+    if (performance.now() < suppressClickUntil) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  },
+  true,
+);
+
+profileList.addEventListener("click", (event) => {
+  const select = event.target.closest("[data-profile-id]");
+  if (!select) return;
+  appState.setActiveProfile(select.dataset.profileId);
+  renderProfiles();
+  showToast("已切换八字档案");
+});
+
+conversationList.addEventListener("click", (event) => {
+  const item = event.target.closest("[data-conversation-id]");
+  if (!item) return;
+  if (!appState.setActiveConversation(item.dataset.conversationId)) return;
+  renderHistory();
+  renderConversations();
+  closeDrawer({ restoreFocus: false });
+  window.scrollTo({ top: 0, behavior: "auto" });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (!isDrawerOpen) return;
+  if (event.key === "Escape") {
+    event.preventDefault();
+    closeDrawer();
+    return;
+  }
+  if (event.key !== "Tab") return;
+
+  const focusable = drawerFocusableElements();
+  if (!focusable.length) {
+    event.preventDefault();
+    drawer.focus();
+    return;
+  }
+  const first = focusable[0];
+  const last = focusable.at(-1);
+  if (
+    event.shiftKey &&
+    (document.activeElement === first || document.activeElement === drawer)
+  ) {
+    event.preventDefault();
+    last.focus();
+  } else if (
+    !event.shiftKey &&
+    (document.activeElement === last || document.activeElement === drawer)
+  ) {
+    event.preventDefault();
+    first.focus();
+  }
+});
+
+document.addEventListener("pointerdown", (event) => {
+  if (!isDrawerOpen && event.clientX <= 24) beginDrawerGesture(event, "open");
+});
+drawer.addEventListener("pointerdown", (event) => {
+  if (isDrawerOpen) beginDrawerGesture(event, "close");
+});
+document.addEventListener("pointermove", updateDrawerGesture, { passive: false });
+document.addEventListener("pointerup", finishDrawerGesture);
+document.addEventListener("pointercancel", finishDrawerGesture);
 
 questionInput.addEventListener("input", syncActionState);
 questionInput.addEventListener("compositionstart", () => {
@@ -311,15 +722,22 @@ window.addEventListener("resize", queueScrollStateUpdate);
 window.addEventListener("pageshow", () => {
   syncQuotaState();
   syncScrollTopButton();
+  renderDrawerContent();
 });
 window.addEventListener("focus", syncQuotaState);
 window.addEventListener("beforeunload", () => {
   if (replyTimer) window.clearTimeout(replyTimer);
+  if (toastTimer) window.clearTimeout(toastTimer);
 });
 
 const history = renderHistory();
 syncQuotaState();
 syncScrollTopButton();
+renderDrawerContent();
+
+if (window.location.hash === "#menu") {
+  openDrawer();
+}
 
 const lastMessage = history.at(-1);
 if (lastMessage?.role === "user") {

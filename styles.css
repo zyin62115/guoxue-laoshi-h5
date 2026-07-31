@@ -409,7 +409,7 @@ button,
   display: flex;
   align-items: center;
   width: 100%;
-  height: calc(118.4 * var(--unit));
+  height: calc(153.92 * var(--unit));
   overflow: hidden;
   text-align: left;
   border: calc(1 * var(--unit)) solid rgba(239, 216, 193, 0.46);

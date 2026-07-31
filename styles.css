@@ -393,15 +393,18 @@ button,
   background: #efd3b5;
 }
 
+.home-content-flow {
+  position: relative;
+  z-index: 4;
+  width: calc(834 * var(--unit));
+  margin: 0 auto;
+  padding-top: calc(562 * var(--unit) + var(--content-lift));
+}
+
 .feature-list {
-  position: absolute;
-  top: calc(562 * var(--unit));
-  left: calc(52 * var(--unit));
-  z-index: 2;
   display: grid;
   gap: calc(11 * var(--unit));
-  width: calc(834 * var(--unit));
-  transform: translateY(var(--content-lift));
+  width: 100%;
 }
 
 .feature-card {
@@ -469,9 +472,8 @@ button,
 
 .inline-chat {
   position: relative;
-  z-index: 4;
-  width: calc(834 * var(--unit));
-  margin: calc(964 * var(--unit) + var(--content-lift)) auto 0;
+  width: 100%;
+  margin: calc(25 * var(--unit)) 0 0;
   padding: 0 0 calc(44 * var(--unit));
 }
 

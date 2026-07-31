@@ -99,7 +99,7 @@ function formatStartedAt(value) {
 function createTeacherAvatar() {
   const avatar = document.createElement("img");
   avatar.className = "inline-teacher-avatar";
-  avatar.src = "./assets/teacher-avatar-centered.png";
+    avatar.src = "../../public/images/teacher-avatar-centered.png";
   avatar.alt = "";
   return avatar;
 }

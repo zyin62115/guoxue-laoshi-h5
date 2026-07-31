@@ -13,7 +13,7 @@
 - 新增、编辑、删除及切换八字档案
 - 个人中心抽屉，支持按钮、键盘和边缘滑动操作
 - 中文输入法组合态处理、焦点管理和减少动态效果适配
-- `chat.html` 兼容旧入口并自动跳转首页
+- `src/pages/chat.html` 兼容旧入口并自动跳转首页
 
 “专业排盘”“国心解读”“学习资料”、语音输入、个人资料和会员服务目前仍是演示入口或占位功能。
 
@@ -33,21 +33,24 @@ python -m http.server 8000
 npx serve .
 ```
 
-然后访问 `http://localhost:8000/`（`serve` 输出的端口可能不同）。
+然后访问 `http://localhost:8000/src/pages/index.html`（`serve` 输出的端口可能不同）。
 
 ## 项目结构
 
 ```text
 .
-├── index.html              # 首页、对话区和个人中心抽屉
-├── profile.html            # 八字档案新增/编辑页
-├── chat.html               # 旧对话入口，跳转到首页
-├── styles.css              # 全站样式、响应式布局和动效
-├── shared.js               # 本地状态、存储迁移和数据 API
-├── app.js                  # 首页交互、模拟回复和抽屉逻辑
-├── profile.js              # 档案表单、校验和删除逻辑
-├── assets/                 # 国风插画、头像和功能图标
 ├── .github/workflows/      # GitHub Pages 部署工作流
+├── src/
+│   ├── pages/              # 首页、档案页和旧入口兼容页
+│   ├── js/                 # 页面逻辑、共享状态和本地数据 API
+│   ├── css/                # 全站样式、响应式布局和动效
+│   └── components/         # 后续可复用的公共组件
+├── public/
+│   ├── images/             # 国风插画、头像和功能图片
+│   ├── icons/              # 独立图标资源
+│   └── fonts/              # 本地字体资源
+├── docs/                   # 设计和 API 文档
+├── test-output/            # 本地测试生成物，不提交到 Git
 └── .openai/hosting.json    # OpenAI Sites 项目标识
 ```
 
@@ -87,7 +90,7 @@ npx serve .
 
 ## 部署
 
-仓库包含 GitHub Pages 工作流，推送到 `main` 后会发布静态文件，也支持手动触发。新增页面或脚本时，需要同步更新 `.github/workflows/pages.yml` 中复制到 `_site` 的文件列表。
+仓库包含 GitHub Pages 工作流，推送到 `main` 后会发布 `src/` 和 `public/`，并生成指向首页的根入口，也支持手动触发。新增运行时目录时，需要同步检查 `.github/workflows/pages.yml`。
 
 项目还包含 `.openai/hosting.json`，用于关联已有的 OpenAI Sites 项目。部署时应复用其中的 `project_id`。
 

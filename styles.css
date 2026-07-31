@@ -426,7 +426,6 @@ button,
 
 .feature-card img {
   position: absolute;
-  top: calc(22.6 * var(--unit));
   left: calc(30 * var(--unit));
   width: calc(73.2 * var(--unit));
   height: calc(73.2 * var(--unit));
@@ -457,6 +456,13 @@ button,
   line-height: 1;
   letter-spacing: calc(0.6 * var(--unit));
   white-space: nowrap;
+}
+
+.feature-card img,
+.feature-title,
+.feature-desc {
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .chevron {

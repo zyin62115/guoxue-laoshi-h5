@@ -50,8 +50,7 @@ npx serve .
 │   ├── icons/              # 独立图标资源
 │   └── fonts/              # 本地字体资源
 ├── docs/                   # 设计和 API 文档
-├── test-output/            # 本地测试生成物，不提交到 Git
-└── .openai/hosting.json    # OpenAI Sites 项目标识
+└── test-output/            # 本地测试生成物，不提交到 Git
 ```
 
 脚本加载顺序很重要：业务页面应先加载 `shared.js`，再加载对应的页面脚本。共享状态以 `window.GuoxueApp` 暴露。
@@ -91,8 +90,6 @@ npx serve .
 ## 部署
 
 仓库包含 GitHub Pages 工作流，推送到 `main` 后会发布 `src/` 和 `public/`，并生成指向首页的根入口，也支持手动触发。新增运行时目录时，需要同步检查 `.github/workflows/pages.yml`。
-
-项目还包含 `.openai/hosting.json`，用于关联已有的 OpenAI Sites 项目。部署时应复用其中的 `project_id`。
 
 ## 隐私提示
 

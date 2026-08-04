@@ -753,7 +753,7 @@ button,
   opacity: 0.55;
 }
 
-.membership-guide {
+.quota-guide {
   color: #8c4b22;
   font-family: var(--serif);
   font-weight: 600;
@@ -761,7 +761,7 @@ button,
   letter-spacing: calc(0.45 * var(--unit));
 }
 
-.voice-dock .membership-guide {
+.voice-dock .quota-guide {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -789,7 +789,7 @@ button,
   display: none;
 }
 
-.voice-dock.is-exhausted .membership-guide {
+.voice-dock.is-exhausted .quota-guide {
   display: flex;
 }
 
@@ -1115,76 +1115,6 @@ body.drawer-open {
   stroke: currentColor;
   stroke-width: 2.2;
   stroke-linecap: round;
-}
-
-.membership-card {
-  display: grid;
-  grid-template-columns: clamp(42px, 10vw, 68px) minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(12px, 3vw, 22px);
-  width: 100%;
-  margin-top: clamp(14px, 3.5vw, 28px);
-  padding: clamp(16px, 3.8vw, 27px);
-  text-align: left;
-  border: 1px solid rgba(226, 174, 113, 0.38);
-  border-radius: clamp(18px, 4.6vw, 30px);
-  background:
-    radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.72), transparent 36%),
-    linear-gradient(105deg, #fae6c6, #f5d4a9);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 10px 26px rgba(153, 94, 34, 0.08);
-}
-
-.membership-mark {
-  display: grid;
-  width: clamp(42px, 10vw, 68px);
-  height: clamp(42px, 10vw, 68px);
-  color: #fff8e9;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #d68429, #a84b16);
-  place-items: center;
-}
-
-.membership-mark svg {
-  width: 65%;
-  height: 65%;
-}
-
-.membership-mark path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 3;
-  stroke-linejoin: round;
-}
-
-.membership-copy {
-  min-width: 0;
-}
-
-.membership-copy strong {
-  display: block;
-  color: #482c16;
-  font-size: clamp(18px, 4.4vw, 29px);
-}
-
-.membership-copy small {
-  display: block;
-  margin-top: 5px;
-  overflow: hidden;
-  color: #976c42;
-  font-size: clamp(11px, 2.7vw, 17px);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.membership-action {
-  padding: 8px 12px;
-  color: #7c421c;
-  border: 1px solid rgba(135, 72, 25, 0.3);
-  border-radius: 999px;
-  font-size: clamp(11px, 2.5vw, 16px);
-  white-space: nowrap;
 }
 
 .drawer-section {

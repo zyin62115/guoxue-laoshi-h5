@@ -2,10 +2,9 @@ const appState = window.GuoxueApp;
 const pressables = document.querySelectorAll("[data-action]");
 const questionInput = document.querySelector("#home-question");
 const actionButton = document.querySelector("#home-action");
-const quotaDisplay = document.querySelector("#home-quota");
 const voiceDock = document.querySelector(".voice-dock");
 const micButton = document.querySelector('[data-action="voice-mode"]');
-const membershipGuide = document.querySelector("#home-membership-guide");
+const quotaGuide = document.querySelector("#home-quota-guide");
 const inlineChat = document.querySelector("#inline-chat");
 const chatStartTime = document.querySelector("#chat-start-time");
 const messageList = document.querySelector("#inline-message-list");
@@ -198,14 +197,13 @@ function syncQuotaState() {
   const quota = appState.getQuota();
   const exhausted = quota.remaining <= 0;
 
-  appState.renderQuota(quotaDisplay, quota, false);
   voiceDock.classList.toggle("is-exhausted", exhausted);
   questionInput.disabled = exhausted || isReplying;
   micButton.disabled = exhausted || isReplying;
   actionButton.disabled = exhausted || isReplying;
-  membershipGuide.hidden = !exhausted;
+  quotaGuide.hidden = !exhausted;
   questionInput.placeholder = exhausted
-    ? "今日次数已用完"
+    ? "限时免费体验已结束"
     : isReplying
       ? "老师正在思考…"
       : "请输入问题";
@@ -555,7 +553,6 @@ drawerLayer.addEventListener("click", (event) => {
   const action = event.target.closest("[data-action]")?.dataset.action;
   if (action === "close-drawer") closeDrawer();
   if (action === "account-placeholder") showToast("个人资料功能开发中");
-  if (action === "membership-placeholder") showToast("会员服务功能开发中");
 });
 
 drawer.addEventListener(

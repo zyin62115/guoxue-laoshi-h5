@@ -1629,6 +1629,22 @@ body.drawer-open {
   box-shadow: 0 0 0 3px rgba(201, 120, 58, 0.12);
 }
 
+.birthplace-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.birthplace-grid select {
+  padding: 0 9px;
+  font-size: 14px;
+}
+
+.birthplace-grid select:disabled {
+  color: #9b9187;
+  background: rgba(246, 241, 234, 0.72);
+}
+
 .choice-field {
   min-width: 0;
   margin: 0;

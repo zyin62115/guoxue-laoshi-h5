@@ -17,6 +17,11 @@ const drawerScrim = document.querySelector(".drawer-scrim");
 const profileList = document.querySelector("#profile-list");
 const conversationList = document.querySelector("#conversation-list");
 const appToast = document.querySelector("#app-toast");
+const interpretationButton = document.querySelector('[data-action="interpretation"]');
+const reportContext = document.querySelector("#report-chat-context");
+const reportContextTitle = document.querySelector("#report-chat-context-title");
+const reportContextLink = document.querySelector("#report-chat-context-link");
+const drawerReportList = document.querySelector("#drawer-report-list");
 
 let isComposing = false;
 let isReplying = false;
@@ -78,7 +83,11 @@ function getMockReply(question) {
   const matchedRule = MOCK_RULES.find((rule) =>
     rule.keywords.some((keyword) => question.includes(keyword)),
   );
-  return matchedRule ? matchedRule.reply : FALLBACK_REPLY;
+  const reply = matchedRule ? matchedRule.reply : FALLBACK_REPLY;
+  const context = appState.getActiveConversation()?.context;
+  return context
+    ? `结合你在《${context.sectionTitle}》报告中的特点来看，${reply}`
+    : reply;
 }
 
 function formatStartedAt(value) {
@@ -141,6 +150,7 @@ function renderHistory() {
   inlineChat.hidden = !hasConversation;
   document.body.classList.toggle("has-inline-chat", hasConversation);
 
+  renderReportContext();
   if (!hasConversation) {
     messageList.replaceChildren();
     return history;
@@ -151,6 +161,14 @@ function renderHistory() {
   history.forEach((message) => fragment.append(createMessageRow(message)));
   messageList.replaceChildren(fragment);
   return history;
+}
+
+function renderReportContext() {
+  const context = appState.getActiveConversation()?.context;
+  reportContext.hidden = !context;
+  if (!context) return;
+  reportContextTitle.textContent = `正在结合《${context.sectionTitle}》为你解读`;
+  reportContextLink.href = `./interpretation.html?report=${encodeURIComponent(context.reportId)}#report-section-${encodeURIComponent(context.sectionId)}`;
 }
 
 function scrollToLatest(behavior = "smooth") {
@@ -478,8 +496,39 @@ function renderConversations() {
   conversationList.replaceChildren(fragment);
 }
 
+function renderReports() {
+  const reports = appState.getReports();
+  const fragment = document.createDocumentFragment();
+  if (!reports.length) {
+    const empty = document.createElement("a");
+    empty.className = "drawer-report-empty pressable";
+    empty.href = "./interpretation.html";
+    empty.textContent = "还没有报告，去生成第一份国心解读";
+    fragment.append(empty);
+  } else {
+    reports.forEach((report) => {
+      const link = document.createElement("a");
+      link.className = "drawer-report-card pressable";
+      link.href = `./interpretation.html?report=${encodeURIComponent(report.id)}`;
+      const unlocked = report.fullUnlocked ? 8 : report.unlockedSectionIds.length;
+      const title = document.createElement("strong");
+      title.textContent = `${report.profileSnapshot?.name || "我的"}的国心解读`;
+      const meta = document.createElement("small");
+      meta.textContent = report.fullUnlocked
+        ? "完整报告 · 已永久解锁"
+        : `已解锁 ${unlocked}/8 · 可继续试读`;
+      const arrow = document.createElement("i");
+      arrow.setAttribute("aria-hidden", "true");
+      link.append(title, meta, arrow);
+      fragment.append(link);
+    });
+  }
+  drawerReportList.replaceChildren(fragment);
+}
+
 function renderDrawerContent() {
   renderProfiles();
+  renderReports();
   renderConversations();
 }
 
@@ -610,6 +659,9 @@ function finishDrawerGesture(event) {
 }
 
 menuButton.addEventListener("click", () => openDrawer());
+interpretationButton.addEventListener("click", () => {
+  window.location.href = "./interpretation.html";
+});
 drawerLayer.addEventListener("click", (event) => {
   const action = event.target.closest("[data-action]")?.dataset.action;
   if (action === "close-drawer") closeDrawer();
@@ -742,4 +794,11 @@ if (window.location.hash === "#menu") {
 const lastMessage = history.at(-1);
 if (lastMessage?.role === "user") {
   scheduleReply(lastMessage.content);
+}
+
+if (new URLSearchParams(window.location.search).has("reportChat")) {
+  requestAnimationFrame(() => {
+    reportContext.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (!questionInput.disabled) questionInput.focus({ preventScroll: true });
+  });
 }

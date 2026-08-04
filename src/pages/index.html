@@ -99,6 +99,17 @@
             </button>
           </nav>
 
+          <section class="report-chat-context" id="report-chat-context" hidden>
+            <img src="../../public/images/teacher-avatar-centered.png" alt="" />
+            <div>
+              <span>国心解读</span>
+              <strong id="report-chat-context-title"></strong>
+              <a class="pressable" id="report-chat-context-link" href="./interpretation.html">
+                返回查看报告
+              </a>
+            </div>
+          </section>
+
           <section class="inline-chat" id="inline-chat" aria-label="与国学老师的对话" hidden>
             <time class="chat-start-time" id="chat-start-time"></time>
             <div
@@ -189,6 +200,17 @@
               <a class="section-link pressable" href="./profile.html">添加</a>
             </div>
             <div class="profile-list" id="profile-list"></div>
+          </section>
+
+          <section class="drawer-section history-section" aria-labelledby="report-list-title">
+            <div class="drawer-section-heading history-heading">
+              <div>
+                <h2 id="report-list-title">我的报告</h2>
+                <p>查看已生成和已解锁的国心解读</p>
+              </div>
+              <a class="section-link pressable" href="./interpretation.html">生成</a>
+            </div>
+            <div class="drawer-report-list" id="drawer-report-list"></div>
           </section>
 
           <section class="drawer-section history-section" aria-labelledby="history-title">

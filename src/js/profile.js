@@ -14,7 +14,12 @@ const deleteButton = document.querySelector("#delete-profile");
 const cancelButton = document.querySelector("#cancel-profile");
 
 const profileId = new URLSearchParams(window.location.search).get("id");
+const returnTarget = new URLSearchParams(window.location.search).get("return");
 const editingProfile = profileId ? appState.getProfile(profileId) : null;
+
+function exitTarget() {
+  return returnTarget === "interpretation" ? "./interpretation.html" : "./index.html#menu";
+}
 
 function selectedValue(name) {
   return form.elements[name].value;
@@ -126,11 +131,11 @@ form.addEventListener("submit", (event) => {
   const profile = collectProfile();
   if (!profile) return;
   appState.upsertProfile(profile);
-  window.location.replace("./index.html#menu");
+  window.location.replace(exitTarget());
 });
 
 cancelButton.addEventListener("click", () => {
-  window.location.href = "./index.html#menu";
+  window.location.href = exitTarget();
 });
 
 deleteButton.addEventListener("click", () => {
@@ -138,7 +143,7 @@ deleteButton.addEventListener("click", () => {
   const confirmed = window.confirm(`确定删除“${editingProfile.name}”的八字档案吗？`);
   if (!confirmed) return;
   appState.deleteProfile(editingProfile.id);
-  window.location.replace("./index.html#menu");
+  window.location.replace(exitTarget());
 });
 
 if (editingProfile) {

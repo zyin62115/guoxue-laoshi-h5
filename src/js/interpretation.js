@@ -181,6 +181,7 @@ let purchaseSectionId = null;
 let toastTimer = null;
 let paymentOpener = null;
 let claimOpener = null;
+let claimTimer = null;
 
 function formatMoney(cents) {
   const amount = cents / 100;
@@ -425,6 +426,14 @@ function openFirstReportClaim() {
   window.setTimeout(() => claimCard.focus({ preventScroll: true }), 80);
 }
 
+function scheduleFirstReportClaim() {
+  if (!reportState.shouldShowFirstReportClaim() || claimTimer) return;
+  claimTimer = window.setTimeout(() => {
+    claimTimer = null;
+    openFirstReportClaim();
+  }, 5000);
+}
+
 function closeFirstReportClaim(action = "closed") {
   reportState.dismissFirstReportClaim(action);
   claimLayer.classList.remove("is-visible");
@@ -451,7 +460,10 @@ generateButton.addEventListener("click", () => {
     const report = reportState.getOrCreateReport(profile.id, reportPayload(profile));
     generateButton.disabled = false;
     generateButton.textContent = "生成我的报告";
-    if (report) openReport(report);
+    if (report) {
+      openReport(report);
+      scheduleFirstReportClaim();
+    }
   }, 550);
 });
 
@@ -558,9 +570,11 @@ window.addEventListener("pageshow", () => {
   else renderProfiles();
 });
 
+window.addEventListener("beforeunload", () => {
+  if (claimTimer) window.clearTimeout(claimTimer);
+});
+
 const initialReportId = new URLSearchParams(window.location.search).get("report");
 const initialReport = initialReportId ? reportState.getReport(initialReportId) : null;
 if (initialReport) openReport(initialReport);
 else renderProfiles();
-
-requestAnimationFrame(openFirstReportClaim);

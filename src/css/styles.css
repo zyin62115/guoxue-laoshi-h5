@@ -183,9 +183,9 @@ button,
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(298 * var(--unit));
+  width: max-content;
   height: calc(54 * var(--unit));
-  padding: 0 calc(12 * var(--unit));
+  padding: 0 calc(28 * var(--unit));
   color: #33291c;
   border-radius: calc(27 * var(--unit));
   border: calc(1 * var(--unit)) solid rgba(232, 178, 121, 0.28);

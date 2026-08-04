@@ -50,6 +50,12 @@ function populateForm(profile) {
   monthInput.value = profile.birthDate.month;
   dayInput.value = profile.birthDate.day;
   timeInput.value = profile.birthTime;
+  if (
+    profile.birthplace &&
+    !Array.from(birthplaceInput.options).some((option) => option.value === profile.birthplace)
+  ) {
+    birthplaceInput.add(new Option(profile.birthplace, profile.birthplace));
+  }
   birthplaceInput.value = profile.birthplace;
   leapMonthInput.checked = profile.isLeapMonth;
   syncCalendarFields();
@@ -109,11 +115,6 @@ function collectProfile() {
     showError("请选择出生时间。", timeInput);
     return null;
   }
-  if (!birthplace) {
-    showError("请输入出生地。", birthplaceInput);
-    return null;
-  }
-
   errorDisplay.textContent = "";
   return {
     id: editingProfile?.id,

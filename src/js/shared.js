@@ -602,6 +602,36 @@
     return { ok: true, report: normalizeReport(updated), amount, order };
   }
 
+  function claimFreeReport(reportId) {
+    const reports = getReports();
+    const index = reports.findIndex((report) => report.id === reportId);
+    if (index < 0) return { ok: false, reason: "not-found" };
+    const report = reports[index];
+    if (report.fullUnlocked) return { ok: true, report, amount: 0 };
+
+    const now = new Date().toISOString();
+    const updated = {
+      ...report,
+      unlockedSectionIds: report.sections.map((section) => section.id),
+      fullUnlocked: true,
+      updatedAt: now,
+    };
+    reports[index] = updated;
+    saveReports(reports);
+
+    const order = {
+      id: createId("order"),
+      reportId,
+      type: "claim",
+      sectionId: null,
+      amount: 0,
+      status: "claimed",
+      claimedAt: now,
+    };
+    writeLocal(KEYS.reportOrders, JSON.stringify([order, ...getReportOrders()].slice(0, 100)));
+    return { ok: true, report: normalizeReport(updated), amount: 0, order };
+  }
+
   function createReportConversation(reportId, sectionId) {
     const report = getReport(reportId);
     const section = report?.sections.find((item) => item.id === sectionId);
@@ -733,6 +763,7 @@
     REPORT_SECTION_PRICE,
     STORAGE_VERSION,
     appendMessage,
+    claimFreeReport,
     consumeQuota,
     createReportConversation,
     deleteProfile,

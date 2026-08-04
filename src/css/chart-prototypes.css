@@ -32,9 +32,7 @@ button { color: inherit; font: inherit; }
   margin: 0 auto;
   padding: 0 18px max(30px, env(safe-area-inset-bottom));
   overflow: hidden;
-  background:
-    radial-gradient(circle at 52% 8%, rgba(255,255,255,.82), transparent 24%),
-    linear-gradient(180deg, #fff8ed 0, var(--paper-soft) 33%, var(--paper) 100%);
+  background: linear-gradient(180deg, #fff8ed 0, var(--paper-soft) 34%, var(--paper) 100%);
   box-shadow: 0 0 34px rgba(71, 51, 30, .1);
 }
 
@@ -43,16 +41,6 @@ button { color: inherit; font: inherit; }
   height: calc(max(18px, env(safe-area-inset-top)) + 48px);
   margin: 0 -18px;
   padding: max(18px, env(safe-area-inset-top)) 18px 0;
-  overflow: hidden;
-  isolation: isolate;
-}
-.chart-header::after {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: -1;
-  height: 100%;
-  background: linear-gradient(180deg, rgba(253, 242, 230, 0), rgba(253, 242, 230, .76) 76%, var(--paper-soft));
-  content: "";
 }
 .back-button, .history-button {
   position: absolute;
@@ -87,10 +75,6 @@ button { color: inherit; font: inherit; }
 .back-button svg, .history-button svg { width: 25px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
 .header-copy { position: relative; z-index: 3; height: 40px; display: grid; place-items: center; }
 .header-copy h1 { margin: 0; font-family: var(--serif); font-size: 21px; line-height: 1.1; letter-spacing: .08em; text-indent: .08em; }
-.header-mountain { position: absolute; right: -34px; bottom: -54px; z-index: 0; width: 220px; opacity: .25; filter: sepia(.28) saturate(.72); }
-.header-ridge { position: absolute; left: 96px; bottom: -58px; z-index: 0; width: 230px; opacity: .11; filter: sepia(.42) saturate(.6); transform: scaleX(-1); }
-.header-bamboo { position: absolute; left: -20px; bottom: -108px; z-index: 1; width: 94px; fill: none; stroke: #ac8a63; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; opacity: .22; }
-.header-birds { position: absolute; right: 83px; top: 51px; z-index: 2; width: 50px; fill: none; stroke: #c48952; stroke-linecap: round; stroke-width: 1.5; opacity: .32; }
 
 .wechat-banner {
   position: relative;

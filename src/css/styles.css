@@ -317,13 +317,30 @@ button,
   position: absolute;
   top: calc(214 * var(--unit));
   left: calc(650 * var(--unit));
-  display: block;
+  display: grid;
   width: calc(225 * var(--unit));
   height: calc(64 * var(--unit));
-  object-fit: fill;
+  background: url("../../public/images/date-badge.png") center / 100% 100% no-repeat;
+  color: #282721;
+  font-family: var(--serif);
+  font-size: calc(26 * var(--unit));
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  place-items: center;
   user-select: none;
-  -webkit-user-drag: none;
   transform: translateY(16px);
+}
+
+.date-badge::before {
+  position: absolute;
+  inset: 18% 15%;
+  background: #fff3dc;
+  content: "";
+}
+
+.date-badge span {
+  position: relative;
 }
 
 .guidance {

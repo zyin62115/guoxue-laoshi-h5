@@ -19,6 +19,12 @@ const interpretationButton = document.querySelector('[data-action="interpretatio
 const reportContext = document.querySelector("#report-chat-context");
 const reportContextTitle = document.querySelector("#report-chat-context-title");
 const reportContextLink = document.querySelector("#report-chat-context-link");
+const guideDate = document.querySelector("#guide-date");
+const guideDateText = document.querySelector("#guide-date-text");
+const guideLineOne = document.querySelector("#guide-line-one");
+const guideLineTwo = document.querySelector("#guide-line-two");
+const guideGood = document.querySelector("#guide-good");
+const guideAvoid = document.querySelector("#guide-avoid");
 
 let isComposing = false;
 let isReplying = false;
@@ -28,6 +34,118 @@ let isDrawerOpen = false;
 let toastTimer = null;
 let drawerGesture = null;
 let suppressClickUntil = 0;
+let dailyGuideTimer = null;
+
+const DAILY_GUIDES = [
+  {
+    lines: ["顺势而为，稳中求进，保持平和心态，", "善用耐心，方能见长远之效。"],
+    good: "静心学习",
+    avoid: "急躁冲动",
+  },
+  {
+    lines: ["心定则事明，步稳则路远，", "从容安排，今日自有所得。"],
+    good: "整理计划",
+    avoid: "仓促决定",
+  },
+  {
+    lines: ["守正而行，专注眼前可为之事，", "日积小功，终能汇成长进。"],
+    good: "专注行动",
+    avoid: "贪多求快",
+  },
+  {
+    lines: ["言缓则贵，心静则安，", "多听一分，更能看清彼此所需。"],
+    good: "坦诚沟通",
+    avoid: "意气争辩",
+  },
+  {
+    lines: ["张弛有度，劳逸相宜，", "养足精神，方可从容应对。"],
+    good: "规律作息",
+    avoid: "过度劳累",
+  },
+  {
+    lines: ["旧事宜清，新机渐显，", "舍去纷扰，才能轻装前行。"],
+    good: "清理积压",
+    avoid: "反复拖延",
+  },
+  {
+    lines: ["见微知著，先察后行，", "留心细节，可避无谓周折。"],
+    good: "核对细节",
+    avoid: "粗心大意",
+  },
+  {
+    lines: ["和气能聚，真诚可通，", "以善意相待，自有温暖回应。"],
+    good: "关怀他人",
+    avoid: "冷言相向",
+  },
+  {
+    lines: ["知止而后定，量力而后行，", "守好边界，心中自会安稳。"],
+    good: "量力而行",
+    avoid: "勉强逞强",
+  },
+  {
+    lines: ["晨光宜启新章，今日宜立小愿，", "方向既明，行动便有力量。"],
+    good: "开启新事",
+    avoid: "犹豫不前",
+  },
+  {
+    lines: ["温故可以知新，回望亦为前行，", "总结得失，下一步会更清晰。"],
+    good: "复盘总结",
+    avoid: "重蹈旧误",
+  },
+  {
+    lines: ["静中有思，独处亦能生慧，", "给心留白，答案自会浮现。"],
+    good: "安静独处",
+    avoid: "随波逐流",
+  },
+];
+
+function lunarDayName(day) {
+  const days = [
+    "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十",
+    "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十",
+    "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十",
+  ];
+  return days[Number(day) - 1] || day;
+}
+
+function formatGuideDate(date) {
+  try {
+    const formatter = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const parts = Object.fromEntries(
+      formatter.formatToParts(date).map((part) => [part.type, part.value]),
+    );
+    if (parts.yearName && parts.month && parts.day) {
+      return `${parts.yearName}年${parts.month}${lunarDayName(parts.day)}`;
+    }
+  } catch (error) {
+    // 不支持农历日历的浏览器回退到本地公历日期。
+  }
+  return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+}
+
+function getDailyGuideIndex(date) {
+  const localDay = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+  return Math.floor(localDay / 86400000) % DAILY_GUIDES.length;
+}
+
+function renderDailyGuide() {
+  const now = new Date();
+  const guide = DAILY_GUIDES[getDailyGuideIndex(now)];
+  guideDate.dateTime = appState.localDateKey(now);
+  guideDateText.textContent = formatGuideDate(now);
+  guideLineOne.textContent = guide.lines[0];
+  guideLineTwo.textContent = guide.lines[1];
+  guideGood.textContent = guide.good;
+  guideAvoid.textContent = guide.avoid;
+
+  if (dailyGuideTimer) window.clearTimeout(dailyGuideTimer);
+  const nextDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  dailyGuideTimer = window.setTimeout(renderDailyGuide, nextDay.getTime() - now.getTime() + 1000);
+}
 
 const MOCK_RULES = [
   {
@@ -650,16 +768,22 @@ scrollTopButton.addEventListener("click", () => {
 window.addEventListener("scroll", queueScrollStateUpdate, { passive: true });
 window.addEventListener("resize", queueScrollStateUpdate);
 window.addEventListener("pageshow", () => {
+  renderDailyGuide();
   syncQuotaState();
   syncScrollTopButton();
   renderDrawerContent();
 });
-window.addEventListener("focus", syncQuotaState);
+window.addEventListener("focus", () => {
+  renderDailyGuide();
+  syncQuotaState();
+});
 window.addEventListener("beforeunload", () => {
   if (replyTimer) window.clearTimeout(replyTimer);
   if (toastTimer) window.clearTimeout(toastTimer);
+  if (dailyGuideTimer) window.clearTimeout(dailyGuideTimer);
 });
 
+renderDailyGuide();
 const history = renderHistory();
 syncQuotaState();
 syncScrollTopButton();

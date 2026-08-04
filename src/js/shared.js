@@ -17,6 +17,7 @@
     migration: "guoxueStorageMigrationV2",
     reports: "guoxueInterpretationReportsV1",
     reportOrders: "guoxueInterpretationOrdersV1",
+    firstReportClaim: "guoxueFirstReportClaimPromptV1",
   });
 
   const LEGACY_KEYS = Object.freeze({
@@ -531,6 +532,26 @@
     return Array.isArray(stored) ? stored.slice(0, 100) : [];
   }
 
+  function getFirstReportClaim() {
+    const stored = safeParse(readLocal(KEYS.firstReportClaim), null);
+    return stored && typeof stored === "object" ? stored : null;
+  }
+
+  function shouldShowFirstReportClaim() {
+    return !getFirstReportClaim();
+  }
+
+  function dismissFirstReportClaim(action = "closed") {
+    const existing = getFirstReportClaim();
+    if (existing) return existing;
+    const record = {
+      action: action === "wechat" ? "wechat" : "closed",
+      handledAt: new Date().toISOString(),
+    };
+    writeLocal(KEYS.firstReportClaim, JSON.stringify(record));
+    return record;
+  }
+
   function purchaseReport(reportId, purchase) {
     const reports = getReports();
     const index = reports.findIndex((report) => report.id === reportId);
@@ -715,12 +736,14 @@
     consumeQuota,
     createReportConversation,
     deleteProfile,
+    dismissFirstReportClaim,
     ensureChatStartedAt,
     getActiveConversation,
     getActiveProfile,
     getActiveProfileId,
     getChatStartedAt,
     getConversations,
+    getFirstReportClaim,
     getHistory,
     getProfile,
     getProfiles,
@@ -736,6 +759,7 @@
     saveHistory,
     setActiveConversation,
     setActiveProfile,
+    shouldShowFirstReportClaim,
     upsertProfile,
   });
 })(window);

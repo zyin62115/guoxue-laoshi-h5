@@ -120,6 +120,38 @@
       </section>
     </div>
 
+    <div class="first-report-claim-layer" id="first-report-claim-layer" aria-hidden="true">
+      <button
+        class="first-report-claim-scrim"
+        type="button"
+        data-claim-close
+        aria-label="暂不领取"
+      ></button>
+      <section
+        class="first-report-claim-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="claim-title"
+        tabindex="-1"
+      >
+        <button class="claim-close pressable" type="button" data-claim-close aria-label="关闭"></button>
+        <span class="claim-exclusive">首次专享</span>
+        <img src="../../public/images/teacher-avatar-centered.png" alt="" />
+        <span class="claim-teacher-name">国学老师送你的见面礼</span>
+        <h2 id="claim-title">免费领取一次国心解读</h2>
+        <p>前往微信添加老师，免费领取一份完整报告，并获得专属解读指引。</p>
+        <ul>
+          <li>八大人生主题完整解读</li>
+          <li>结合报告继续向老师追问</li>
+        </ul>
+        <button class="claim-wechat-button pressable" type="button" id="claim-wechat-button">
+          <span aria-hidden="true">微</span>
+          去微信免费领取
+        </button>
+        <small>本版本为模拟跳转，不会真实添加微信</small>
+      </section>
+    </div>
+
     <div class="app-toast" id="report-toast" role="status" aria-live="polite"></div>
 
     <script src="../js/shared.js"></script>

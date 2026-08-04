@@ -170,6 +170,9 @@ const paymentFullPrice = document.querySelector("#payment-full-price");
 const paymentSectionOption = document.querySelector("#payment-section-option");
 const paymentSectionTitle = document.querySelector("#payment-section-title");
 const paymentConfirm = document.querySelector("#payment-confirm");
+const claimLayer = document.querySelector("#first-report-claim-layer");
+const claimCard = document.querySelector(".first-report-claim-card");
+const claimWechatButton = document.querySelector("#claim-wechat-button");
 const toast = document.querySelector("#report-toast");
 
 let selectedProfileId = reportState.getActiveProfileId();
@@ -177,6 +180,7 @@ let activeReport = null;
 let purchaseSectionId = null;
 let toastTimer = null;
 let paymentOpener = null;
+let claimOpener = null;
 
 function formatMoney(cents) {
   const amount = cents / 100;
@@ -412,6 +416,26 @@ function syncPaymentButton() {
   paymentConfirm.textContent = `确认支付 ${formatMoney(amount)}`;
 }
 
+function openFirstReportClaim() {
+  if (!reportState.shouldShowFirstReportClaim()) return;
+  claimOpener = document.activeElement;
+  claimLayer.classList.add("is-visible");
+  claimLayer.setAttribute("aria-hidden", "false");
+  document.body.classList.add("claim-open");
+  window.setTimeout(() => claimCard.focus({ preventScroll: true }), 80);
+}
+
+function closeFirstReportClaim(action = "closed") {
+  reportState.dismissFirstReportClaim(action);
+  claimLayer.classList.remove("is-visible");
+  claimLayer.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("claim-open");
+  if (claimOpener instanceof HTMLElement) {
+    claimOpener.focus({ preventScroll: true });
+  }
+  claimOpener = null;
+}
+
 profileList.addEventListener("change", (event) => {
   if (event.target.name !== "report-profile") return;
   selectedProfileId = event.target.value;
@@ -479,7 +503,35 @@ paymentConfirm.addEventListener("click", () => {
   }
 });
 
+claimLayer.addEventListener("click", (event) => {
+  if (event.target.closest("[data-claim-close]")) closeFirstReportClaim();
+});
+claimWechatButton.addEventListener("click", () => {
+  closeFirstReportClaim("wechat");
+  const returnTarget = `./interpretation.html${window.location.search}${window.location.hash}`;
+  window.location.href = `./wechat-simulator.html?return=${encodeURIComponent(returnTarget)}`;
+});
+
 document.addEventListener("keydown", (event) => {
+  if (claimLayer.classList.contains("is-visible")) {
+    if (event.key === "Escape") {
+      closeFirstReportClaim();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const claimFocusable = [...claimCard.querySelectorAll("button:not([disabled])")];
+    if (!claimFocusable.length) return;
+    const first = claimFocusable[0];
+    const last = claimFocusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+    return;
+  }
   if (!paymentLayer.classList.contains("is-visible")) return;
   if (event.key === "Escape") {
     closePayment();
@@ -510,3 +562,5 @@ const initialReportId = new URLSearchParams(window.location.search).get("report"
 const initialReport = initialReportId ? reportState.getReport(initialReportId) : null;
 if (initialReport) openReport(initialReport);
 else renderProfiles();
+
+requestAnimationFrame(openFirstReportClaim);

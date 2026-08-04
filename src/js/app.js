@@ -16,6 +16,7 @@ const drawerScrim = document.querySelector(".drawer-scrim");
 const conversationList = document.querySelector("#conversation-list");
 const appToast = document.querySelector("#app-toast");
 const interpretationButton = document.querySelector('[data-action="interpretation"]');
+const professionalChartButton = document.querySelector('[data-action="professional-chart"]');
 const reportContext = document.querySelector("#report-chat-context");
 const reportContextTitle = document.querySelector("#report-chat-context-title");
 const reportContextLink = document.querySelector("#report-chat-context-link");
@@ -664,6 +665,9 @@ function finishDrawerGesture(event) {
 }
 
 menuButton.addEventListener("click", () => openDrawer());
+professionalChartButton.addEventListener("click", () => {
+  window.location.href = "./chart-prototypes.html";
+});
 interpretationButton.addEventListener("click", () => {
   window.location.href = "./interpretation.html";
 });

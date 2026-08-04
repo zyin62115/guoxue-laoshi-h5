@@ -40,7 +40,7 @@ button { color: inherit; font: inherit; }
 
 .chart-header {
   position: relative;
-  height: 242px;
+  height: 104px;
   margin: 0 -18px;
   padding: max(18px, env(safe-area-inset-top)) 18px 0;
   overflow: hidden;
@@ -85,67 +85,24 @@ button { color: inherit; font: inherit; }
   letter-spacing: .04em;
 }
 .back-button svg, .history-button svg { width: 25px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
-.header-copy { position: relative; z-index: 3; padding-top: 37px; text-align: center; }
-.header-copy h1 { margin: 0; font-family: var(--serif); font-size: 32px; line-height: 1.1; letter-spacing: .12em; text-indent: .12em; }
-.header-copy p { margin: 15px 0 0; display: flex; align-items: center; justify-content: center; gap: 13px; color: #9b6943; font-family: var(--serif); font-size: 16px; letter-spacing: .13em; }
-.header-copy p span { width: 28px; height: 1px; background: linear-gradient(90deg, transparent, #c99058); }
-.header-copy p span:last-child { background: linear-gradient(90deg, #c99058, transparent); }
-.header-mountain { position: absolute; right: -58px; bottom: 10px; z-index: 0; width: 290px; opacity: .48; filter: sepia(.28) saturate(.72); }
-.header-ridge { position: absolute; left: 112px; bottom: 3px; z-index: 0; width: 280px; opacity: .2; filter: sepia(.42) saturate(.6); transform: scaleX(-1); }
-.header-bamboo { position: absolute; left: -12px; bottom: -1px; z-index: 1; width: 105px; fill: none; stroke: #ac8a63; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; opacity: .42; }
-.header-birds { position: absolute; right: 32px; top: 73px; z-index: 2; width: 70px; fill: none; stroke: #c48952; stroke-linecap: round; stroke-width: 1.5; opacity: .7; }
-.auspicious-mark { position: absolute; left: 50%; bottom: 30px; z-index: 2; width: 33px; color: var(--orange); transform: translateX(-50%); opacity: .72; }
-.auspicious-mark svg { width: 100%; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; }
+.header-copy { position: relative; z-index: 3; height: 40px; display: grid; place-items: center; }
+.header-copy h1 { margin: 0; font-family: var(--serif); font-size: 21px; line-height: 1.1; letter-spacing: .08em; text-indent: .08em; }
+.header-mountain { position: absolute; right: -34px; bottom: -34px; z-index: 0; width: 220px; opacity: .32; filter: sepia(.28) saturate(.72); }
+.header-ridge { position: absolute; left: 96px; bottom: -38px; z-index: 0; width: 230px; opacity: .14; filter: sepia(.42) saturate(.6); transform: scaleX(-1); }
+.header-bamboo { position: absolute; left: -20px; bottom: -73px; z-index: 1; width: 94px; fill: none; stroke: #ac8a63; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; opacity: .3; }
+.header-birds { position: absolute; right: 78px; top: 62px; z-index: 2; width: 54px; fill: none; stroke: #c48952; stroke-linecap: round; stroke-width: 1.5; opacity: .45; }
 
 .wechat-banner {
   position: relative;
   z-index: 3;
-  min-height: 96px;
-  margin: -2px 0 22px;
-  padding: 16px 14px;
-  display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) auto;
-  gap: 11px;
-  align-items: center;
+  margin: 10px 0 22px;
+  display: block;
   overflow: hidden;
-  border: 1px solid rgba(226, 190, 152, .8);
-  border-radius: 21px;
-  background:
-    radial-gradient(circle at 88% 12%, rgba(255,255,255,.9), transparent 30%),
-    linear-gradient(135deg, rgba(255,253,248,.96), rgba(250,231,208,.92));
-  color: inherit;
+  border-radius: 18px;
   text-decoration: none;
-  box-shadow: 0 10px 24px rgba(123, 75, 31, .09), inset 0 1px rgba(255,255,255,.88);
+  box-shadow: 0 10px 24px rgba(123, 75, 31, .11);
 }
-.wechat-banner::after {
-  position: absolute;
-  right: -18px;
-  bottom: -28px;
-  width: 94px;
-  height: 64px;
-  border: 1px solid rgba(222,106,10,.12);
-  border-radius: 50%;
-  content: "";
-}
-.wechat-banner-icon {
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  border-radius: 15px;
-  background: linear-gradient(145deg, #f18124, #cf5c08);
-  color: #fff;
-  box-shadow: 0 7px 15px rgba(205, 91, 10, .2);
-  font-family: var(--serif);
-  font-size: 20px;
-  font-weight: 700;
-}
-.wechat-banner-copy { min-width: 0; }
-.wechat-banner-copy small { display: block; color: #a66a39; font-size: 9px; letter-spacing: .08em; }
-.wechat-banner-copy strong { margin-top: 4px; display: block; color: var(--warm-ink); font-family: var(--serif); font-size: 14px; }
-.wechat-banner-copy em { margin-top: 4px; display: block; color: #9b7d65; font-size: 9px; font-style: normal; }
-.wechat-banner-action { position: relative; z-index: 1; display: flex; align-items: center; gap: 2px; color: var(--orange); font-size: 11px; font-weight: 700; white-space: nowrap; }
-.wechat-banner-action i { font-family: sans-serif; font-size: 17px; font-style: normal; font-weight: 400; }
+.wechat-banner img { width: 100%; height: auto; display: block; }
 
 .method-section { position: relative; z-index: 2; }
 .section-heading { margin: 0 2px 14px; display: flex; align-items: end; justify-content: space-between; }
@@ -187,10 +144,6 @@ button { color: inherit; font: inherit; }
 @media (max-width: 370px) {
   .chart-page { padding-inline: 13px; }
   .chart-header { margin-inline: -13px; }
-  .wechat-banner { padding-inline: 11px; grid-template-columns: 42px minmax(0, 1fr) auto; gap: 8px; }
-  .wechat-banner-icon { width: 42px; height: 42px; }
-  .wechat-banner-copy strong { font-size: 12px; }
-  .wechat-banner-action { font-size: 10px; }
   .method-grid { gap: 8px 6px; }
   .method-card { min-height: 102px; border-radius: 16px; }
   .method-icon { width: 50px; height: 50px; }

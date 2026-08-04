@@ -6,106 +6,116 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
     />
-    <meta name="theme-color" content="#f5efe5" />
+    <meta name="theme-color" content="#fcefe0" />
     <meta name="format-detection" content="telephone=no" />
-    <title>专业排盘 · 三版原型</title>
+    <title>专业排盘</title>
     <link rel="stylesheet" href="../css/chart-prototypes.css" />
   </head>
   <body>
-    <main class="prototype-shell">
-      <header class="prototype-review-bar" aria-label="原型方案切换">
-        <a class="review-back" href="./index.html" aria-label="返回首页">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
+    <main class="chart-page">
+      <header class="chart-header">
+        <a class="back-button pressable" href="./index.html" aria-label="返回首页">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="m20 7-9 9 9 9" />
+          </svg>
         </a>
-        <div class="review-copy">
-          <strong>专业排盘 · 原型评审</strong>
-          <span id="review-description">典藏宫格｜沉稳、品牌感强</span>
+
+        <div class="header-copy">
+          <h1>专业排盘</h1>
+          <p><span></span>择一法，起一局<span></span></p>
         </div>
-        <div class="version-tabs" role="tablist" aria-label="选择原型版本">
-          <button class="version-tab is-active" type="button" role="tab" aria-selected="true" data-version="a">A</button>
-          <button class="version-tab" type="button" role="tab" aria-selected="false" data-version="b">B</button>
-          <button class="version-tab" type="button" role="tab" aria-selected="false" data-version="c">C</button>
-        </div>
+
+        <button
+          class="history-button pressable"
+          type="button"
+          data-action="history"
+          aria-label="查看排盘记录"
+        >
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M7 8v7h7M8.5 21a10 10 0 1 0 .4-10L7 15" />
+          </svg>
+        </button>
+
+        <img
+          class="header-mountain"
+          src="../../public/images/top-mountain-hd-alpha.png"
+          alt=""
+        />
+        <img
+          class="header-ridge"
+          src="../../public/images/right-mountains-hd-alpha.png"
+          alt=""
+        />
+        <svg class="header-bamboo" viewBox="0 0 110 180" aria-hidden="true">
+          <path d="M26 178C35 128 43 76 52 10M50 68c-17-14-29-17-42-13M46 93c17-14 33-17 49-12M39 124c-13-11-24-13-35-9M57 42c15-11 28-13 39-8" />
+          <path d="M20 53c13 0 24 5 31 15M50 82c16-2 30 2 42 12M6 114c12 0 22 4 31 12M56 32c14-1 26 2 36 10" />
+        </svg>
+        <svg class="header-birds" viewBox="0 0 100 38" aria-hidden="true">
+          <path d="M3 23c7-8 14-8 21 0 7-8 14-8 21 0M52 10c5-5 10-5 15 0 5-5 10-5 15 0" />
+        </svg>
+        <span class="auspicious-mark" aria-hidden="true">
+          <svg viewBox="0 0 52 34">
+            <path d="M7 26c-7-1-7-10 0-11 0-8 11-10 15-4 5-8 18-5 17 5 9-1 10 10 3 12H10" />
+            <path d="M20 17c2-4 8-4 10 0 2 5-8 9-10 0Z" />
+          </svg>
+        </span>
       </header>
 
-      <section class="phone-stage" aria-live="polite">
-        <article class="chart-app version-a" id="chart-app">
-          <header class="app-header">
-            <a class="app-back" href="./index.html" aria-label="返回首页">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
-            </a>
-            <div class="app-heading">
-              <span class="app-eyebrow">东方智慧 · 专业推演</span>
-              <h1>专业排盘</h1>
-            </div>
-            <button class="history-button" type="button" data-action="history" aria-label="排盘记录">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5v5h5M5.2 15a8 8 0 1 0 .4-7.4L4 10" /></svg>
-            </button>
-          </header>
-
-          <div class="chart-scroll">
-            <section class="intro-panel">
-              <div class="intro-copy">
-                <span class="intro-kicker">起一局 · 观万象</span>
-                <h2>选择排盘方式</h2>
-                <p>录入必要信息，即刻生成专业盘局</p>
-              </div>
-              <div class="cosmos-mark" aria-hidden="true">
-                <span>乾</span><i></i><b>坤</b>
-              </div>
-            </section>
-
-            <section class="quick-section" aria-labelledby="quick-title">
-              <div class="section-heading">
-                <div><span>常用</span><h2 id="quick-title">热门排盘</h2></div>
-                <button type="button" data-action="history">最近使用 <i>›</i></button>
-              </div>
-              <div class="quick-grid" id="quick-grid"></div>
-            </section>
-
-            <section class="all-section" aria-labelledby="all-title">
-              <div class="section-heading all-heading">
-                <div><span>全部</span><h2 id="all-title">排盘方式</h2></div>
-                <div class="filter-tabs" role="tablist" aria-label="排盘分类">
-                  <button class="is-active" type="button" data-filter="all">全部</button>
-                  <button type="button" data-filter="destiny">命理</button>
-                  <button type="button" data-filter="decision">决策</button>
-                  <button type="button" data-filter="tools">工具</button>
-                </div>
-              </div>
-              <div class="method-grid" id="method-grid"></div>
-            </section>
-
-            <p class="disclaimer">传统文化研究与娱乐参考，请理性看待推演结果</p>
+      <section class="method-section" aria-labelledby="method-title">
+        <div class="section-heading">
+          <div>
+            <span>十三法门</span>
+            <h2 id="method-title">选择排盘方式</h2>
           </div>
-
-          <nav class="app-nav" aria-label="底部导航">
-            <a href="./index.html"><span>⌂</span><small>首页</small></a>
-            <button class="is-current" type="button"><span>▦</span><small>排盘</small></button>
-            <button type="button" data-action="history"><span>◷</span><small>记录</small></button>
-            <a href="./profiles.html"><span>♙</span><small>我的</small></a>
-          </nav>
-        </article>
+          <p>点击图标进入排盘</p>
+        </div>
+        <div class="method-grid" id="method-grid"></div>
       </section>
+
+      <p class="disclaimer">传统文化研究与娱乐参考，请理性看待推演结果</p>
     </main>
 
     <div class="sheet-layer" id="sheet-layer" aria-hidden="true">
-      <button class="sheet-scrim" type="button" data-action="close-sheet" aria-label="关闭"></button>
-      <section class="entry-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <button
+        class="sheet-scrim"
+        type="button"
+        data-action="close-sheet"
+        aria-label="关闭排盘信息"
+        tabindex="-1"
+      ></button>
+      <section
+        class="entry-sheet"
+        id="entry-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="sheet-title"
+        tabindex="-1"
+      >
         <div class="sheet-handle" aria-hidden="true"></div>
         <header class="sheet-header">
-          <span class="method-seal" id="sheet-seal">命</span>
-          <div><small id="sheet-category">命理排盘</small><h2 id="sheet-title">生平子时</h2></div>
-          <button type="button" data-action="close-sheet" aria-label="关闭窗口">×</button>
+          <span class="sheet-icon" id="sheet-icon" aria-hidden="true"></span>
+          <div>
+            <small id="sheet-category">命理排盘</small>
+            <h2 id="sheet-title">生平子时</h2>
+          </div>
+          <button class="sheet-close pressable" type="button" data-action="close-sheet" aria-label="关闭窗口">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+          </button>
         </header>
         <p class="sheet-summary" id="sheet-summary"></p>
         <div class="field-preview" id="field-preview"></div>
-        <p class="privacy-note"><span>盾</span> 出生信息仅保存在当前设备，用于本次排盘</p>
-        <button class="enter-button" type="button" data-action="enter-chart">进入排盘 <span>→</span></button>
+        <p class="privacy-note">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3Z" /><path d="m9 12 2 2 4-5" /></svg>
+          出生信息仅保存在当前设备，用于本次排盘
+        </p>
+        <button class="enter-button pressable" type="button" data-action="enter-chart">
+          <span>进入排盘</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M14 7l5 5-5 5" /></svg>
+        </button>
       </section>
     </div>
 
-    <div class="prototype-toast" id="prototype-toast" role="status" aria-live="polite"></div>
+    <div class="chart-toast" id="chart-toast" role="status" aria-live="polite"></div>
     <script src="../js/chart-prototypes.js"></script>
   </body>
 </html>

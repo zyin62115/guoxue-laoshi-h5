@@ -26,14 +26,12 @@
         </div>
 
         <button
-          class="history-button pressable"
+          class="history-button history-text pressable"
           type="button"
           data-action="history"
           aria-label="查看排盘记录"
         >
-          <svg viewBox="0 0 32 32" aria-hidden="true">
-            <path d="M7 8v7h7M8.5 21a10 10 0 1 0 .4-10L7 15" />
-          </svg>
+          排盘记录
         </button>
 
         <img
@@ -61,6 +59,20 @@
         </span>
       </header>
 
+      <a
+        class="wechat-banner pressable"
+        href="./wechat-simulator.html?context=chart&amp;return=./chart-prototypes.html"
+        aria-label="添加老师微信，获得一对一排盘咨询"
+      >
+        <span class="wechat-banner-icon" aria-hidden="true">微</span>
+        <span class="wechat-banner-copy">
+          <small>排盘遇到问题？</small>
+          <strong>添加老师微信，一对一为你解答</strong>
+          <em>免费咨询 · 隐私保护</em>
+        </span>
+        <span class="wechat-banner-action">立即添加 <i>›</i></span>
+      </a>
+
       <section class="method-section" aria-labelledby="method-title">
         <div class="section-heading">
           <div>
@@ -75,47 +87,8 @@
       <p class="disclaimer">传统文化研究与娱乐参考，请理性看待推演结果</p>
     </main>
 
-    <div class="sheet-layer" id="sheet-layer" aria-hidden="true">
-      <button
-        class="sheet-scrim"
-        type="button"
-        data-action="close-sheet"
-        aria-label="关闭排盘信息"
-        tabindex="-1"
-      ></button>
-      <section
-        class="entry-sheet"
-        id="entry-sheet"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="sheet-title"
-        tabindex="-1"
-      >
-        <div class="sheet-handle" aria-hidden="true"></div>
-        <header class="sheet-header">
-          <span class="sheet-icon" id="sheet-icon" aria-hidden="true"></span>
-          <div>
-            <small id="sheet-category">命理排盘</small>
-            <h2 id="sheet-title">生平子时</h2>
-          </div>
-          <button class="sheet-close pressable" type="button" data-action="close-sheet" aria-label="关闭窗口">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
-          </button>
-        </header>
-        <p class="sheet-summary" id="sheet-summary"></p>
-        <div class="field-preview" id="field-preview"></div>
-        <p class="privacy-note">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3Z" /><path d="m9 12 2 2 4-5" /></svg>
-          出生信息仅保存在当前设备，用于本次排盘
-        </p>
-        <button class="enter-button pressable" type="button" data-action="enter-chart">
-          <span>进入排盘</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M14 7l5 5-5 5" /></svg>
-        </button>
-      </section>
-    </div>
-
     <div class="chart-toast" id="chart-toast" role="status" aria-live="polite"></div>
+    <script src="../js/chart-methods.js"></script>
     <script src="../js/chart-prototypes.js"></script>
   </body>
 </html>

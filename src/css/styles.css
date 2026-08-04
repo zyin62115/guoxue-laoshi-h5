@@ -347,14 +347,14 @@ button,
   position: absolute;
   top: calc(302 * var(--unit));
   left: calc(340 * var(--unit));
-  width: calc(555 * var(--unit));
+  width: calc(535 * var(--unit));
   margin: 0;
   font-family: var(--serif);
   font-size: calc(31.5 * var(--unit));
   font-weight: 600;
   line-height: calc(51 * var(--unit));
   letter-spacing: calc(0.5 * var(--unit));
-  white-space: nowrap;
+  white-space: normal;
   transform: translateY(16px);
 }
 

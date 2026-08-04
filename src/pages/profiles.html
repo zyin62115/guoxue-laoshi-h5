@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#fff9f1" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>我的档案</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+  <body class="collection-page">
+    <main class="collection-shell">
+      <header class="collection-header">
+        <a class="profile-back pressable" href="./index.html#menu" aria-label="返回个人中心"></a>
+        <div>
+          <h1>我的档案</h1>
+          <span>管理八字出生信息</span>
+        </div>
+        <a class="collection-header-action pressable" href="./profile.html?return=profiles">新增</a>
+      </header>
+
+      <section class="collection-intro">
+        <strong>当前对话档案</strong>
+        <p>选择一份档案作为当前使用对象，也可以进入编辑页修改详细出生信息。</p>
+      </section>
+
+      <section class="collection-list profile-list" id="profiles-page-list" aria-live="polite"></section>
+    </main>
+
+    <div class="app-toast" id="collection-toast" role="status" aria-live="polite"></div>
+    <script src="../js/shared.js"></script>
+    <script src="../js/profiles.js"></script>
+  </body>
+</html>

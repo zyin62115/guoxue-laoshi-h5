@@ -191,27 +191,24 @@
             <span class="membership-action">了解会员</span>
           </button>
 
-          <section class="drawer-section archive-section" aria-labelledby="archive-title">
-            <div class="drawer-section-heading">
-              <div>
-                <h2 id="archive-title">八字档案</h2>
-                <p>选择本次对话所使用的档案</p>
-              </div>
-              <a class="section-link pressable" href="./profile.html">添加</a>
-            </div>
-            <div class="profile-list" id="profile-list"></div>
-          </section>
-
-          <section class="drawer-section history-section" aria-labelledby="report-list-title">
-            <div class="drawer-section-heading history-heading">
-              <div>
-                <h2 id="report-list-title">我的报告</h2>
-                <p>查看已生成和已解锁的国心解读</p>
-              </div>
-              <a class="section-link pressable" href="./interpretation.html">生成</a>
-            </div>
-            <div class="drawer-report-list" id="drawer-report-list"></div>
-          </section>
+          <nav class="drawer-entry-list" aria-label="个人内容">
+            <a class="drawer-entry pressable" href="./profiles.html">
+              <span class="drawer-entry-mark" aria-hidden="true">档</span>
+              <span>
+                <strong>我的档案</strong>
+                <small>管理出生信息与当前使用档案</small>
+              </span>
+              <i aria-hidden="true"></i>
+            </a>
+            <a class="drawer-entry pressable" href="./reports.html">
+              <span class="drawer-entry-mark" aria-hidden="true">报</span>
+              <span>
+                <strong>我的报告</strong>
+                <small>查看已生成和已解锁的国心解读</small>
+              </span>
+              <i aria-hidden="true"></i>
+            </a>
+          </nav>
 
           <section class="drawer-section history-section" aria-labelledby="history-title">
             <div class="drawer-section-heading history-heading">

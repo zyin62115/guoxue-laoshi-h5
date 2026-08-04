@@ -14,14 +14,12 @@ const menuButton = document.querySelector('[data-action="menu"]');
 const drawerLayer = document.querySelector("#drawer-layer");
 const drawer = document.querySelector("#personal-drawer");
 const drawerScrim = document.querySelector(".drawer-scrim");
-const profileList = document.querySelector("#profile-list");
 const conversationList = document.querySelector("#conversation-list");
 const appToast = document.querySelector("#app-toast");
 const interpretationButton = document.querySelector('[data-action="interpretation"]');
 const reportContext = document.querySelector("#report-chat-context");
 const reportContextTitle = document.querySelector("#report-chat-context-title");
 const reportContextLink = document.querySelector("#report-chat-context-link");
-const drawerReportList = document.querySelector("#drawer-report-list");
 
 let isComposing = false;
 let isReplying = false;
@@ -323,83 +321,6 @@ function showToast(message) {
   }, 1800);
 }
 
-function formatProfileBirth(profile) {
-  const { year, month, day } = profile.birthDate;
-  const calendar = profile.calendar === "lunar" ? "农历" : "公历";
-  const leap = profile.calendar === "lunar" && profile.isLeapMonth ? "闰" : "";
-  return `${calendar} ${year}年${leap}${month}月${day}日 ${profile.birthTime}`;
-}
-
-function renderProfiles() {
-  const profiles = appState.getProfiles();
-  const activeId = appState.getActiveProfileId();
-  const fragment = document.createDocumentFragment();
-
-  if (!profiles.length) {
-    const empty = document.createElement("a");
-    empty.className = "profile-empty pressable";
-    empty.href = "./profile.html";
-
-    const mark = document.createElement("span");
-    mark.className = "profile-empty-mark";
-    mark.textContent = "+";
-
-    const copy = document.createElement("span");
-    const title = document.createElement("strong");
-    title.textContent = "添加第一份八字档案";
-    const description = document.createElement("small");
-    description.textContent = "保存出生信息，方便后续问答";
-    copy.append(title, description);
-    empty.append(mark, copy);
-    fragment.append(empty);
-    profileList.replaceChildren(fragment);
-    return;
-  }
-
-  profiles.forEach((profile) => {
-    const card = document.createElement("article");
-    card.className = "archive-card";
-    card.classList.toggle("is-active", profile.id === activeId);
-
-    const select = document.createElement("button");
-    select.className = "archive-select pressable";
-    select.type = "button";
-    select.dataset.profileId = profile.id;
-    select.setAttribute(
-      "aria-label",
-      `${profile.id === activeId ? "当前档案，" : ""}选择${profile.name}的八字档案`,
-    );
-
-    const avatar = document.createElement("span");
-    avatar.className = "archive-avatar";
-    avatar.textContent = profile.name.slice(0, 1);
-
-    const copy = document.createElement("span");
-    copy.className = "archive-copy";
-    const name = document.createElement("strong");
-    name.textContent = profile.name;
-    const detail = document.createElement("small");
-    detail.textContent = formatProfileBirth(profile);
-    copy.append(name, detail);
-
-    const check = document.createElement("span");
-    check.className = "archive-check";
-    check.setAttribute("aria-hidden", "true");
-    check.textContent = "✓";
-    select.append(avatar, copy, check);
-
-    const edit = document.createElement("a");
-    edit.className = "archive-edit pressable";
-    edit.href = `./profile.html?id=${encodeURIComponent(profile.id)}`;
-    edit.textContent = "编辑";
-    edit.setAttribute("aria-label", `编辑${profile.name}的八字档案`);
-    card.append(select, edit);
-    fragment.append(card);
-  });
-
-  profileList.replaceChildren(fragment);
-}
-
 function dateGroupLabel(dateKey) {
   const today = new Date();
   const yesterday = new Date(today);
@@ -496,39 +417,7 @@ function renderConversations() {
   conversationList.replaceChildren(fragment);
 }
 
-function renderReports() {
-  const reports = appState.getReports();
-  const fragment = document.createDocumentFragment();
-  if (!reports.length) {
-    const empty = document.createElement("a");
-    empty.className = "drawer-report-empty pressable";
-    empty.href = "./interpretation.html";
-    empty.textContent = "还没有报告，去生成第一份国心解读";
-    fragment.append(empty);
-  } else {
-    reports.forEach((report) => {
-      const link = document.createElement("a");
-      link.className = "drawer-report-card pressable";
-      link.href = `./interpretation.html?report=${encodeURIComponent(report.id)}`;
-      const unlocked = report.fullUnlocked ? 8 : report.unlockedSectionIds.length;
-      const title = document.createElement("strong");
-      title.textContent = `${report.profileSnapshot?.name || "我的"}的国心解读`;
-      const meta = document.createElement("small");
-      meta.textContent = report.fullUnlocked
-        ? "完整报告 · 已永久解锁"
-        : `已解锁 ${unlocked}/8 · 可继续试读`;
-      const arrow = document.createElement("i");
-      arrow.setAttribute("aria-hidden", "true");
-      link.append(title, meta, arrow);
-      fragment.append(link);
-    });
-  }
-  drawerReportList.replaceChildren(fragment);
-}
-
 function renderDrawerContent() {
-  renderProfiles();
-  renderReports();
   renderConversations();
 }
 
@@ -679,14 +568,6 @@ drawer.addEventListener(
   },
   true,
 );
-
-profileList.addEventListener("click", (event) => {
-  const select = event.target.closest("[data-profile-id]");
-  if (!select) return;
-  appState.setActiveProfile(select.dataset.profileId);
-  renderProfiles();
-  showToast("已切换八字档案");
-});
 
 conversationList.addEventListener("click", (event) => {
   const item = event.target.closest("[data-conversation-id]");

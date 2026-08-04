@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#fff9f1" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>我的报告</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+  <body class="collection-page">
+    <main class="collection-shell">
+      <header class="collection-header">
+        <a class="profile-back pressable" href="./index.html#menu" aria-label="返回个人中心"></a>
+        <div>
+          <h1>我的报告</h1>
+          <span>国心解读报告记录</span>
+        </div>
+        <a class="collection-header-action pressable" href="./interpretation.html">生成</a>
+      </header>
+
+      <section class="collection-intro">
+        <strong>报告长期保留</strong>
+        <p>已生成的报告与解锁状态保存在当前浏览器中，点击报告可继续阅读。</p>
+      </section>
+
+      <section class="collection-list report-page-list" id="reports-page-list" aria-live="polite"></section>
+    </main>
+
+    <script src="../js/shared.js"></script>
+    <script src="../js/reports.js"></script>
+  </body>
+</html>

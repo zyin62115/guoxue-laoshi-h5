@@ -432,7 +432,7 @@ generateButton.addEventListener("click", () => {
 });
 
 historyButton.addEventListener("click", () => {
-  window.location.href = "./index.html#menu";
+  window.location.href = "./reports.html";
 });
 
 sectionList.addEventListener("click", (event) => {

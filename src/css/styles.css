@@ -301,7 +301,7 @@ button,
 .date-badge {
   position: absolute;
   top: calc(210 * var(--unit));
-  left: calc(600 * var(--unit));
+  left: calc(600 * var(--unit) + 3px);
   z-index: 5;
   display: flex;
   align-items: center;
@@ -310,10 +310,8 @@ button,
   width: max-content;
   height: calc(72 * var(--unit));
   padding: 0 calc(26 * var(--unit));
-  border: calc(1 * var(--unit)) solid rgba(188, 128, 71, 0.32);
   border-radius: calc(36 * var(--unit));
   background: rgba(255, 247, 235, 0.78);
-  box-shadow: 0 calc(4 * var(--unit)) calc(12 * var(--unit)) rgba(123, 77, 35, 0.06);
   color: #282721;
   font-family: var(--serif);
   font-size: calc(26 * var(--unit));

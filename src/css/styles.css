@@ -298,49 +298,59 @@ button,
   white-space: nowrap;
 }
 
-.date-birds {
-  top: calc(194 * var(--unit));
-  left: calc(720 * var(--unit));
-  width: calc(96 * var(--unit));
-  height: calc(30 * var(--unit));
-  opacity: 0.58;
-}
-
-.date-birds path {
-  fill: none;
-  stroke: #c58b4f;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-}
-
 .date-badge {
   position: absolute;
-  top: calc(214 * var(--unit));
-  left: calc(650 * var(--unit));
-  display: grid;
-  width: calc(225 * var(--unit));
-  height: calc(64 * var(--unit));
-  background: url("../../public/images/date-badge.png") center / 100% 100% no-repeat;
+  top: calc(210 * var(--unit));
+  left: calc(600 * var(--unit) + 3px);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(14 * var(--unit));
+  width: max-content;
+  height: calc(72 * var(--unit));
+  padding: 0 calc(26 * var(--unit));
+  border-radius: calc(36 * var(--unit));
+  background: rgba(255, 247, 235, 0.78);
   color: #282721;
   font-family: var(--serif);
   font-size: calc(26 * var(--unit));
   font-weight: 600;
   line-height: 1;
+  text-decoration: none;
   white-space: nowrap;
-  place-items: center;
   user-select: none;
-  transform: translateY(16px);
+  pointer-events: auto;
+  transform: translateY(calc(var(--content-lift) + 16px));
 }
 
-.date-badge::before {
-  position: absolute;
-  inset: 18% 15%;
-  background: #fff3dc;
-  content: "";
-}
-
+.date-badge time,
 .date-badge span {
   position: relative;
+}
+
+.date-badge time {
+  font-size: calc(24 * var(--unit));
+}
+
+.calendar-entry-label {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(8 * var(--unit));
+  padding-left: calc(16 * var(--unit));
+  border-left: calc(1 * var(--unit)) solid rgba(111, 79, 42, 0.24);
+  color: #b55416;
+  font-family: var(--sans);
+  font-size: calc(24 * var(--unit));
+  font-weight: 700;
+}
+
+.calendar-entry-label i {
+  width: calc(7 * var(--unit));
+  height: calc(7 * var(--unit));
+  border-top: calc(1.5 * var(--unit)) solid currentColor;
+  border-right: calc(1.5 * var(--unit)) solid currentColor;
+  transform: rotate(45deg);
 }
 
 .guidance {

@@ -119,13 +119,13 @@ function formatGuideDate(date) {
     const parts = Object.fromEntries(
       formatter.formatToParts(date).map((part) => [part.type, part.value]),
     );
-    if (parts.yearName && parts.month && parts.day) {
-      return `${parts.yearName}年${parts.month}${lunarDayName(parts.day)}`;
+    if (parts.month && parts.day) {
+      return `${parts.month}${lunarDayName(parts.day)}`;
     }
   } catch (error) {
     // 不支持农历日历的浏览器回退到本地公历日期。
   }
-  return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+  return `${date.getMonth() + 1}月${date.getDate()}日`;
 }
 
 function getDailyGuideIndex(date) {

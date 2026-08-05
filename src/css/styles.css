@@ -316,9 +316,12 @@ button,
 .date-badge {
   position: absolute;
   top: calc(214 * var(--unit));
-  left: calc(650 * var(--unit));
-  display: grid;
-  width: calc(225 * var(--unit));
+  left: calc(590 * var(--unit));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(12 * var(--unit));
+  width: calc(300 * var(--unit));
   height: calc(64 * var(--unit));
   background: url("../../public/images/date-badge.png") center / 100% 100% no-repeat;
   color: #282721;
@@ -326,9 +329,10 @@ button,
   font-size: calc(26 * var(--unit));
   font-weight: 600;
   line-height: 1;
+  text-decoration: none;
   white-space: nowrap;
-  place-items: center;
   user-select: none;
+  pointer-events: auto;
   transform: translateY(16px);
 }
 
@@ -339,8 +343,33 @@ button,
   content: "";
 }
 
+.date-badge time,
 .date-badge span {
   position: relative;
+}
+
+.date-badge time {
+  font-size: calc(21 * var(--unit));
+}
+
+.calendar-entry-label {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(6 * var(--unit));
+  padding-left: calc(12 * var(--unit));
+  border-left: calc(1 * var(--unit)) solid rgba(111, 79, 42, 0.24);
+  color: #b55416;
+  font-family: var(--sans);
+  font-size: calc(18 * var(--unit));
+  font-weight: 700;
+}
+
+.calendar-entry-label i {
+  width: calc(7 * var(--unit));
+  height: calc(7 * var(--unit));
+  border-top: calc(1.5 * var(--unit)) solid currentColor;
+  border-right: calc(1.5 * var(--unit)) solid currentColor;
+  transform: rotate(45deg);
 }
 
 .guidance {

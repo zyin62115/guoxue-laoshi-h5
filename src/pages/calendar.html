@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#fff9f1" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>万年历</title>
+    <link rel="stylesheet" href="../css/calendar.css" />
+  </head>
+  <body>
+    <main class="calendar-page">
+      <header class="calendar-header">
+        <a class="calendar-back pressable" href="./index.html" aria-label="返回首页">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M20 7 11 16l9 9" />
+          </svg>
+        </a>
+        <div>
+          <small>传统历法</small>
+          <h1>万年历</h1>
+        </div>
+        <button class="today-button pressable" id="today-button" type="button">今</button>
+      </header>
+
+      <section class="date-overview" aria-live="polite">
+        <p id="selected-weekday"></p>
+        <div>
+          <strong id="selected-day"></strong>
+          <span>
+            <b id="selected-solar"></b>
+            <small id="selected-lunar"></small>
+          </span>
+        </div>
+        <p id="selected-ganzhi"></p>
+      </section>
+
+      <section class="calendar-card" aria-labelledby="calendar-title">
+        <header class="month-navigation">
+          <button class="month-button pressable" id="previous-month" type="button" aria-label="上个月">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="m19 9-7 7 7 7" /></svg>
+          </button>
+          <label class="month-picker-label">
+            <strong id="calendar-title"></strong>
+            <span>点击选择年月</span>
+            <input id="month-picker" type="month" min="1900-01" max="2100-12" aria-label="选择年月" />
+          </label>
+          <button class="month-button pressable" id="next-month" type="button" aria-label="下个月">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="m13 9 7 7-7 7" /></svg>
+          </button>
+        </header>
+
+        <div class="weekday-row" aria-hidden="true">
+          <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+        </div>
+        <div class="calendar-grid" id="calendar-grid" role="grid" aria-label="日期"></div>
+      </section>
+
+      <p class="calendar-note">农历信息由浏览器内置中国历法换算，仅供日常查看。</p>
+    </main>
+
+    <script src="../js/calendar.js"></script>
+  </body>
+</html>

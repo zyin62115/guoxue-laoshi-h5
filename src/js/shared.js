@@ -17,6 +17,7 @@
     migration: "guoxueStorageMigrationV2",
     reports: "guoxueInterpretationReportsV1",
     reportOrders: "guoxueInterpretationOrdersV1",
+    firstReportClaim: "guoxueFirstReportClaimPromptV1",
   });
 
   const LEGACY_KEYS = Object.freeze({
@@ -531,6 +532,26 @@
     return Array.isArray(stored) ? stored.slice(0, 100) : [];
   }
 
+  function getFirstReportClaim() {
+    const stored = safeParse(readLocal(KEYS.firstReportClaim), null);
+    return stored && typeof stored === "object" ? stored : null;
+  }
+
+  function shouldShowFirstReportClaim() {
+    return !getFirstReportClaim();
+  }
+
+  function dismissFirstReportClaim(action = "closed") {
+    const existing = getFirstReportClaim();
+    if (existing) return existing;
+    const record = {
+      action: action === "wechat" ? "wechat" : "closed",
+      handledAt: new Date().toISOString(),
+    };
+    writeLocal(KEYS.firstReportClaim, JSON.stringify(record));
+    return record;
+  }
+
   function purchaseReport(reportId, purchase) {
     const reports = getReports();
     const index = reports.findIndex((report) => report.id === reportId);
@@ -579,6 +600,36 @@
     };
     writeLocal(KEYS.reportOrders, JSON.stringify([order, ...getReportOrders()].slice(0, 100)));
     return { ok: true, report: normalizeReport(updated), amount, order };
+  }
+
+  function claimFreeReport(reportId) {
+    const reports = getReports();
+    const index = reports.findIndex((report) => report.id === reportId);
+    if (index < 0) return { ok: false, reason: "not-found" };
+    const report = reports[index];
+    if (report.fullUnlocked) return { ok: true, report, amount: 0 };
+
+    const now = new Date().toISOString();
+    const updated = {
+      ...report,
+      unlockedSectionIds: report.sections.map((section) => section.id),
+      fullUnlocked: true,
+      updatedAt: now,
+    };
+    reports[index] = updated;
+    saveReports(reports);
+
+    const order = {
+      id: createId("order"),
+      reportId,
+      type: "claim",
+      sectionId: null,
+      amount: 0,
+      status: "claimed",
+      claimedAt: now,
+    };
+    writeLocal(KEYS.reportOrders, JSON.stringify([order, ...getReportOrders()].slice(0, 100)));
+    return { ok: true, report: normalizeReport(updated), amount: 0, order };
   }
 
   function createReportConversation(reportId, sectionId) {
@@ -712,15 +763,18 @@
     REPORT_SECTION_PRICE,
     STORAGE_VERSION,
     appendMessage,
+    claimFreeReport,
     consumeQuota,
     createReportConversation,
     deleteProfile,
+    dismissFirstReportClaim,
     ensureChatStartedAt,
     getActiveConversation,
     getActiveProfile,
     getActiveProfileId,
     getChatStartedAt,
     getConversations,
+    getFirstReportClaim,
     getHistory,
     getProfile,
     getProfiles,
@@ -736,6 +790,7 @@
     saveHistory,
     setActiveConversation,
     setActiveProfile,
+    shouldShowFirstReportClaim,
     upsertProfile,
   });
 })(window);

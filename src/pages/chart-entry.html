@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#fcefe0" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>排盘信息</title>
+    <link rel="stylesheet" href="../css/chart-entry.css" />
+  </head>
+  <body>
+    <main class="entry-page">
+      <header class="entry-header">
+        <a class="entry-back pressable" href="./chart-prototypes.html" aria-label="返回专业排盘">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><path d="m20 7-9 9 9 9" /></svg>
+        </a>
+        <div><small id="entry-category">专业排盘</small><h1 id="entry-title">排盘信息</h1></div>
+        <a class="entry-help pressable" href="./wechat-simulator.html?context=chart&amp;return=./chart-entry.html" aria-label="添加微信咨询">咨询</a>
+      </header>
+
+      <section class="entry-intro">
+        <span class="entry-method-icon tone-orange" id="entry-method-icon" aria-hidden="true"></span>
+        <div><span>专业推演</span><h2 id="entry-heading">填写排盘信息</h2><p id="entry-description"></p></div>
+      </section>
+
+      <form class="chart-form" id="chart-form" novalidate>
+        <div class="form-fields" id="form-fields"></div>
+        <p class="form-error" id="form-error" role="alert"></p>
+        <p class="entry-privacy">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-5"/></svg>
+          信息仅保存在当前设备，用于本次排盘
+        </p>
+        <button class="chart-submit pressable" id="chart-submit" type="submit">开始排盘</button>
+      </form>
+
+      <p class="entry-disclaimer">传统文化研究与娱乐参考，请理性看待推演结果</p>
+    </main>
+    <div class="entry-toast" id="entry-toast" role="status" aria-live="polite"></div>
+    <script src="../js/chart-methods.js"></script>
+    <script src="../js/chart-entry.js"></script>
+  </body>
+</html>

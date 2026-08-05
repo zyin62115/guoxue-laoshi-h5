@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#fcefe0" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>专业排盘</title>
+    <link rel="stylesheet" href="../css/chart-prototypes.css" />
+  </head>
+  <body>
+    <main class="chart-page">
+      <header class="chart-header">
+        <a class="back-button pressable" href="./index.html" aria-label="返回首页">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="m20 7-9 9 9 9" />
+          </svg>
+        </a>
+
+        <div class="header-copy">
+          <h1>专业排盘</h1>
+        </div>
+
+        <button
+          class="history-button history-text pressable"
+          type="button"
+          data-action="history"
+          aria-label="查看排盘记录"
+        >
+          排盘记录
+        </button>
+
+      </header>
+
+      <a
+        class="wechat-banner pressable"
+        href="./wechat-simulator.html?context=chart&amp;return=./chart-prototypes.html"
+        aria-label="添加老师微信，获得一对一排盘咨询"
+      >
+        <img src="../../public/images/chart-wecom-banner.svg" alt="添加老师企业微信，一对一排盘咨询" />
+      </a>
+
+      <section class="method-section" aria-labelledby="method-title">
+        <div class="section-heading">
+          <div>
+            <span>十三法门</span>
+            <h2 id="method-title">选择排盘方式</h2>
+          </div>
+          <p>点击图标进入排盘</p>
+        </div>
+        <div class="method-grid" id="method-grid"></div>
+      </section>
+
+      <p class="disclaimer">传统文化研究与娱乐参考，请理性看待推演结果</p>
+    </main>
+
+    <div class="chart-toast" id="chart-toast" role="status" aria-live="polite"></div>
+    <script src="../js/chart-methods.js"></script>
+    <script src="../js/chart-prototypes.js"></script>
+  </body>
+</html>

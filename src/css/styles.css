@@ -331,7 +331,7 @@ button,
 }
 
 .date-badge time {
-  font-size: calc(30 * var(--unit));
+  font-size: calc(24 * var(--unit));
 }
 
 .calendar-entry-label {

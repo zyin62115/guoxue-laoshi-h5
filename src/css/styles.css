@@ -307,8 +307,9 @@ button,
   align-items: center;
   justify-content: center;
   gap: calc(14 * var(--unit));
-  width: calc(310 * var(--unit));
+  width: max-content;
   height: calc(72 * var(--unit));
+  padding: 0 calc(26 * var(--unit));
   border: calc(1 * var(--unit)) solid rgba(188, 128, 71, 0.32);
   border-radius: calc(36 * var(--unit));
   background: rgba(255, 247, 235, 0.78);

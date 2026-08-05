@@ -13,6 +13,8 @@
 `window.GuoxueApp` 新增以下接口：
 
 - `getReports()` / `getReport(id)`：读取报告列表或单份报告。
+- `getCurrentProfileReport(profileId)`：按当前档案完整快照查找可直接续读的报告；档案信息变化后返回 `null`。
+- `getLatestProfileReport(profileId)`：读取该档案最近生成的任意版本，用于提示和查看旧版报告。
 - `getOrCreateReport(profileId, payload)`：按档案快照复用或创建报告。
 - `getReportUpgradePrice(reportOrId)`：返回补全完整报告所需金额。
 - `purchaseReport(reportId, purchase)`：模拟购买单章或完整报告，并写入已支付订单。
@@ -24,5 +26,7 @@
 首次免费领取卡片状态保存在 `guoxueFirstReportClaimPromptV1`。用户首次生成报告并看到付费页面 5 秒后才检查和展示卡片，直接打开历史报告不会触发。`shouldShowFirstReportClaim()` 判断是否应展示；`dismissFirstReportClaim(action)` 记录用户选择，`action` 为 `wechat` 或 `closed`；`getFirstReportClaim()` 可读取处理结果。当前微信按钮跳转至本地 `wechat-simulator.html`，只有完成模拟添加并返回时才授予免费权益。
 
 微信模拟页完成添加并返回时调用 `claimFreeReport(reportId)`，将对应报告的八章完整解锁，并写入一条金额为 0、状态为 `claimed` 的领取订单。找不到原报告时不授予权益，并提示用户返回重新生成。
+
+国心解读入口不带参数时，优先打开当前使用档案的同快照报告；`mode=select` 强制进入档案选择页，`report=<id>` 精确打开指定历史版本。无效的 `report` 参数会被移除并回退到常规入口判断。只有实际创建的新报告会触发首次免费领取检查，查看已有报告不会触发。
 
 专业排盘页使用 `wechat-simulator.html?context=chart&return=...` 进入同一微信模拟页。`context=chart` 只切换为排盘咨询文案，并校验 `return` 为站内排盘列表或排盘信息页；此场景不调用 `claimFreeReport()`，也不会写入领取订单。

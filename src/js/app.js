@@ -16,6 +16,7 @@ const drawerScrim = document.querySelector(".drawer-scrim");
 const conversationList = document.querySelector("#conversation-list");
 const appToast = document.querySelector("#app-toast");
 const interpretationButton = document.querySelector('[data-action="interpretation"]');
+const interpretationDescription = interpretationButton.querySelector(".feature-desc");
 const professionalChartButton = document.querySelector('[data-action="professional-chart"]');
 const reportContext = document.querySelector("#report-chat-context");
 const reportContextTitle = document.querySelector("#report-chat-context-title");
@@ -26,6 +27,28 @@ const guideLineOne = document.querySelector("#guide-line-one");
 const guideLineTwo = document.querySelector("#guide-line-two");
 const guideGood = document.querySelector("#guide-good");
 const guideAvoid = document.querySelector("#guide-avoid");
+
+function renderInterpretationEntry() {
+  const profile = appState.getActiveProfile();
+  if (!profile) {
+    interpretationDescription.textContent = appState.getReports().length
+      ? "查看历史报告，或创建新档案"
+      : "建立档案，获得专属解读";
+    return;
+  }
+
+  const currentReport = appState.getCurrentProfileReport(profile.id);
+  const latestReport = appState.getLatestProfileReport(profile.id);
+  if (currentReport) {
+    interpretationDescription.textContent = currentReport.fullUnlocked
+      ? `继续查看${profile.name}的完整报告`
+      : `继续查看${profile.name}的报告`;
+  } else if (latestReport) {
+    interpretationDescription.textContent = `${profile.name}档案已更新，可生成新版`;
+  } else {
+    interpretationDescription.textContent = `${profile.name}尚未生成报告`;
+  }
+}
 
 let isComposing = false;
 let isReplying = false;
@@ -773,6 +796,7 @@ window.addEventListener("scroll", queueScrollStateUpdate, { passive: true });
 window.addEventListener("resize", queueScrollStateUpdate);
 window.addEventListener("pageshow", () => {
   renderDailyGuide();
+  renderInterpretationEntry();
   syncQuotaState();
   syncScrollTopButton();
   renderDrawerContent();
@@ -788,6 +812,7 @@ window.addEventListener("beforeunload", () => {
 });
 
 renderDailyGuide();
+renderInterpretationEntry();
 const history = renderHistory();
 syncQuotaState();
 syncScrollTopButton();

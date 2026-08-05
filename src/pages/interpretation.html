@@ -47,7 +47,18 @@
         <button class="report-primary-action pressable" type="button" id="generate-report">
           生成我的报告
         </button>
-        <p class="report-permanent-note">出生信息仅保存在当前浏览器，购买后可永久查看</p>
+        <button
+          class="report-secondary-action pressable"
+          type="button"
+          id="view-previous-report"
+          hidden
+        >
+          查看上一版报告
+        </button>
+        <a class="report-history-link pressable" id="setup-report-history" href="./reports.html" hidden>
+          查看已保留的历史报告
+        </a>
+        <p class="report-permanent-note" id="report-action-note">出生信息仅保存在当前浏览器，购买后可永久查看</p>
       </section>
 
       <section class="report-reader" id="report-reader" hidden>

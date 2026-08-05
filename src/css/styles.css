@@ -2328,6 +2328,28 @@ body.drawer-open {
   white-space: nowrap;
 }
 
+.report-profile-status {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 7px;
+  padding: 3px 7px;
+  color: #8c755f;
+  border-radius: 999px;
+  background: rgba(142, 113, 84, 0.09);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.report-profile-status[data-status="current"] {
+  color: #8f4328;
+  background: rgba(181, 80, 43, 0.11);
+}
+
+.report-profile-status[data-status="stale"] {
+  color: #8a6428;
+  background: rgba(190, 142, 56, 0.13);
+}
+
 .report-profile-card i {
   display: none;
   width: 24px;
@@ -2377,6 +2399,27 @@ body.drawer-open {
 .report-primary-action:disabled {
   cursor: not-allowed;
   opacity: 0.48;
+}
+
+.report-secondary-action,
+.report-history-link {
+  display: grid;
+  width: 100%;
+  min-height: 46px;
+  margin-top: 10px;
+  color: #9b4b2e;
+  border: 1px solid rgba(177, 92, 51, 0.28);
+  border-radius: 15px;
+  background: rgba(255, 250, 243, 0.64);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  place-items: center;
+}
+
+.report-secondary-action[hidden],
+.report-history-link[hidden] {
+  display: none;
 }
 
 .report-permanent-note {

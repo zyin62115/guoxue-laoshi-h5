@@ -492,6 +492,21 @@
     return getReports().find((report) => report.id === id) || null;
   }
 
+  function getCurrentProfileReport(profileId) {
+    const profile = getProfile(profileId);
+    if (!profile) return null;
+    const fingerprint = snapshotFingerprint(profileSnapshot(profile));
+    return getReports().find((report) => report.fingerprint === fingerprint) || null;
+  }
+
+  function getLatestProfileReport(profileId) {
+    return (
+      getReports()
+        .filter((report) => report.profileId === profileId)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0] || null
+    );
+  }
+
   function getOrCreateReport(profileId, payload) {
     const profile = getProfile(profileId);
     if (!profile) return null;
@@ -774,8 +789,10 @@
     getActiveProfileId,
     getChatStartedAt,
     getConversations,
+    getCurrentProfileReport,
     getFirstReportClaim,
     getHistory,
+    getLatestProfileReport,
     getProfile,
     getProfiles,
     getQuota,

@@ -12,9 +12,19 @@ const leapMonthInput = document.querySelector("#is-leap-month");
 const errorDisplay = document.querySelector("#form-error");
 const deleteButton = document.querySelector("#delete-profile");
 const cancelButton = document.querySelector("#cancel-profile");
+const backLink = document.querySelector(".profile-back");
 
 const profileId = new URLSearchParams(window.location.search).get("id");
+const returnTarget = new URLSearchParams(window.location.search).get("return");
 const editingProfile = profileId ? appState.getProfile(profileId) : null;
+
+function exitTarget() {
+  if (returnTarget === "interpretation") return "./interpretation.html";
+  if (returnTarget === "profiles") return "./profiles.html";
+  return "./index.html#menu";
+}
+
+backLink.href = exitTarget();
 
 function selectedValue(name) {
   return form.elements[name].value;
@@ -126,11 +136,11 @@ form.addEventListener("submit", (event) => {
   const profile = collectProfile();
   if (!profile) return;
   appState.upsertProfile(profile);
-  window.location.replace("./index.html#menu");
+  window.location.replace(exitTarget());
 });
 
 cancelButton.addEventListener("click", () => {
-  window.location.href = "./index.html#menu";
+  window.location.href = exitTarget();
 });
 
 deleteButton.addEventListener("click", () => {
@@ -138,7 +148,7 @@ deleteButton.addEventListener("click", () => {
   const confirmed = window.confirm(`确定删除“${editingProfile.name}”的八字档案吗？`);
   if (!confirmed) return;
   appState.deleteProfile(editingProfile.id);
-  window.location.replace("./index.html#menu");
+  window.location.replace(exitTarget());
 });
 
 if (editingProfile) {

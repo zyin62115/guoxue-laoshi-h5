@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#fff9f1" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>国心解读</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+  <body class="interpretation-page">
+    <main class="interpretation-shell">
+      <header class="interpretation-header">
+        <a class="interpretation-back pressable" href="./index.html" aria-label="返回首页"></a>
+        <div>
+          <h1>国心解读</h1>
+          <span>国学老师陪你读懂自己</span>
+        </div>
+        <button class="interpretation-history pressable" type="button" id="report-history-button">
+          报告
+        </button>
+      </header>
+
+      <section class="report-setup" id="report-setup" aria-labelledby="setup-title">
+        <article class="teacher-welcome">
+          <img src="../../public/images/teacher-avatar-centered.png" alt="" />
+          <div>
+            <span>国学老师</span>
+            <h2 id="setup-title">先认识你，再为你解读</h2>
+            <p>选择一份八字档案，我会先送你一份免费总览，再陪你逐章读懂完整报告。</p>
+          </div>
+        </article>
+
+        <div class="setup-heading">
+          <div>
+            <h2>选择解读档案</h2>
+            <p>报告将永久绑定本次档案信息</p>
+          </div>
+          <a href="./profile.html?return=interpretation" class="setup-add pressable">新增</a>
+        </div>
+
+        <div class="report-profile-list" id="report-profile-list"></div>
+
+        <button class="report-primary-action pressable" type="button" id="generate-report">
+          生成我的报告
+        </button>
+        <p class="report-permanent-note">出生信息仅保存在当前浏览器，购买后可永久查看</p>
+      </section>
+
+      <section class="report-reader" id="report-reader" hidden>
+        <article class="report-teacher-summary">
+          <img src="../../public/images/teacher-avatar-centered.png" alt="" />
+          <div>
+            <span>国学老师</span>
+            <p id="report-overview"></p>
+          </div>
+        </article>
+
+        <header class="report-title-block">
+          <span id="report-profile-name"></span>
+          <h2>你的国心解读报告</h2>
+          <p id="report-meta"></p>
+        </header>
+
+        <div class="report-progress" id="report-progress" aria-live="polite"></div>
+        <div class="report-section-list" id="report-section-list"></div>
+      </section>
+    </main>
+
+    <aside class="report-sticky-purchase" id="report-sticky-purchase" hidden>
+      <div>
+        <small id="sticky-purchase-label">一次解锁全部八章</small>
+        <strong id="sticky-purchase-price">¥88</strong>
+      </div>
+      <button class="pressable" type="button" id="sticky-purchase-button">
+        解锁完整报告
+      </button>
+    </aside>
+
+    <div class="report-payment-layer" id="report-payment-layer" aria-hidden="true">
+      <button class="report-payment-scrim" type="button" data-payment-close aria-label="取消购买"></button>
+      <section
+        class="report-payment-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="payment-title"
+        tabindex="-1"
+      >
+        <span class="payment-handle" aria-hidden="true"></span>
+        <button class="payment-close pressable" type="button" data-payment-close aria-label="关闭"></button>
+        <h2 id="payment-title">选择解锁方式</h2>
+        <p>解锁后可永久查看，并可针对已购章节继续追问。</p>
+
+        <label class="payment-option payment-full-option">
+          <input type="radio" name="payment-option" value="full" checked />
+          <span>
+            <i>推荐</i>
+            <strong>完整报告</strong>
+            <small>一次解锁全部八章</small>
+          </span>
+          <b id="payment-full-price">¥88</b>
+        </label>
+
+        <label class="payment-option" id="payment-section-option">
+          <input type="radio" name="payment-option" value="section" />
+          <span>
+            <strong id="payment-section-title">单章解锁</strong>
+            <small>解锁当前章节深度内容</small>
+          </span>
+          <b>¥16.8</b>
+        </label>
+
+        <button class="payment-confirm pressable" type="button" id="payment-confirm">
+          确认支付 ¥88
+        </button>
+        <small class="payment-safety">模拟支付 · 不会产生真实扣款</small>
+      </section>
+    </div>
+
+    <div class="app-toast" id="report-toast" role="status" aria-live="polite"></div>
+
+    <script src="../js/shared.js"></script>
+    <script src="../js/interpretation.js"></script>
+  </body>
+</html>

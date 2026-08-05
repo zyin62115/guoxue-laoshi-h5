@@ -28,8 +28,8 @@
         </button>
         <h1 class="brand">国学老师</h1>
 
-        <div class="quota" id="home-quota" aria-live="polite" aria-label="今日还可免费对话十次">
-          <span>今日还可免费对话</span><strong>10</strong><span>次</span>
+        <div class="quota" id="home-quota" aria-label="限时免费">
+          <span>限时免费</span>
         </div>
       </header>
 
@@ -99,6 +99,17 @@
             </button>
           </nav>
 
+          <section class="report-chat-context" id="report-chat-context" hidden>
+            <img src="../../public/images/teacher-avatar-centered.png" alt="" />
+            <div>
+              <span>国心解读</span>
+              <strong id="report-chat-context-title"></strong>
+              <a class="pressable" id="report-chat-context-link" href="./interpretation.html">
+                返回查看报告
+              </a>
+            </div>
+          </section>
+
           <section class="inline-chat" id="inline-chat" aria-label="与国学老师的对话" hidden>
             <time class="chat-start-time" id="chat-start-time"></time>
             <div
@@ -163,33 +174,24 @@
             </button>
           </header>
 
-          <button
-            class="membership-card pressable"
-            type="button"
-            data-action="membership-placeholder"
-          >
-            <span class="membership-mark" aria-hidden="true">
-              <svg viewBox="0 0 48 48">
-                <path d="m8 15 9 8 7-13 7 13 9-8-4 23H12L8 15Z" />
-              </svg>
-            </span>
-            <span class="membership-copy">
-              <strong>免费版</strong>
-              <small>升级会员，解锁更多国学问答</small>
-            </span>
-            <span class="membership-action">了解会员</span>
-          </button>
-
-          <section class="drawer-section archive-section" aria-labelledby="archive-title">
-            <div class="drawer-section-heading">
-              <div>
-                <h2 id="archive-title">八字档案</h2>
-                <p>选择本次对话所使用的档案</p>
-              </div>
-              <a class="section-link pressable" href="./profile.html">添加</a>
-            </div>
-            <div class="profile-list" id="profile-list"></div>
-          </section>
+          <nav class="drawer-entry-list" aria-label="个人内容">
+            <a class="drawer-entry pressable" href="./profiles.html">
+              <span class="drawer-entry-mark" aria-hidden="true">档</span>
+              <span>
+                <strong>我的档案</strong>
+                <small>管理出生信息与当前使用档案</small>
+              </span>
+              <i aria-hidden="true"></i>
+            </a>
+            <a class="drawer-entry pressable" href="./reports.html">
+              <span class="drawer-entry-mark" aria-hidden="true">报</span>
+              <span>
+                <strong>我的报告</strong>
+                <small>查看已生成和已解锁的国心解读</small>
+              </span>
+              <i aria-hidden="true"></i>
+            </a>
+          </nav>
 
           <section class="drawer-section history-section" aria-labelledby="history-title">
             <div class="drawer-section-heading history-heading">
@@ -246,8 +248,8 @@
         </svg>
       </button>
 
-      <p class="membership-guide" id="home-membership-guide" hidden>
-        今日免费对话次数已用完，开通会员即可获得更多对话次数。
+      <p class="quota-guide" id="home-quota-guide" hidden>
+        限时免费体验已结束。
       </p>
     </div>
 

@@ -4,6 +4,9 @@
   const HISTORY_LIMIT = 40;
   const CONVERSATION_LIMIT = 90;
   const PROFILE_LIMIT = 20;
+  const REPORT_LIMIT = 30;
+  const FULL_REPORT_PRICE = 8800;
+  const REPORT_SECTION_PRICE = 1680;
 
   const KEYS = Object.freeze({
     profiles: "guoxueProfilesV2",
@@ -12,6 +15,8 @@
     activeConversation: "guoxueActiveConversationV2",
     quota: "guoxueDailyQuotaV2",
     migration: "guoxueStorageMigrationV2",
+    reports: "guoxueInterpretationReportsV1",
+    reportOrders: "guoxueInterpretationOrdersV1",
   });
 
   const LEGACY_KEYS = Object.freeze({
@@ -119,6 +124,17 @@
       typeof conversation.updatedAt === "string"
         ? conversation.updatedAt
         : messages.at(-1)?.createdAt || createdAt;
+    const context =
+      conversation.context &&
+      typeof conversation.context.reportId === "string" &&
+      typeof conversation.context.sectionId === "string"
+        ? {
+            type: "report",
+            reportId: conversation.context.reportId,
+            sectionId: conversation.context.sectionId,
+            sectionTitle: String(conversation.context.sectionTitle || "报告解读"),
+          }
+        : null;
     return {
       id: typeof conversation.id === "string" ? conversation.id : createId("conversation"),
       dateKey:
@@ -130,6 +146,7 @@
           ? conversation.title.trim()
           : deriveTitle(messages),
       messages,
+      context,
       createdAt,
       updatedAt,
     };
@@ -184,7 +201,15 @@
   function getOrCreateTodayConversation() {
     const conversations = getConversations();
     const todayKey = localDateKey();
-    let conversation = conversations.find((item) => item.dateKey === todayKey);
+    const activeId = getActiveConversationId();
+    let conversation = conversations.find(
+      (item) => item.id === activeId && item.dateKey === todayKey,
+    );
+    if (!conversation) {
+      conversation = conversations.find(
+        (item) => item.dateKey === todayKey && !item.context,
+      );
+    }
 
     if (!conversation) {
       const now = new Date().toISOString();
@@ -372,6 +397,224 @@
     return getProfiles().find((profile) => profile.id === id) || null;
   }
 
+  function profileSnapshot(profile) {
+    return {
+      profileId: profile.id,
+      name: profile.name,
+      gender: profile.gender,
+      calendar: profile.calendar,
+      birthDate: { ...profile.birthDate },
+      birthTime: profile.birthTime,
+      isLeapMonth: profile.isLeapMonth,
+      birthplace: profile.birthplace,
+    };
+  }
+
+  function snapshotFingerprint(snapshot) {
+    const source = JSON.stringify(snapshot);
+    let hash = 2166136261;
+    for (let index = 0; index < source.length; index += 1) {
+      hash ^= source.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+    return `snapshot-${(hash >>> 0).toString(36)}`;
+  }
+
+  function normalizeReportSection(section) {
+    if (!section || typeof section.id !== "string") return null;
+    const content = section.content && typeof section.content === "object" ? section.content : {};
+    return {
+      id: section.id,
+      title: String(section.title || "报告章节"),
+      keywords: Array.isArray(section.keywords)
+        ? section.keywords.map(String).slice(0, 3)
+        : [],
+      teaser: String(section.teaser || ""),
+      lockedItems: Array.isArray(section.lockedItems)
+        ? section.lockedItems.map(String).slice(0, 5)
+        : [],
+      content: {
+        conclusion: String(content.conclusion || ""),
+        strengths: String(content.strengths || ""),
+        blindSpots: String(content.blindSpots || ""),
+        actions: String(content.actions || ""),
+      },
+      disclaimer: String(section.disclaimer || ""),
+    };
+  }
+
+  function normalizeReport(report) {
+    if (!report || typeof report !== "object") return null;
+    const sections = Array.isArray(report.sections)
+      ? report.sections.map(normalizeReportSection).filter(Boolean).slice(0, 8)
+      : [];
+    const validIds = new Set(sections.map((section) => section.id));
+    const unlockedSectionIds = Array.isArray(report.unlockedSectionIds)
+      ? [...new Set(report.unlockedSectionIds.filter((id) => validIds.has(id)))]
+      : [];
+    const now = new Date().toISOString();
+    return {
+      id: typeof report.id === "string" ? report.id : createId("report"),
+      profileId: String(report.profileId || report.profileSnapshot?.profileId || ""),
+      profileSnapshot: report.profileSnapshot || null,
+      fingerprint: String(report.fingerprint || ""),
+      overview: String(report.overview || ""),
+      sections,
+      unlockedSectionIds,
+      fullUnlocked: Boolean(report.fullUnlocked),
+      createdAt: typeof report.createdAt === "string" ? report.createdAt : now,
+      updatedAt: typeof report.updatedAt === "string" ? report.updatedAt : now,
+    };
+  }
+
+  function getReports() {
+    const stored = safeParse(readLocal(KEYS.reports), []);
+    if (!Array.isArray(stored)) return [];
+    return stored
+      .map(normalizeReport)
+      .filter(Boolean)
+      .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+      .slice(0, REPORT_LIMIT);
+  }
+
+  function saveReports(reports) {
+    const normalized = reports
+      .map(normalizeReport)
+      .filter(Boolean)
+      .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+      .slice(0, REPORT_LIMIT);
+    writeLocal(KEYS.reports, JSON.stringify(normalized));
+    return normalized;
+  }
+
+  function getReport(id) {
+    return getReports().find((report) => report.id === id) || null;
+  }
+
+  function getOrCreateReport(profileId, payload) {
+    const profile = getProfile(profileId);
+    if (!profile) return null;
+    const snapshot = profileSnapshot(profile);
+    const fingerprint = snapshotFingerprint(snapshot);
+    const reports = getReports();
+    const existing = reports.find((report) => report.fingerprint === fingerprint);
+    if (existing) return existing;
+
+    const now = new Date().toISOString();
+    const report = normalizeReport({
+      id: createId("report"),
+      profileId: profile.id,
+      profileSnapshot: snapshot,
+      fingerprint,
+      overview: payload?.overview,
+      sections: payload?.sections,
+      unlockedSectionIds: [],
+      fullUnlocked: false,
+      createdAt: now,
+      updatedAt: now,
+    });
+    saveReports([report, ...reports]);
+    return report;
+  }
+
+  function getReportUpgradePrice(reportOrId) {
+    const report = typeof reportOrId === "string" ? getReport(reportOrId) : reportOrId;
+    if (!report || report.fullUnlocked) return 0;
+    return Math.max(
+      0,
+      FULL_REPORT_PRICE - report.unlockedSectionIds.length * REPORT_SECTION_PRICE,
+    );
+  }
+
+  function getReportOrders() {
+    const stored = safeParse(readLocal(KEYS.reportOrders), []);
+    return Array.isArray(stored) ? stored.slice(0, 100) : [];
+  }
+
+  function purchaseReport(reportId, purchase) {
+    const reports = getReports();
+    const index = reports.findIndex((report) => report.id === reportId);
+    if (index < 0) return { ok: false, reason: "not-found" };
+    const report = reports[index];
+    if (report.fullUnlocked) return { ok: true, report, amount: 0 };
+
+    const type = purchase?.type === "section" ? "section" : "full";
+    let amount = getReportUpgradePrice(report);
+    let sectionId = null;
+    if (type === "section") {
+      sectionId = String(purchase?.sectionId || "");
+      if (!report.sections.some((section) => section.id === sectionId)) {
+        return { ok: false, reason: "invalid-section" };
+      }
+      if (report.unlockedSectionIds.includes(sectionId)) {
+        return { ok: true, report, amount: 0 };
+      }
+      if (amount < REPORT_SECTION_PRICE) {
+        return { ok: false, reason: "upgrade-cheaper" };
+      }
+      amount = REPORT_SECTION_PRICE;
+    }
+
+    const now = new Date().toISOString();
+    const updated = {
+      ...report,
+      unlockedSectionIds:
+        type === "section"
+          ? [...report.unlockedSectionIds, sectionId]
+          : report.sections.map((section) => section.id),
+      fullUnlocked: type === "full",
+      updatedAt: now,
+    };
+    reports[index] = updated;
+    saveReports(reports);
+
+    const order = {
+      id: createId("order"),
+      reportId,
+      type,
+      sectionId,
+      amount,
+      status: "paid",
+      paidAt: now,
+    };
+    writeLocal(KEYS.reportOrders, JSON.stringify([order, ...getReportOrders()].slice(0, 100)));
+    return { ok: true, report: normalizeReport(updated), amount, order };
+  }
+
+  function createReportConversation(reportId, sectionId) {
+    const report = getReport(reportId);
+    const section = report?.sections.find((item) => item.id === sectionId);
+    if (!report || !section) return null;
+    const conversations = getConversations();
+    const todayKey = localDateKey();
+    let conversation = conversations.find(
+      (item) =>
+        item.dateKey === todayKey &&
+        item.context?.reportId === reportId &&
+        item.context?.sectionId === sectionId,
+    );
+    if (!conversation) {
+      const now = new Date().toISOString();
+      conversation = normalizeConversation({
+        id: createId("conversation"),
+        dateKey: todayKey,
+        title: `${section.title}解读`,
+        messages: [],
+        context: {
+          type: "report",
+          reportId,
+          sectionId,
+          sectionTitle: section.title,
+        },
+        createdAt: now,
+        updatedAt: now,
+      });
+      saveConversations([conversation, ...conversations]);
+    }
+    writeLocal(KEYS.activeConversation, conversation.id);
+    return conversation;
+  }
+
   function upsertProfile(profile) {
     const profiles = getProfiles();
     const existingIndex = profiles.findIndex((item) => item.id === profile.id);
@@ -462,11 +705,15 @@
   global.GuoxueApp = Object.freeze({
     CONVERSATION_LIMIT,
     DAILY_LIMIT,
+    FULL_REPORT_PRICE,
     HISTORY_LIMIT,
     PROFILE_LIMIT,
+    REPORT_LIMIT,
+    REPORT_SECTION_PRICE,
     STORAGE_VERSION,
     appendMessage,
     consumeQuota,
+    createReportConversation,
     deleteProfile,
     ensureChatStartedAt,
     getActiveConversation,
@@ -478,7 +725,13 @@
     getProfile,
     getProfiles,
     getQuota,
+    getOrCreateReport,
+    getReport,
+    getReportOrders,
+    getReportUpgradePrice,
+    getReports,
     localDateKey,
+    purchaseReport,
     renderQuota,
     saveHistory,
     setActiveConversation,

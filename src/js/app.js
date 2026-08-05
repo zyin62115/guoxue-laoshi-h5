@@ -2,10 +2,9 @@ const appState = window.GuoxueApp;
 const pressables = document.querySelectorAll("[data-action]");
 const questionInput = document.querySelector("#home-question");
 const actionButton = document.querySelector("#home-action");
-const quotaDisplay = document.querySelector("#home-quota");
 const voiceDock = document.querySelector(".voice-dock");
 const micButton = document.querySelector('[data-action="voice-mode"]');
-const membershipGuide = document.querySelector("#home-membership-guide");
+const quotaGuide = document.querySelector("#home-quota-guide");
 const inlineChat = document.querySelector("#inline-chat");
 const chatStartTime = document.querySelector("#chat-start-time");
 const messageList = document.querySelector("#inline-message-list");
@@ -14,9 +13,12 @@ const menuButton = document.querySelector('[data-action="menu"]');
 const drawerLayer = document.querySelector("#drawer-layer");
 const drawer = document.querySelector("#personal-drawer");
 const drawerScrim = document.querySelector(".drawer-scrim");
-const profileList = document.querySelector("#profile-list");
 const conversationList = document.querySelector("#conversation-list");
 const appToast = document.querySelector("#app-toast");
+const interpretationButton = document.querySelector('[data-action="interpretation"]');
+const reportContext = document.querySelector("#report-chat-context");
+const reportContextTitle = document.querySelector("#report-chat-context-title");
+const reportContextLink = document.querySelector("#report-chat-context-link");
 
 let isComposing = false;
 let isReplying = false;
@@ -78,7 +80,11 @@ function getMockReply(question) {
   const matchedRule = MOCK_RULES.find((rule) =>
     rule.keywords.some((keyword) => question.includes(keyword)),
   );
-  return matchedRule ? matchedRule.reply : FALLBACK_REPLY;
+  const reply = matchedRule ? matchedRule.reply : FALLBACK_REPLY;
+  const context = appState.getActiveConversation()?.context;
+  return context
+    ? `结合你在《${context.sectionTitle}》报告中的特点来看，${reply}`
+    : reply;
 }
 
 function formatStartedAt(value) {
@@ -141,6 +147,7 @@ function renderHistory() {
   inlineChat.hidden = !hasConversation;
   document.body.classList.toggle("has-inline-chat", hasConversation);
 
+  renderReportContext();
   if (!hasConversation) {
     messageList.replaceChildren();
     return history;
@@ -151,6 +158,14 @@ function renderHistory() {
   history.forEach((message) => fragment.append(createMessageRow(message)));
   messageList.replaceChildren(fragment);
   return history;
+}
+
+function renderReportContext() {
+  const context = appState.getActiveConversation()?.context;
+  reportContext.hidden = !context;
+  if (!context) return;
+  reportContextTitle.textContent = `正在结合《${context.sectionTitle}》为你解读`;
+  reportContextLink.href = `./interpretation.html?report=${encodeURIComponent(context.reportId)}#report-section-${encodeURIComponent(context.sectionId)}`;
 }
 
 function scrollToLatest(behavior = "smooth") {
@@ -182,14 +197,13 @@ function syncQuotaState() {
   const quota = appState.getQuota();
   const exhausted = quota.remaining <= 0;
 
-  appState.renderQuota(quotaDisplay, quota, false);
   voiceDock.classList.toggle("is-exhausted", exhausted);
   questionInput.disabled = exhausted || isReplying;
   micButton.disabled = exhausted || isReplying;
   actionButton.disabled = exhausted || isReplying;
-  membershipGuide.hidden = !exhausted;
+  quotaGuide.hidden = !exhausted;
   questionInput.placeholder = exhausted
-    ? "今日次数已用完"
+    ? "限时免费体验已结束"
     : isReplying
       ? "老师正在思考…"
       : "请输入问题";
@@ -305,83 +319,6 @@ function showToast(message) {
   }, 1800);
 }
 
-function formatProfileBirth(profile) {
-  const { year, month, day } = profile.birthDate;
-  const calendar = profile.calendar === "lunar" ? "农历" : "公历";
-  const leap = profile.calendar === "lunar" && profile.isLeapMonth ? "闰" : "";
-  return `${calendar} ${year}年${leap}${month}月${day}日 ${profile.birthTime}`;
-}
-
-function renderProfiles() {
-  const profiles = appState.getProfiles();
-  const activeId = appState.getActiveProfileId();
-  const fragment = document.createDocumentFragment();
-
-  if (!profiles.length) {
-    const empty = document.createElement("a");
-    empty.className = "profile-empty pressable";
-    empty.href = "./profile.html";
-
-    const mark = document.createElement("span");
-    mark.className = "profile-empty-mark";
-    mark.textContent = "+";
-
-    const copy = document.createElement("span");
-    const title = document.createElement("strong");
-    title.textContent = "添加第一份八字档案";
-    const description = document.createElement("small");
-    description.textContent = "保存出生信息，方便后续问答";
-    copy.append(title, description);
-    empty.append(mark, copy);
-    fragment.append(empty);
-    profileList.replaceChildren(fragment);
-    return;
-  }
-
-  profiles.forEach((profile) => {
-    const card = document.createElement("article");
-    card.className = "archive-card";
-    card.classList.toggle("is-active", profile.id === activeId);
-
-    const select = document.createElement("button");
-    select.className = "archive-select pressable";
-    select.type = "button";
-    select.dataset.profileId = profile.id;
-    select.setAttribute(
-      "aria-label",
-      `${profile.id === activeId ? "当前档案，" : ""}选择${profile.name}的八字档案`,
-    );
-
-    const avatar = document.createElement("span");
-    avatar.className = "archive-avatar";
-    avatar.textContent = profile.name.slice(0, 1);
-
-    const copy = document.createElement("span");
-    copy.className = "archive-copy";
-    const name = document.createElement("strong");
-    name.textContent = profile.name;
-    const detail = document.createElement("small");
-    detail.textContent = formatProfileBirth(profile);
-    copy.append(name, detail);
-
-    const check = document.createElement("span");
-    check.className = "archive-check";
-    check.setAttribute("aria-hidden", "true");
-    check.textContent = "✓";
-    select.append(avatar, copy, check);
-
-    const edit = document.createElement("a");
-    edit.className = "archive-edit pressable";
-    edit.href = `./profile.html?id=${encodeURIComponent(profile.id)}`;
-    edit.textContent = "编辑";
-    edit.setAttribute("aria-label", `编辑${profile.name}的八字档案`);
-    card.append(select, edit);
-    fragment.append(card);
-  });
-
-  profileList.replaceChildren(fragment);
-}
-
 function dateGroupLabel(dateKey) {
   const today = new Date();
   const yesterday = new Date(today);
@@ -479,7 +416,6 @@ function renderConversations() {
 }
 
 function renderDrawerContent() {
-  renderProfiles();
   renderConversations();
 }
 
@@ -610,11 +546,13 @@ function finishDrawerGesture(event) {
 }
 
 menuButton.addEventListener("click", () => openDrawer());
+interpretationButton.addEventListener("click", () => {
+  window.location.href = "./interpretation.html";
+});
 drawerLayer.addEventListener("click", (event) => {
   const action = event.target.closest("[data-action]")?.dataset.action;
   if (action === "close-drawer") closeDrawer();
   if (action === "account-placeholder") showToast("个人资料功能开发中");
-  if (action === "membership-placeholder") showToast("会员服务功能开发中");
 });
 
 drawer.addEventListener(
@@ -627,14 +565,6 @@ drawer.addEventListener(
   },
   true,
 );
-
-profileList.addEventListener("click", (event) => {
-  const select = event.target.closest("[data-profile-id]");
-  if (!select) return;
-  appState.setActiveProfile(select.dataset.profileId);
-  renderProfiles();
-  showToast("已切换八字档案");
-});
 
 conversationList.addEventListener("click", (event) => {
   const item = event.target.closest("[data-conversation-id]");
@@ -742,4 +672,11 @@ if (window.location.hash === "#menu") {
 const lastMessage = history.at(-1);
 if (lastMessage?.role === "user") {
   scheduleReply(lastMessage.content);
+}
+
+if (new URLSearchParams(window.location.search).has("reportChat")) {
+  requestAnimationFrame(() => {
+    reportContext.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (!questionInput.disabled) questionInput.focus({ preventScroll: true });
+  });
 }

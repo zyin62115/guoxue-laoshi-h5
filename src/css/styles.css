@@ -298,33 +298,21 @@ button,
   white-space: nowrap;
 }
 
-.date-birds {
-  top: calc(194 * var(--unit));
-  left: calc(720 * var(--unit));
-  width: calc(96 * var(--unit));
-  height: calc(30 * var(--unit));
-  opacity: 0.58;
-}
-
-.date-birds path {
-  fill: none;
-  stroke: #c58b4f;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-}
-
 .date-badge {
   position: absolute;
-  top: calc(206 * var(--unit));
-  left: calc(575 * var(--unit));
+  top: calc(210 * var(--unit));
+  left: calc(600 * var(--unit));
   z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: calc(16 * var(--unit));
-  width: calc(335 * var(--unit));
-  height: calc(80 * var(--unit));
-  background: url("../../public/images/date-badge.png") center / 100% 100% no-repeat;
+  gap: calc(14 * var(--unit));
+  width: calc(310 * var(--unit));
+  height: calc(72 * var(--unit));
+  border: calc(1 * var(--unit)) solid rgba(188, 128, 71, 0.32);
+  border-radius: calc(36 * var(--unit));
+  background: rgba(255, 247, 235, 0.78);
+  box-shadow: 0 calc(4 * var(--unit)) calc(12 * var(--unit)) rgba(123, 77, 35, 0.06);
   color: #282721;
   font-family: var(--serif);
   font-size: calc(26 * var(--unit));
@@ -335,14 +323,6 @@ button,
   user-select: none;
   pointer-events: auto;
   transform: translateY(calc(var(--content-lift) + 16px));
-}
-
-.date-badge::before {
-  position: absolute;
-  inset: 18% 15%;
-  background: #fff3dc;
-  pointer-events: none;
-  content: "";
 }
 
 .date-badge time,

@@ -6,7 +6,7 @@
 
 ## 对话额度
 
-当前所有页面均允许不限次数对话。为兼容现有页面脚本，`getQuota()`、`consumeQuota()` 和 `renderQuota()` 接口继续保留：前两者始终返回无限额度状态，`renderQuota()` 固定显示“对话不限次”。
+当前所有页面均允许不限次数对话。为兼容现有页面脚本，`getQuota()`、`consumeQuota()` 和 `renderQuota()` 接口继续保留：前两者始终返回无限额度状态，`renderQuota()` 继续显示“限时免费”，不展示后台额度。
 
 ## 国心解读报告
 

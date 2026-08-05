@@ -482,7 +482,7 @@ sectionList.addEventListener("click", (event) => {
   const ask = event.target.closest("[data-ask-section]");
   if (!ask) return;
   reportState.createReportConversation(activeReport.id, ask.dataset.askSection);
-  window.location.href = "./index.html?reportChat=1#chat";
+  window.location.href = "./chat.html";
 });
 
 stickyButton.addEventListener("click", () => openPayment());

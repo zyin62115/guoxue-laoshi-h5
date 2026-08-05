@@ -322,8 +322,8 @@
 
   function renderQuota(element) {
     if (!element) return;
-    element.textContent = "对话不限次";
-    element.setAttribute("aria-label", "对话不限次数");
+    element.textContent = "限时免费";
+    element.setAttribute("aria-label", "限时免费");
   }
 
   function normalizeProfile(profile) {

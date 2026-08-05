@@ -7,6 +7,10 @@
   const REPORT_LIMIT = 30;
   const FULL_REPORT_PRICE = 8800;
   const REPORT_SECTION_PRICE = 1680;
+  const PROMOTION_BADGE = Object.freeze({
+    text: "限时免费",
+    ariaLabel: "限时免费",
+  });
 
   const KEYS = Object.freeze({
     profiles: "guoxueProfilesV2",
@@ -320,10 +324,16 @@
     return getQuota();
   }
 
-  function renderQuota(element) {
+  function getPromotionBadge() {
+    return PROMOTION_BADGE;
+  }
+
+  function renderPromotionBadge(element) {
     if (!element) return;
-    element.textContent = "限时免费";
-    element.setAttribute("aria-label", "限时免费");
+    const badge = getPromotionBadge();
+    const textElement = element.querySelector("[data-promotion-badge-text]") || element;
+    textElement.textContent = badge.text;
+    element.setAttribute("aria-label", badge.ariaLabel);
   }
 
   function normalizeProfile(profile) {
@@ -764,6 +774,7 @@
     getHistory,
     getProfile,
     getProfiles,
+    getPromotionBadge,
     getQuota,
     getOrCreateReport,
     getReport,
@@ -772,7 +783,7 @@
     getReports,
     localDateKey,
     purchaseReport,
-    renderQuota,
+    renderPromotionBadge,
     saveHistory,
     setActiveConversation,
     setActiveProfile,

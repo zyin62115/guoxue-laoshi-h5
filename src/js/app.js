@@ -5,6 +5,7 @@ const actionButton = document.querySelector("#home-action");
 const voiceDock = document.querySelector(".voice-dock");
 const micButton = document.querySelector('[data-action="voice-mode"]');
 const quotaGuide = document.querySelector("#home-quota-guide");
+const promotionBadge = document.querySelector("#home-promotion-badge");
 const scrollTopButton = document.querySelector("#scroll-top-button");
 const menuButton = document.querySelector('[data-action="menu"]');
 const drawerLayer = document.querySelector("#drawer-layer");
@@ -572,6 +573,7 @@ window.addEventListener("beforeunload", () => {
 });
 
 renderDailyGuide();
+appState.renderPromotionBadge(promotionBadge);
 syncQuotaState();
 syncScrollTopButton();
 renderDrawerContent();

@@ -4,9 +4,14 @@
 
 问答回复由 `src/js/app.js` 中的本地关键词规则模拟，不代表已接入真实 AI 服务。八字档案和历史会话仅保存在当前浏览器中。
 
-## 对话额度
+## 对话额度与运营标签
 
-当前所有页面均允许不限次数对话。为兼容现有页面脚本，`getQuota()`、`consumeQuota()` 和 `renderQuota()` 接口继续保留：前两者始终返回无限额度状态，`renderQuota()` 继续显示“限时免费”，不展示后台额度。
+当前所有页面均允许不限次数对话。额度状态与运营展示彼此独立：
+
+- `getQuota()` / `consumeQuota()` 只负责额度业务状态，始终返回 `{ unlimited: true, remaining: Infinity }`，不会扣减或耗尽，也不提供 UI 文案。
+- `getPromotionBadge()` 返回当前运营标签配置；`renderPromotionBadge(element)` 将“限时免费”渲染到指定标签元素，不读取额度状态。
+
+首页和独立对话页只通过 promotion 接口渲染右上角标签；发送许可仍读取 quota 接口。旧 `localStorage` 中即使保存 `remaining: 0`，也不会影响当前无限额度状态。
 
 ## 国心解读报告
 

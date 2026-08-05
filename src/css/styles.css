@@ -315,14 +315,15 @@ button,
 
 .date-badge {
   position: absolute;
-  top: calc(214 * var(--unit));
-  left: calc(590 * var(--unit));
+  top: calc(206 * var(--unit));
+  left: calc(575 * var(--unit));
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: calc(12 * var(--unit));
-  width: calc(300 * var(--unit));
-  height: calc(64 * var(--unit));
+  gap: calc(16 * var(--unit));
+  width: calc(335 * var(--unit));
+  height: calc(80 * var(--unit));
   background: url("../../public/images/date-badge.png") center / 100% 100% no-repeat;
   color: #282721;
   font-family: var(--serif);
@@ -333,13 +334,14 @@ button,
   white-space: nowrap;
   user-select: none;
   pointer-events: auto;
-  transform: translateY(16px);
+  transform: translateY(calc(var(--content-lift) + 16px));
 }
 
 .date-badge::before {
   position: absolute;
   inset: 18% 15%;
   background: #fff3dc;
+  pointer-events: none;
   content: "";
 }
 
@@ -349,18 +351,18 @@ button,
 }
 
 .date-badge time {
-  font-size: calc(21 * var(--unit));
+  font-size: calc(30 * var(--unit));
 }
 
 .calendar-entry-label {
   display: inline-flex;
   align-items: center;
-  gap: calc(6 * var(--unit));
-  padding-left: calc(12 * var(--unit));
+  gap: calc(8 * var(--unit));
+  padding-left: calc(16 * var(--unit));
   border-left: calc(1 * var(--unit)) solid rgba(111, 79, 42, 0.24);
   color: #b55416;
   font-family: var(--sans);
-  font-size: calc(18 * var(--unit));
+  font-size: calc(24 * var(--unit));
   font-weight: 700;
 }
 

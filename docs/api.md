@@ -25,6 +25,8 @@
 
 会话结构增加可选的 `context` 字段，包含 `reportId`、`sectionId` 和 `sectionTitle`。没有上下文的旧会话继续按原有结构读取。
 
+`activateHomeConversation()` 用于进入普通首页时切换或创建当天的无报告上下文会话。报告章节对话仍按章节独立保存，但只在 `reportChat` 专属会话期间展示，不作为首页普通问答或首页对话记录的一部分。
+
 首次免费领取卡片状态保存在 `guoxueFirstReportClaimPromptV1`。用户首次生成报告并看到付费页面 5 秒后才检查和展示卡片，直接打开历史报告不会触发。`shouldShowFirstReportClaim()` 判断是否应展示；`dismissFirstReportClaim(action)` 记录用户选择，`action` 为 `wechat` 或 `closed`；`getFirstReportClaim()` 可读取处理结果。当前微信按钮跳转至本地 `wechat-simulator.html`，只有完成模拟添加并返回时才授予免费权益。
 
 微信模拟页完成添加并返回时调用 `claimFreeReport(reportId)`，将对应报告的八章完整解锁，并写入一条金额为 0、状态为 `claimed` 的领取订单。找不到原报告时不授予权益，并提示用户返回重新生成。

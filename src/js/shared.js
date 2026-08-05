@@ -230,6 +230,30 @@
     return conversation;
   }
 
+  function activateHomeConversation() {
+    const conversations = getConversations();
+    const todayKey = localDateKey();
+    let conversation = conversations.find(
+      (item) => item.dateKey === todayKey && !item.context,
+    );
+
+    if (!conversation) {
+      const now = new Date().toISOString();
+      conversation = normalizeConversation({
+        id: createId("conversation"),
+        dateKey: todayKey,
+        title: "新的对话",
+        messages: [],
+        createdAt: now,
+        updatedAt: now,
+      });
+      saveConversations([conversation, ...conversations]);
+    }
+
+    writeLocal(KEYS.activeConversation, conversation.id);
+    return conversation;
+  }
+
   function createMessage(role, content) {
     return {
       id: createId("message"),
@@ -793,6 +817,7 @@
     REPORT_LIMIT,
     REPORT_SECTION_PRICE,
     STORAGE_VERSION,
+    activateHomeConversation,
     appendMessage,
     claimFreeReport,
     consumeQuota,

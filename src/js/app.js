@@ -27,6 +27,22 @@ const guideLineOne = document.querySelector("#guide-line-one");
 const guideLineTwo = document.querySelector("#guide-line-two");
 const guideGood = document.querySelector("#guide-good");
 const guideAvoid = document.querySelector("#guide-avoid");
+const initialUrl = new URL(window.location.href);
+let reportChatSessionActive =
+  initialUrl.searchParams.has("reportChat") &&
+  Boolean(appState.getActiveConversation()?.context);
+
+function syncHomeConversation() {
+  if (!reportChatSessionActive && appState.getActiveConversation()?.context) {
+    appState.activateHomeConversation();
+  }
+}
+
+function clearReportChatMarker() {
+  if (!initialUrl.searchParams.has("reportChat")) return;
+  initialUrl.searchParams.delete("reportChat");
+  window.history.replaceState(null, "", initialUrl);
+}
 
 function renderInterpretationEntry() {
   const profile = appState.getActiveProfile();
@@ -494,7 +510,11 @@ function formatConversationDate(conversation) {
 function renderConversations() {
   const conversations = appState
     .getConversations()
-    .filter((conversation) => conversation.messages.some((message) => message.role === "user"));
+    .filter(
+      (conversation) =>
+        !conversation.context &&
+        conversation.messages.some((message) => message.role === "user"),
+    );
   const activeId = appState.getActiveConversation()?.id;
   const fragment = document.createDocumentFragment();
 
@@ -794,7 +814,11 @@ scrollTopButton.addEventListener("click", () => {
 
 window.addEventListener("scroll", queueScrollStateUpdate, { passive: true });
 window.addEventListener("resize", queueScrollStateUpdate);
-window.addEventListener("pageshow", () => {
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) {
+    syncHomeConversation();
+    renderHistory();
+  }
   renderDailyGuide();
   renderInterpretationEntry();
   syncQuotaState();
@@ -810,9 +834,13 @@ window.addEventListener("beforeunload", () => {
   if (toastTimer) window.clearTimeout(toastTimer);
   if (dailyGuideTimer) window.clearTimeout(dailyGuideTimer);
 });
+window.addEventListener("pagehide", () => {
+  reportChatSessionActive = false;
+});
 
 renderDailyGuide();
 renderInterpretationEntry();
+syncHomeConversation();
 const history = renderHistory();
 syncQuotaState();
 syncScrollTopButton();
@@ -827,9 +855,10 @@ if (lastMessage?.role === "user") {
   scheduleReply(lastMessage.content);
 }
 
-if (new URLSearchParams(window.location.search).has("reportChat")) {
+if (reportChatSessionActive) {
   requestAnimationFrame(() => {
     reportContext.scrollIntoView({ behavior: "smooth", block: "center" });
     if (!questionInput.disabled) questionInput.focus({ preventScroll: true });
   });
 }
+clearReportChatMarker();

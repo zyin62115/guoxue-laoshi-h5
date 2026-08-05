@@ -41,8 +41,8 @@ function renderInterpretationEntry() {
   const latestReport = appState.getLatestProfileReport(profile.id);
   if (currentReport) {
     interpretationDescription.textContent = currentReport.fullUnlocked
-      ? `继续查看${profile.name}的完整报告`
-      : `继续查看${profile.name}的报告`;
+      ? `${profile.name}已有完整报告，可继续查看`
+      : `${profile.name}已有报告，可继续查看`;
   } else if (latestReport) {
     interpretationDescription.textContent = `${profile.name}档案已更新，可生成新版`;
   } else {

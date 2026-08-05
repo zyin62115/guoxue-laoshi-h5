@@ -443,6 +443,7 @@ function openReport(report) {
 
 function showProfileSelection() {
   activeReport = null;
+  selectedProfileId = reportState.getActiveProfileId();
   setup.hidden = false;
   reader.hidden = true;
   stickyPurchase.hidden = true;
@@ -668,14 +669,7 @@ function initializePage({ notifyInvalidReport = false } = {}) {
     window.history.replaceState(null, "", url);
   }
 
-  const forceSelection = url.searchParams.get("mode") === "select";
-  const activeProfile = reportState.getActiveProfile();
-  const currentReport = activeProfile
-    ? reportState.getCurrentProfileReport(activeProfile.id)
-    : null;
-
-  if (!forceSelection && currentReport) openReport(currentReport);
-  else showProfileSelection();
+  showProfileSelection();
 
   if (reportId && notifyInvalidReport) showToast("原报告不存在，已为你返回国心解读");
 }

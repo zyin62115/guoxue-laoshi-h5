@@ -4,6 +4,7 @@ const actionButton = document.querySelector("#chat-action");
 const voiceDock = document.querySelector(".chat-dock");
 const micButton = document.querySelector("#chat-mic");
 const quotaGuide = document.querySelector("#chat-quota-guide");
+const promotionBadge = document.querySelector("#chat-promotion-badge");
 const chatStartTime = document.querySelector("#chat-start-time");
 const messageList = document.querySelector("#inline-message-list");
 const reportContext = document.querySelector("#report-chat-context");
@@ -260,6 +261,7 @@ window.addEventListener("beforeunload", () => {
 });
 
 const history = renderHistory();
+chatState.renderPromotionBadge(promotionBadge);
 syncQuotaState();
 scrollToLatest("auto");
 const lastMessage = history.at(-1);

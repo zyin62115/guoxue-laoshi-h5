@@ -274,34 +274,12 @@ button,
 
 .guide-heading {
   position: absolute;
-  top: calc(280 * var(--unit));
+  top: calc(214 * var(--unit));
   left: calc(326 * var(--unit));
   display: flex;
   align-items: center;
   height: calc(64 * var(--unit));
   transform: translateY(16px);
-}
-
-.guide-row-decoration {
-  position: absolute;
-  top: calc(294 * var(--unit));
-  left: calc(672 * var(--unit));
-  width: calc(170 * var(--unit));
-  height: calc(38 * var(--unit));
-  overflow: visible;
-  opacity: 0.58;
-}
-
-.guide-row-decoration path {
-  fill: none;
-  stroke: #bc7b3f;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.guide-row-decoration path:last-child {
-  fill: rgba(188, 123, 63, 0.16);
 }
 
 .guide-heading img {
@@ -322,8 +300,8 @@ button,
 
 .date-badge {
   position: absolute;
-  top: calc(190 * var(--unit));
-  left: calc(326 * var(--unit));
+  top: calc(210 * var(--unit));
+  left: calc(600 * var(--unit));
   z-index: 5;
   display: flex;
   align-items: center;
@@ -331,7 +309,6 @@ button,
   gap: calc(14 * var(--unit));
   width: calc(310 * var(--unit));
   height: calc(72 * var(--unit));
-  padding: 0 calc(26 * var(--unit));
   border: calc(1 * var(--unit)) solid rgba(188, 128, 71, 0.32);
   border-radius: calc(36 * var(--unit));
   background: rgba(255, 247, 235, 0.78);
@@ -346,14 +323,6 @@ button,
   user-select: none;
   pointer-events: auto;
   transform: translateY(calc(var(--content-lift) + 16px));
-}
-
-.date-ornament {
-  width: calc(9 * var(--unit));
-  height: calc(9 * var(--unit));
-  flex: 0 0 auto;
-  border: calc(1.5 * var(--unit)) solid rgba(181, 84, 22, 0.72);
-  transform: rotate(45deg);
 }
 
 .date-badge time,
@@ -387,7 +356,7 @@ button,
 
 .guidance {
   position: absolute;
-  top: calc(365 * var(--unit));
+  top: calc(302 * var(--unit));
   left: calc(340 * var(--unit));
   width: calc(535 * var(--unit));
   margin: 0;
@@ -402,7 +371,7 @@ button,
 
 .advice-row {
   position: absolute;
-  top: calc(485 * var(--unit));
+  top: calc(432 * var(--unit));
   left: calc(340 * var(--unit));
   display: flex;
   align-items: center;
@@ -457,7 +426,7 @@ button,
   z-index: 4;
   width: calc(834 * var(--unit));
   margin: 0 auto;
-  padding-top: calc(620 * var(--unit) + var(--content-lift));
+  padding-top: calc(562 * var(--unit) + var(--content-lift));
 }
 
 .feature-list {

@@ -121,18 +121,30 @@
           <input id="birth-time" name="birthTime" type="time" required />
         </label>
 
-        <label class="form-field">
-          <span>出生地<i class="required-mark" aria-hidden="true">*</i></span>
-          <input
-            id="birthplace"
-            name="birthplace"
-            type="text"
-            maxlength="60"
-            autocomplete="address-level2"
-            placeholder="例如：浙江省杭州市"
-            required
-          />
-        </label>
+        <div class="form-field">
+          <span>出生地（选填）</span>
+          <div class="birthplace-grid">
+            <label>
+              <span class="sr-only">出生省份</span>
+              <select id="birthplace-province" autocomplete="address-level1" disabled>
+                <option value="">加载省份中…</option>
+              </select>
+            </label>
+            <label>
+              <span class="sr-only">出生城市</span>
+              <select id="birthplace-city" autocomplete="address-level2" disabled>
+                <option value="">选择城市</option>
+              </select>
+            </label>
+            <label>
+              <span class="sr-only">出生区县</span>
+              <select id="birthplace-district" autocomplete="address-level3" disabled>
+                <option value="">选择区县</option>
+              </select>
+            </label>
+          </div>
+          <input id="birthplace" name="birthplace" type="hidden" />
+        </div>
 
         <p class="form-error" id="form-error" role="alert" aria-live="polite"></p>
 

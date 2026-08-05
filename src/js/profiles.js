@@ -7,7 +7,8 @@ function formatProfileBirth(profile) {
   const { year, month, day } = profile.birthDate;
   const calendar = profile.calendar === "lunar" ? "农历" : "公历";
   const leap = profile.calendar === "lunar" && profile.isLeapMonth ? "闰" : "";
-  return `${calendar} ${year}年${leap}${month}月${day}日 ${profile.birthTime} · ${profile.birthplace}`;
+  const birthplace = profile.birthplace ? ` · ${profile.birthplace}` : "";
+  return `${calendar} ${year}年${leap}${month}月${day}日 ${profile.birthTime}${birthplace}`;
 }
 
 function showToast(message) {

@@ -27,9 +27,11 @@ if (context === "chart") {
 }
 
 backLink.addEventListener("click", (event) => {
-  if (context === "chart") return;
-  if (!reportId) return;
   event.preventDefault();
+  if (context === "chart" || !reportId) {
+    window.GuoxueNavigation.goBack(backLink.href);
+    return;
+  }
   const result = window.GuoxueApp.claimFreeReport(reportId);
   if (!result.ok) {
     status.textContent = "暂时无法解锁";
@@ -39,6 +41,6 @@ backLink.addEventListener("click", (event) => {
   backLink.textContent = "报告已解锁，正在返回…";
   backLink.setAttribute("aria-disabled", "true");
   window.setTimeout(() => {
-    window.location.href = backLink.href;
+    window.GuoxueNavigation.goBack(backLink.href);
   }, 350);
 });

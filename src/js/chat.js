@@ -3,7 +3,6 @@ const questionInput = document.querySelector("#chat-question");
 const actionButton = document.querySelector("#chat-action");
 const voiceDock = document.querySelector(".chat-dock");
 const micButton = document.querySelector("#chat-mic");
-const quotaElement = document.querySelector("#chat-quota");
 const quotaGuide = document.querySelector("#chat-quota-guide");
 const chatStartTime = document.querySelector("#chat-start-time");
 const messageList = document.querySelector("#inline-message-list");
@@ -148,7 +147,6 @@ function syncActionState() {
 function syncQuotaState() {
   const quota = chatState.getQuota();
   const exhausted = quota.remaining <= 0;
-  chatState.renderQuota(quotaElement, quota, true);
   voiceDock.classList.toggle("is-exhausted", exhausted);
   questionInput.disabled = exhausted || isReplying;
   micButton.disabled = exhausted || isReplying;

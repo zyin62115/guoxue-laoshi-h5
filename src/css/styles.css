@@ -1951,56 +1951,162 @@ body.drawer-open {
   font-size: 10px;
 }
 
-.report-chat-context {
+.report-chat-page {
+  min-height: 100svh;
+  color: #34271d;
+  background:
+    radial-gradient(circle at 82% 7%, rgba(215, 151, 91, 0.12), transparent 24%),
+    linear-gradient(180deg, #fff9f1 0%, #fbf0e3 100%);
+}
+
+.report-chat-header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 30;
   display: grid;
-  grid-template-columns: calc(76 * var(--unit)) 1fr;
-  gap: calc(18 * var(--unit));
+  grid-template-columns: 44px 1fr auto;
+  gap: 8px;
   align-items: center;
-  width: calc(834 * var(--unit));
-  margin: calc(24 * var(--unit)) auto 0;
-  padding: calc(20 * var(--unit));
-  border: 1px solid rgba(191, 117, 70, 0.28);
-  border-radius: calc(24 * var(--unit));
-  background: rgba(255, 249, 240, 0.86);
-  box-shadow: 0 calc(10 * var(--unit)) calc(28 * var(--unit)) rgba(116, 70, 35, 0.07);
+  width: min(100%, 560px);
+  min-height: calc(env(safe-area-inset-top, 0px) + 68px);
+  padding: env(safe-area-inset-top, 0px) 12px 0;
+  border-bottom: 1px solid rgba(184, 130, 83, 0.16);
+  background: rgba(255, 249, 241, 0.95);
+  box-shadow: 0 6px 18px rgba(100, 65, 35, 0.04);
+  transform: translateX(-50%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-.report-chat-context[hidden] {
-  display: none;
+.report-chat-header > div:nth-child(2) {
+  min-width: 0;
+  text-align: center;
 }
 
-.report-chat-context img {
-  width: calc(76 * var(--unit));
-  height: calc(76 * var(--unit));
+.report-chat-header span {
+  display: block;
+  overflow: hidden;
+  color: #9a816b;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.report-chat-header h1 {
+  overflow: hidden;
+  margin: 2px 0 0;
+  color: #3f2a1d;
+  font-family: var(--serif);
+  font-size: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.report-chat-back {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+
+.report-chat-back::before,
+.report-chat-back::after {
+  position: absolute;
+  content: "";
+}
+
+.report-chat-back::before {
+  top: 15px;
+  left: 14px;
+  width: 10px;
+  height: 10px;
+  border-bottom: 2px solid #563d2c;
+  border-left: 2px solid #563d2c;
+  transform: rotate(45deg);
+}
+
+.report-chat-back::after {
+  top: 20px;
+  left: 14px;
+  width: 16px;
+  height: 2px;
+  background: #563d2c;
+}
+
+.report-chat-quota {
+  min-width: 58px;
+  color: #8f4328;
+  text-align: right;
+  font-size: 9px;
+}
+
+.report-chat-quota strong {
+  margin: 0 2px;
+  font-size: 15px;
+}
+
+.report-chat-shell {
+  width: min(100%, 560px);
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 88px) 16px calc(env(safe-area-inset-bottom, 0px) + 128px);
+}
+
+.report-chat-intro {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid rgba(205, 161, 120, 0.38);
+  border-radius: 20px;
+  background: rgba(255, 252, 247, 0.84);
+  box-shadow: 0 10px 24px rgba(117, 72, 35, 0.07);
+}
+
+.report-chat-intro img {
+  width: 58px;
+  height: 58px;
   object-fit: cover;
   border-radius: 50%;
   background: #f2dfcb;
 }
 
-.report-chat-context span,
-.report-chat-context strong,
-.report-chat-context a {
-  display: block;
+.report-chat-intro strong {
+  color: #a55332;
+  font-size: 12px;
 }
 
-.report-chat-context span {
-  color: #a04e2f;
-  font-size: calc(19 * var(--unit));
-  font-weight: 700;
+.report-chat-intro p {
+  margin: 5px 0 0;
+  color: #756153;
+  font-size: 12px;
+  line-height: 1.65;
 }
 
-.report-chat-context strong {
-  margin-top: calc(5 * var(--unit));
-  color: #5e4433;
-  font-size: calc(25 * var(--unit));
+.report-chat-messages {
+  margin-top: 24px;
 }
 
-.report-chat-context a {
-  width: max-content;
-  margin-top: calc(8 * var(--unit));
-  color: #a44e2f;
-  text-decoration: none;
-  font-size: calc(19 * var(--unit));
+.report-chat-dock {
+  width: min(520px, calc(100vw - 24px));
+  max-width: none;
+}
+
+.report-chat-topic-mark {
+  position: absolute;
+  top: 50%;
+  left: calc(33 * var(--unit));
+  display: grid;
+  width: calc(72 * var(--unit));
+  height: calc(72 * var(--unit));
+  color: #fff8ed;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #bd7547, #8e492e);
+  transform: translateY(-50%);
+  font-family: var(--serif);
+  place-items: center;
 }
 
 .drawer-report-list {

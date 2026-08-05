@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#fff9f1" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>报告章节对话</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+  <body class="report-chat-page">
+    <header class="report-chat-header">
+      <a class="report-chat-back pressable" id="report-chat-back" href="./interpretation.html" aria-label="返回报告"></a>
+      <div>
+        <span id="report-chat-profile">国心解读</span>
+        <h1 id="report-chat-title">章节解读</h1>
+      </div>
+      <div class="report-chat-quota" id="report-chat-quota" aria-live="polite"></div>
+    </header>
+
+    <main class="report-chat-shell">
+      <section class="report-chat-intro" id="report-chat-intro">
+        <img src="../../public/images/teacher-avatar-centered.png" alt="" />
+        <div>
+          <strong>国学老师</strong>
+          <p id="report-chat-description">我会结合本章报告内容继续为你解读。</p>
+        </div>
+      </section>
+
+      <section class="report-chat-messages" id="report-chat-messages" aria-label="章节对话">
+        <time class="chat-start-time" id="report-chat-start-time"></time>
+        <div class="inline-message-list" id="report-chat-message-list" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <div class="voice-dock report-chat-dock" id="report-chat-dock" aria-label="对话工具栏">
+      <span class="report-chat-topic-mark" aria-hidden="true">解</span>
+      <input
+        class="text-input"
+        id="report-chat-question"
+        type="text"
+        placeholder="继续问老师"
+        autocomplete="off"
+        aria-label="输入章节问题"
+      />
+      <button class="dock-icon plus-button home-action pressable" id="report-chat-send" type="button" aria-label="发送问题">
+        <svg class="plus-icon" viewBox="0 0 72 72" aria-hidden="true">
+          <circle cx="36" cy="36" r="30" />
+          <path d="M36 20v32M20 36h32" />
+        </svg>
+        <svg class="send-icon" viewBox="0 0 72 72" aria-hidden="true">
+          <circle cx="36" cy="36" r="30" />
+          <path d="M23 36h25M39 26l10 10-10 10" />
+        </svg>
+      </button>
+      <p class="quota-guide" id="report-chat-quota-guide">今日免费对话次数已用完</p>
+    </div>
+
+    <div class="app-toast" id="report-chat-toast" role="status" aria-live="polite"></div>
+
+    <script src="../js/navigation.js"></script>
+    <script src="../js/shared.js"></script>
+    <script src="../js/chat-replies.js"></script>
+    <script src="../js/report-chat.js"></script>
+  </body>
+</html>

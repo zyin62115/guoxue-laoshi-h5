@@ -575,8 +575,15 @@ sectionList.addEventListener("click", (event) => {
     showToast("今日免费对话次数已用完，报告仍可继续阅读");
     return;
   }
-  reportState.createReportConversation(activeReport.id, ask.dataset.askSection);
-  window.location.href = "./index.html?reportChat=1#chat";
+  const conversation = reportState.createReportConversation(
+    activeReport.id,
+    ask.dataset.askSection,
+  );
+  if (!conversation) {
+    showToast("暂时无法进入章节对话");
+    return;
+  }
+  window.location.href = `./report-chat.html?report=${encodeURIComponent(activeReport.id)}&section=${encodeURIComponent(ask.dataset.askSection)}`;
 });
 
 stickyButton.addEventListener("click", () => openPayment());

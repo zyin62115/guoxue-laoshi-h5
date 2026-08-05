@@ -18,31 +18,12 @@ const appToast = document.querySelector("#app-toast");
 const interpretationButton = document.querySelector('[data-action="interpretation"]');
 const interpretationDescription = interpretationButton.querySelector(".feature-desc");
 const professionalChartButton = document.querySelector('[data-action="professional-chart"]');
-const reportContext = document.querySelector("#report-chat-context");
-const reportContextTitle = document.querySelector("#report-chat-context-title");
-const reportContextLink = document.querySelector("#report-chat-context-link");
 const guideDate = document.querySelector("#guide-date");
 const guideDateText = document.querySelector("#guide-date-text");
 const guideLineOne = document.querySelector("#guide-line-one");
 const guideLineTwo = document.querySelector("#guide-line-two");
 const guideGood = document.querySelector("#guide-good");
 const guideAvoid = document.querySelector("#guide-avoid");
-const initialUrl = new URL(window.location.href);
-let reportChatSessionActive =
-  initialUrl.searchParams.has("reportChat") &&
-  Boolean(appState.getActiveConversation()?.context);
-
-function syncHomeConversation() {
-  if (!reportChatSessionActive && appState.getActiveConversation()?.context) {
-    appState.activateHomeConversation();
-  }
-}
-
-function clearReportChatMarker() {
-  if (!initialUrl.searchParams.has("reportChat")) return;
-  initialUrl.searchParams.delete("reportChat");
-  window.history.replaceState(null, "", initialUrl);
-}
 
 function renderInterpretationEntry() {
   const profile = appState.getActiveProfile();
@@ -187,37 +168,6 @@ function renderDailyGuide() {
   dailyGuideTimer = window.setTimeout(renderDailyGuide, nextDay.getTime() - now.getTime() + 1000);
 }
 
-const MOCK_RULES = [
-  {
-    keywords: ["生病", "疾病", "症状", "药物", "治疗", "医院", "法律", "律师", "诉讼", "合同"],
-    reply:
-      "这件事涉及专业判断，国学的修身之道可以帮助你安定心绪，却不能替代医生、律师或其他专业人士的意见。\n\n先保存相关信息并尽快咨询合适的专业人员；在等待期间，照顾好自己的作息与情绪，不要独自承担风险。",
-  },
-  {
-    keywords: ["学习", "考试", "读书", "成绩", "复习", "功课"],
-    reply:
-      "学贵有恒，不在一时之速。先把最重要的一门功课定下来，每日专注一段固定时间，温故而知新。\n\n心静则思清，步稳则路远。今日先完成一个可以落实的小目标，积累自然会显现。",
-  },
-  {
-    keywords: ["工作", "事业", "选择", "机会", "职业", "辞职", "创业"],
-    reply:
-      "事缓则圆，谋定而后动。先分清哪些是你能掌握的，哪些需要等待时机，再从最重要的一步开始。\n\n不必急于求成，也不要因犹豫停滞。把眼前可做之事做好，局面会在行动中逐渐明朗。",
-  },
-  {
-    keywords: ["焦虑", "烦恼", "难过", "压力", "迷茫", "情绪", "害怕"],
-    reply:
-      "心有所扰时，先不急着作决定。停一停，缓缓呼吸，把纷杂的念头写下来，只处理眼前最要紧的一件事。\n\n静能生定，定能生慧。允许自己慢一点，情绪安稳之后，再看问题往往会多一条路。",
-  },
-  {
-    keywords: ["家庭", "朋友", "感情", "相处", "沟通", "父母", "伴侣"],
-    reply:
-      "和而不同，是相处之道。先听清彼此真正关切的是什么，再用平和而具体的话表达自己的感受与边界。\n\n诚恳不等于勉强，体谅也不是一味退让。留一分余地，关系才有转圜和生长的空间。",
-  },
-];
-
-const FALLBACK_REPLY =
-  "你所问之事，不妨先从正心开始：看清自己的真实愿望，也看清眼前的条件与限制。\n\n把大问题拆成今天能够完成的一小步，做完再观其变化。顺势而为，并非等待，而是在合适的方向上稳稳前行。";
-
 function clearPressedState(element) {
   element.classList.remove("is-pressed");
 }
@@ -235,14 +185,7 @@ pressables.forEach((element) => {
 });
 
 function getMockReply(question) {
-  const matchedRule = MOCK_RULES.find((rule) =>
-    rule.keywords.some((keyword) => question.includes(keyword)),
-  );
-  const reply = matchedRule ? matchedRule.reply : FALLBACK_REPLY;
-  const context = appState.getActiveConversation()?.context;
-  return context
-    ? `结合你在《${context.sectionTitle}》报告中的特点来看，${reply}`
-    : reply;
+  return window.GuoxueChatReplies.getReply(question);
 }
 
 function formatStartedAt(value) {
@@ -305,7 +248,6 @@ function renderHistory() {
   inlineChat.hidden = !hasConversation;
   document.body.classList.toggle("has-inline-chat", hasConversation);
 
-  renderReportContext();
   if (!hasConversation) {
     messageList.replaceChildren();
     return history;
@@ -316,14 +258,6 @@ function renderHistory() {
   history.forEach((message) => fragment.append(createMessageRow(message)));
   messageList.replaceChildren(fragment);
   return history;
-}
-
-function renderReportContext() {
-  const context = appState.getActiveConversation()?.context;
-  reportContext.hidden = !context;
-  if (!context) return;
-  reportContextTitle.textContent = `正在结合《${context.sectionTitle}》为你解读`;
-  reportContextLink.href = `./interpretation.html?report=${encodeURIComponent(context.reportId)}#report-section-${encodeURIComponent(context.sectionId)}`;
 }
 
 function scrollToLatest(behavior = "smooth") {
@@ -816,7 +750,7 @@ window.addEventListener("scroll", queueScrollStateUpdate, { passive: true });
 window.addEventListener("resize", queueScrollStateUpdate);
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) {
-    syncHomeConversation();
+    appState.activateHomeConversation();
     renderHistory();
   }
   renderDailyGuide();
@@ -834,13 +768,9 @@ window.addEventListener("beforeunload", () => {
   if (toastTimer) window.clearTimeout(toastTimer);
   if (dailyGuideTimer) window.clearTimeout(dailyGuideTimer);
 });
-window.addEventListener("pagehide", () => {
-  reportChatSessionActive = false;
-});
-
 renderDailyGuide();
 renderInterpretationEntry();
-syncHomeConversation();
+appState.activateHomeConversation();
 const history = renderHistory();
 syncQuotaState();
 syncScrollTopButton();
@@ -854,11 +784,3 @@ const lastMessage = history.at(-1);
 if (lastMessage?.role === "user") {
   scheduleReply(lastMessage.content);
 }
-
-if (reportChatSessionActive) {
-  requestAnimationFrame(() => {
-    reportContext.scrollIntoView({ behavior: "smooth", block: "center" });
-    if (!questionInput.disabled) questionInput.focus({ preventScroll: true });
-  });
-}
-clearReportChatMarker();

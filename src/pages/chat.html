@@ -2,14 +2,91 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0; url=./index.html" />
-    <title>返回国学老师首页</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#fff9f1" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>与国学老师对话</title>
+    <link rel="stylesheet" href="../css/styles.css" />
   </head>
-  <body>
-    <p>对话已移至首页，正在返回……</p>
-    <script>
-      window.location.replace("./index.html");
-    </script>
+  <body class="chat-page">
+    <header class="chat-topbar" aria-label="对话导航">
+      <a class="chat-back pressable" href="./index.html" aria-label="返回首页">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <path d="M27 11 16 22l11 11M17 22h16" />
+        </svg>
+      </a>
+      <div class="chat-heading">
+        <h1>国学老师</h1>
+        <span>在线解答</span>
+      </div>
+      <div class="chat-quota" id="chat-quota"></div>
+    </header>
+
+    <main class="chat-shell">
+      <section class="report-chat-context" id="report-chat-context" hidden>
+        <img src="../../public/images/teacher-avatar-centered.png" alt="" />
+        <div>
+          <span>国心解读</span>
+          <strong id="report-chat-context-title"></strong>
+          <a class="pressable" id="report-chat-context-link" href="./interpretation.html">
+            返回查看报告
+          </a>
+        </div>
+      </section>
+
+      <section class="chat-conversation" aria-label="与国学老师的对话">
+        <time class="chat-start-time" id="chat-start-time"></time>
+        <div class="inline-message-list" id="inline-message-list" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <div class="voice-dock chat-dock" aria-label="对话工具栏">
+      <button
+        class="dock-icon mic-button pressable"
+        type="button"
+        id="chat-mic"
+        aria-label="语音输入暂未开放"
+      >
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <rect x="23" y="8" width="18" height="34" rx="9" />
+          <path d="M15 31c0 10 7.6 18 17 18s17-8 17-18M32 49v8M23 57h18" />
+        </svg>
+      </button>
+
+      <input
+        id="chat-question"
+        class="text-input"
+        type="text"
+        aria-label="文字输入"
+        placeholder="请输入问题"
+        autocomplete="off"
+      />
+
+      <button
+        id="chat-action"
+        class="dock-icon plus-button home-action pressable"
+        type="button"
+        aria-label="更多功能"
+      >
+        <svg class="plus-icon" viewBox="0 0 72 72" aria-hidden="true">
+          <circle cx="36" cy="36" r="30" />
+          <path d="M36 20v32M20 36h32" />
+        </svg>
+        <svg class="send-icon" viewBox="0 0 72 72" aria-hidden="true">
+          <circle cx="36" cy="36" r="30" />
+          <path d="M23 36h25M39 26l10 10-10 10" />
+        </svg>
+      </button>
+
+      <p class="quota-guide" id="chat-quota-guide" hidden>今日免费对话次数已用完</p>
+    </div>
+
+    <div class="app-toast" id="chat-toast" role="status" aria-live="polite"></div>
+
+    <script src="../js/shared.js"></script>
+    <script src="../js/chat.js"></script>
   </body>
 </html>

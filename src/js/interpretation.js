@@ -481,10 +481,6 @@ sectionList.addEventListener("click", (event) => {
   }
   const ask = event.target.closest("[data-ask-section]");
   if (!ask) return;
-  if (reportState.getQuota().remaining <= 0) {
-    showToast("今日免费对话次数已用完，报告仍可继续阅读");
-    return;
-  }
   reportState.createReportConversation(activeReport.id, ask.dataset.askSection);
   window.location.href = "./index.html?reportChat=1#chat";
 });

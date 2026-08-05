@@ -4,7 +4,6 @@ const questionInput = document.querySelector("#home-question");
 const actionButton = document.querySelector("#home-action");
 const voiceDock = document.querySelector(".voice-dock");
 const micButton = document.querySelector('[data-action="voice-mode"]');
-const quotaGuide = document.querySelector("#home-quota-guide");
 const inlineChat = document.querySelector("#inline-chat");
 const chatStartTime = document.querySelector("#chat-start-time");
 const messageList = document.querySelector("#inline-message-list");
@@ -304,8 +303,7 @@ function scrollToLatest(behavior = "smooth") {
 
 function syncActionState() {
   const hasQuestion = questionInput.value.trim().length > 0;
-  const exhausted = appState.getQuota().remaining <= 0;
-  const canSend = hasQuestion && !exhausted && !isReplying;
+  const canSend = hasQuestion && !isReplying;
 
   actionButton.classList.toggle("is-send", canSend);
   actionButton.dataset.action = canSend ? "submit-question" : "more";
@@ -313,19 +311,11 @@ function syncActionState() {
 }
 
 function syncQuotaState() {
-  const quota = appState.getQuota();
-  const exhausted = quota.remaining <= 0;
-
-  voiceDock.classList.toggle("is-exhausted", exhausted);
-  questionInput.disabled = exhausted || isReplying;
-  micButton.disabled = exhausted || isReplying;
-  actionButton.disabled = exhausted || isReplying;
-  quotaGuide.hidden = !exhausted;
-  questionInput.placeholder = exhausted
-    ? "限时免费体验已结束"
-    : isReplying
-      ? "老师正在思考…"
-      : "请输入问题";
+  voiceDock.classList.remove("is-exhausted");
+  questionInput.disabled = isReplying;
+  micButton.disabled = isReplying;
+  actionButton.disabled = isReplying;
+  questionInput.placeholder = isReplying ? "老师正在思考…" : "请输入问题";
   syncActionState();
 }
 
@@ -385,12 +375,6 @@ function submitQuestion() {
   const content = questionInput.value.trim();
   if (!content) {
     syncActionState();
-    return;
-  }
-
-  const quota = appState.consumeQuota();
-  if (!quota) {
-    syncQuotaState();
     return;
   }
 

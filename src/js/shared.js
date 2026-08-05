@@ -1,6 +1,6 @@
 (function initializeGuoxueState(global) {
   const STORAGE_VERSION = 2;
-  const DAILY_LIMIT = 10;
+  const DAILY_LIMIT = Number.POSITIVE_INFINITY;
   const HISTORY_LIMIT = 40;
   const CONVERSATION_LIMIT = 90;
   const PROFILE_LIMIT = 20;
@@ -309,35 +309,21 @@
   }
 
   function getQuota() {
-    const today = localDateKey();
-    const stored = safeParse(readLocal(KEYS.quota), null);
-    if (
-      !stored ||
-      stored.date !== today ||
-      !Number.isInteger(stored.remaining)
-    ) {
-      return saveQuota({ date: today, remaining: DAILY_LIMIT });
-    }
-    stored.remaining = Math.max(0, Math.min(DAILY_LIMIT, stored.remaining));
-    return stored;
+    return {
+      date: localDateKey(),
+      remaining: DAILY_LIMIT,
+      unlimited: true,
+    };
   }
 
   function consumeQuota() {
-    const quota = getQuota();
-    if (quota.remaining <= 0) return null;
-    return saveQuota({ ...quota, remaining: quota.remaining - 1 });
+    return getQuota();
   }
 
-  function renderQuota(element, quota = getQuota(), compact = false) {
+  function renderQuota(element) {
     if (!element) return;
-    if (quota.remaining <= 0) {
-      element.textContent = "今日免费对话次数已用完";
-      element.setAttribute("aria-label", "今日免费对话次数已用完");
-      return;
-    }
-    const prefix = compact ? "今日还可对话" : "今日还可免费对话";
-    element.innerHTML = `<span>${prefix}</span><strong>${quota.remaining}</strong><span>次</span>`;
-    element.setAttribute("aria-label", `${prefix}${quota.remaining}次`);
+    element.textContent = "对话不限次";
+    element.setAttribute("aria-label", "对话不限次数");
   }
 
   function normalizeProfile(profile) {

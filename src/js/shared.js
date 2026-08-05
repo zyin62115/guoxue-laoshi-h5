@@ -398,6 +398,21 @@
     return getProfiles().find((profile) => profile.id === id) || null;
   }
 
+  function profileNameKey(value) {
+    return String(value || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLocaleLowerCase("zh-CN");
+  }
+
+  function isProfileNameTaken(name, excludeProfileId = null) {
+    const key = profileNameKey(name);
+    if (!key) return false;
+    return getProfiles().some(
+      (profile) => profile.id !== excludeProfileId && profileNameKey(profile.name) === key,
+    );
+  }
+
   function profileSnapshot(profile) {
     return {
       profileId: profile.id,
@@ -683,6 +698,7 @@
 
   function upsertProfile(profile) {
     const profiles = getProfiles();
+    if (isProfileNameTaken(profile?.name, profile?.id || null)) return null;
     const existingIndex = profiles.findIndex((item) => item.id === profile.id);
     const existing = existingIndex >= 0 ? profiles[existingIndex] : null;
     const now = new Date().toISOString();
@@ -801,6 +817,7 @@
     getReportOrders,
     getReportUpgradePrice,
     getReports,
+    isProfileNameTaken,
     localDateKey,
     purchaseReport,
     renderQuota,

@@ -4,6 +4,8 @@
 
 问答回复由 `src/js/app.js` 中的本地关键词规则模拟，不代表已接入真实 AI 服务。八字档案、额度和历史会话仅保存在当前浏览器中。
 
+八字档案的“姓名或称呼”在不同档案间必须唯一，比较时忽略首尾空格、连续空格和英文大小写；编辑档案时可保留自身原值。`isProfileNameTaken(name, excludeProfileId)` 用于提前检查冲突，`upsertProfile(profile)` 遇到重名时返回 `null` 且不写入本地存储。
+
 ## 国心解读报告
 
 报告与模拟订单分别保存在 `guoxueInterpretationReportsV1` 和 `guoxueInterpretationOrdersV1`。报告绑定档案快照指纹；同一快照复用已有报告，档案信息变化后生成新版本。报告上限为 30 份，模拟订单最多保留 100 条。

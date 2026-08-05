@@ -201,6 +201,10 @@ function collectProfile() {
     showError("请输入姓名或称呼。", nameInput);
     return null;
   }
+  if (appState.isProfileNameTaken(name, editingProfile?.id || null)) {
+    showError("该姓名或称呼已用于其他档案，请换一个。", nameInput);
+    return null;
+  }
   if (!validateDate(year, month, day, calendar)) {
     showError(
       calendar === "lunar"
@@ -239,7 +243,11 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
   const profile = collectProfile();
   if (!profile) return;
-  appState.upsertProfile(profile);
+  const savedProfile = appState.upsertProfile(profile);
+  if (!savedProfile) {
+    showError("该姓名或称呼已用于其他档案，请换一个。", nameInput);
+    return;
+  }
   window.location.replace(exitTarget());
 });
 

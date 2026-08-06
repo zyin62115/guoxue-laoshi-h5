@@ -31,6 +31,14 @@ if (context === "chart") {
   description.textContent = "本次不会真实添加微信，也不会上传你的个人信息。";
   backLink.textContent = "完成添加，返回主页";
   backLink.href = "./index.html";
+} else if (context === "customer-service") {
+  document.title = "添加客服微信";
+  title.textContent = "已进入客服微信添加流程";
+  copy.textContent = "正式接入后，这里将打开企业微信客服，为你提供产品使用与咨询帮助。";
+  status.textContent = "模拟添加已完成";
+  description.textContent = "本次不会真实添加微信，也不会向外部服务发送你的个人资料。";
+  backLink.textContent = "完成添加，返回个人资料与设置";
+  backLink.href = "./settings.html";
 }
 
 backLink.addEventListener("click", (event) => {

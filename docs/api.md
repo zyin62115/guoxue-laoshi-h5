@@ -4,6 +4,17 @@
 
 问答回复由 `src/js/app.js` 中的本地关键词规则模拟，不代表已接入真实 AI 服务。八字档案和历史会话仅保存在当前浏览器中。
 
+## 个人偏好
+
+个人昵称、预设头像和全站字号保存在 `guoxueUserPreferencesV1`。`src/js/preferences.js` 在页面样式加载前初始化 `window.GuoxuePreferences`，所有页面均应先加载该脚本。
+
+- `getPreferences()`：读取并标准化 `{ nickname, avatarId, fontSize }`；损坏或非法数据回退为访客、远山头像和标准字号。
+- `updatePreferences(patch)`：合并并持久化偏好，同时立即应用字号。
+- `applyFontSize(fontSize)`：将小、标准、大三档字号映射到根元素的 `data-font-size`。
+- `getAvatar(id)`：读取固定头像的标识、名称和显示字形。
+
+客服入口使用 `wechat-simulator.html?context=customer-service&return=./settings.html`。该场景只展示客服添加模拟文案，不调用报告领取接口，也不写入订单。
+
 ## 对话额度与运营标签
 
 当前所有页面均允许不限次数对话。额度状态与运营展示彼此独立：

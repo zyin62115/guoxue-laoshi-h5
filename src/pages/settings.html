@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#fff9f1" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>个人资料与设置</title>
+    <script src="../js/preferences.js"></script>
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+  <body class="collection-page settings-page">
+    <main class="collection-shell settings-shell">
+      <header class="collection-header">
+        <a class="profile-back pressable" href="./index.html#menu" aria-label="返回个人中心"></a>
+        <div>
+          <h1>个人资料与设置</h1>
+          <span>完善称呼与阅读偏好</span>
+        </div>
+        <span aria-hidden="true"></span>
+      </header>
+
+      <form class="settings-card" id="settings-profile-form" novalidate>
+        <div class="settings-heading">
+          <strong>个人资料</strong>
+          <small>资料仅保存在当前浏览器</small>
+        </div>
+
+        <label class="settings-field" for="settings-nickname">
+          <span>昵称</span>
+          <input
+            id="settings-nickname"
+            name="nickname"
+            type="text"
+            maxlength="12"
+            autocomplete="nickname"
+            placeholder="请输入昵称"
+            required
+          />
+        </label>
+
+        <fieldset class="settings-avatar-field">
+          <legend>选择头像</legend>
+          <div class="settings-avatar-grid" id="settings-avatar-grid">
+            <label class="settings-avatar-option">
+              <input type="radio" name="avatarId" value="mountain" />
+              <span class="avatar-theme" data-avatar="mountain"><b>山</b></span>
+              <small>远山</small>
+            </label>
+            <label class="settings-avatar-option">
+              <input type="radio" name="avatarId" value="water" />
+              <span class="avatar-theme" data-avatar="water"><b>水</b></span>
+              <small>流水</small>
+            </label>
+            <label class="settings-avatar-option">
+              <input type="radio" name="avatarId" value="bamboo" />
+              <span class="avatar-theme" data-avatar="bamboo"><b>竹</b></span>
+              <small>青竹</small>
+            </label>
+            <label class="settings-avatar-option">
+              <input type="radio" name="avatarId" value="moon" />
+              <span class="avatar-theme" data-avatar="moon"><b>月</b></span>
+              <small>明月</small>
+            </label>
+          </div>
+        </fieldset>
+
+        <p class="form-error settings-error" id="settings-error" role="alert" aria-live="polite"></p>
+        <button class="settings-save pressable" type="submit">保存个人资料</button>
+      </form>
+
+      <section class="settings-card" aria-labelledby="font-settings-title">
+        <div class="settings-heading">
+          <strong id="font-settings-title">字体大小</strong>
+          <small>设置会应用到全部页面</small>
+        </div>
+        <div class="settings-font-options" id="settings-font-options">
+          <label>
+            <input type="radio" name="fontSize" value="small" />
+            <span>小</span>
+          </label>
+          <label>
+            <input type="radio" name="fontSize" value="standard" />
+            <span>标准</span>
+          </label>
+          <label>
+            <input type="radio" name="fontSize" value="large" />
+            <span>大</span>
+          </label>
+        </div>
+        <p class="settings-font-preview">示例：心静则明，行稳致远。</p>
+      </section>
+
+      <section class="settings-card" aria-labelledby="service-settings-title">
+        <div class="settings-heading">
+          <strong id="service-settings-title">联系客服</strong>
+          <small>添加老师微信，获得使用帮助</small>
+        </div>
+        <a
+          class="settings-service pressable"
+          href="./wechat-simulator.html?context=customer-service&amp;return=./settings.html"
+        >
+          <span class="settings-service-mark" aria-hidden="true">微</span>
+          <span><strong>添加客服微信</strong><small>在线答疑与使用指引</small></span>
+          <i aria-hidden="true"></i>
+        </a>
+      </section>
+    </main>
+
+    <div class="app-toast" id="settings-toast" role="status" aria-live="polite"></div>
+    <script src="../js/settings.js"></script>
+  </body>
+</html>

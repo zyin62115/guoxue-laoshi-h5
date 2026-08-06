@@ -32,8 +32,8 @@ function renderReports() {
         <i aria-hidden="true"></i>`;
       link.querySelector("strong").textContent = `${report.profileSnapshot?.name || "我的"}的国心解读`;
       link.querySelector("small").textContent = report.fullUnlocked
-        ? "完整报告 · 已永久解锁"
-        : `已解锁 ${unlocked}/8 · 可继续试读`;
+        ? "查看完整报告 · 已永久解锁"
+        : `继续试读 · 已解锁 ${unlocked}/8`;
       link.querySelector("time").textContent = formatReportDate(report.updatedAt);
       return link;
     }),

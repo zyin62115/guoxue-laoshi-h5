@@ -14,6 +14,7 @@ const drawerScrim = document.querySelector(".drawer-scrim");
 const conversationList = document.querySelector("#conversation-list");
 const appToast = document.querySelector("#app-toast");
 const interpretationButton = document.querySelector('[data-action="interpretation"]');
+const interpretationDescription = interpretationButton.querySelector(".feature-desc");
 const professionalChartButton = document.querySelector('[data-action="professional-chart"]');
 const learningMaterialsButton = document.querySelector('[data-action="learning-materials"]');
 const guideDate = document.querySelector("#guide-date");
@@ -24,6 +25,28 @@ const guideGood = document.querySelector("#guide-good");
 const guideAvoid = document.querySelector("#guide-avoid");
 const drawerUserAvatar = document.querySelector("#drawer-user-avatar");
 const drawerTitle = document.querySelector("#drawer-title");
+
+function renderInterpretationEntry() {
+  const profile = appState.getActiveProfile();
+  if (!profile) {
+    interpretationDescription.textContent = appState.getReports().length
+      ? "查看历史报告，或创建新档案"
+      : "建立档案，获得专属解读";
+    return;
+  }
+
+  const currentReport = appState.getCurrentProfileReport(profile.id);
+  const latestReport = appState.getLatestProfileReport(profile.id);
+  if (currentReport) {
+    interpretationDescription.textContent = currentReport.fullUnlocked
+      ? `${profile.name}已有完整报告，可继续查看`
+      : `${profile.name}已有报告，可继续查看`;
+  } else if (latestReport) {
+    interpretationDescription.textContent = `${profile.name}档案已更新，可生成新版`;
+  } else {
+    interpretationDescription.textContent = `${profile.name}尚未生成报告`;
+  }
+}
 
 let isComposing = false;
 let scrollTicking = false;
@@ -269,7 +292,11 @@ function formatConversationDate(conversation) {
 function renderConversations() {
   const conversations = appState
     .getConversations()
-    .filter((conversation) => conversation.messages.some((message) => message.role === "user"));
+    .filter(
+      (conversation) =>
+        !conversation.context &&
+        conversation.messages.some((message) => message.role === "user"),
+    );
   const activeId = appState.getActiveConversation()?.id;
   const fragment = document.createDocumentFragment();
 
@@ -571,6 +598,7 @@ window.addEventListener("resize", queueScrollStateUpdate);
 window.addEventListener("pageshow", () => {
   renderUserPreferences();
   renderDailyGuide();
+  renderInterpretationEntry();
   syncQuotaState();
   syncScrollTopButton();
   renderDrawerContent();
@@ -583,10 +611,10 @@ window.addEventListener("beforeunload", () => {
   if (toastTimer) window.clearTimeout(toastTimer);
   if (dailyGuideTimer) window.clearTimeout(dailyGuideTimer);
 });
-
 renderUserPreferences();
 renderDailyGuide();
 appState.renderPromotionBadge(promotionBadge);
+renderInterpretationEntry();
 syncQuotaState();
 syncScrollTopButton();
 renderDrawerContent();

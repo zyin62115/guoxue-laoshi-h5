@@ -42,10 +42,12 @@ if (context === "chart") {
 }
 
 backLink.addEventListener("click", (event) => {
-  if (context === "chart") return;
-  if (!reportId) return;
   event.preventDefault();
   event.stopPropagation();
+  if (context === "chart" || !reportId) {
+    window.GuoxueNavigation.back(backLink.href);
+    return;
+  }
   const result = window.GuoxueApp.claimFreeReport(reportId);
   if (!result.ok) {
     status.textContent = "暂时无法解锁";

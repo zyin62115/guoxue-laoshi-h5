@@ -234,6 +234,30 @@
     return conversation;
   }
 
+  function activateHomeConversation() {
+    const conversations = getConversations();
+    const todayKey = localDateKey();
+    let conversation = conversations.find(
+      (item) => item.dateKey === todayKey && !item.context,
+    );
+
+    if (!conversation) {
+      const now = new Date().toISOString();
+      conversation = normalizeConversation({
+        id: createId("conversation"),
+        dateKey: todayKey,
+        title: "新的对话",
+        messages: [],
+        createdAt: now,
+        updatedAt: now,
+      });
+      saveConversations([conversation, ...conversations]);
+    }
+
+    writeLocal(KEYS.activeConversation, conversation.id);
+    return conversation;
+  }
+
   function createMessage(role, content) {
     return {
       id: createId("message"),
@@ -394,6 +418,21 @@
     return getProfiles().find((profile) => profile.id === id) || null;
   }
 
+  function profileNameKey(value) {
+    return String(value || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLocaleLowerCase("zh-CN");
+  }
+
+  function isProfileNameTaken(name, excludeProfileId = null) {
+    const key = profileNameKey(name);
+    if (!key) return false;
+    return getProfiles().some(
+      (profile) => profile.id !== excludeProfileId && profileNameKey(profile.name) === key,
+    );
+  }
+
   function profileSnapshot(profile) {
     return {
       profileId: profile.id,
@@ -486,6 +525,21 @@
 
   function getReport(id) {
     return getReports().find((report) => report.id === id) || null;
+  }
+
+  function getCurrentProfileReport(profileId) {
+    const profile = getProfile(profileId);
+    if (!profile) return null;
+    const fingerprint = snapshotFingerprint(profileSnapshot(profile));
+    return getReports().find((report) => report.fingerprint === fingerprint) || null;
+  }
+
+  function getLatestProfileReport(profileId) {
+    return (
+      getReports()
+        .filter((report) => report.profileId === profileId)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0] || null
+    );
   }
 
   function getOrCreateReport(profileId, payload) {
@@ -664,6 +718,7 @@
 
   function upsertProfile(profile) {
     const profiles = getProfiles();
+    if (isProfileNameTaken(profile?.name, profile?.id || null)) return null;
     const existingIndex = profiles.findIndex((item) => item.id === profile.id);
     const existing = existingIndex >= 0 ? profiles[existingIndex] : null;
     const now = new Date().toISOString();
@@ -758,6 +813,7 @@
     REPORT_LIMIT,
     REPORT_SECTION_PRICE,
     STORAGE_VERSION,
+    activateHomeConversation,
     appendMessage,
     claimFreeReport,
     consumeQuota,
@@ -770,8 +826,10 @@
     getActiveProfileId,
     getChatStartedAt,
     getConversations,
+    getCurrentProfileReport,
     getFirstReportClaim,
     getHistory,
+    getLatestProfileReport,
     getProfile,
     getProfiles,
     getPromotionBadge,
@@ -781,6 +839,7 @@
     getReportOrders,
     getReportUpgradePrice,
     getReports,
+    isProfileNameTaken,
     localDateKey,
     purchaseReport,
     renderPromotionBadge,

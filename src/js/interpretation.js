@@ -154,6 +154,9 @@ const setup = document.querySelector("#report-setup");
 const reader = document.querySelector("#report-reader");
 const profileList = document.querySelector("#report-profile-list");
 const generateButton = document.querySelector("#generate-report");
+const viewPreviousButton = document.querySelector("#view-previous-report");
+const setupReportHistory = document.querySelector("#setup-report-history");
+const reportActionNote = document.querySelector("#report-action-note");
 const historyButton = document.querySelector("#report-history-button");
 const sectionList = document.querySelector("#report-section-list");
 const overview = document.querySelector("#report-overview");
@@ -202,8 +205,43 @@ function formatProfile(profile) {
   return `${calendar} ${year}年${month}月${day}日 · ${profile.birthTime}${birthplace}`;
 }
 
+function getProfileReportState(profileId) {
+  const currentReport = reportState.getCurrentProfileReport(profileId);
+  const latestReport = reportState.getLatestProfileReport(profileId);
+  return {
+    currentReport,
+    latestReport,
+    status: currentReport ? "current" : latestReport ? "stale" : "empty",
+  };
+}
+
+function syncSelectedProfileActions() {
+  const profile = reportState.getProfile(selectedProfileId);
+  if (!profile) {
+    generateButton.disabled = true;
+    viewPreviousButton.hidden = true;
+    return;
+  }
+
+  const state = getProfileReportState(profile.id);
+  generateButton.disabled = false;
+  viewPreviousButton.hidden = state.status !== "stale";
+  if (state.status === "current") {
+    generateButton.textContent = "查看报告";
+    reportActionNote.textContent = "这份档案已有报告，打开后可继续阅读，不会重复生成";
+  } else if (state.status === "stale") {
+    generateButton.textContent = "生成新版报告";
+    reportActionNote.textContent = "档案信息已更新，旧版报告仍会保留";
+  } else {
+    generateButton.textContent = "生成我的报告";
+    reportActionNote.textContent = "出生信息仅保存在当前浏览器，生成后可长期查看";
+  }
+}
+
 function renderProfiles() {
   const profiles = reportState.getProfiles();
+  const hasReports = reportState.getReports().length > 0;
+  setupReportHistory.hidden = profiles.length > 0 || !hasReports;
   if (!profiles.length) {
     profileList.innerHTML = `
       <a class="report-profile-empty pressable" href="./profile.html">
@@ -211,6 +249,10 @@ function renderProfiles() {
         <span>添加出生信息后即可生成专属报告</span>
       </a>`;
     generateButton.disabled = true;
+    viewPreviousButton.hidden = true;
+    reportActionNote.textContent = hasReports
+      ? "原档案已删除，历史报告仍可继续查看"
+      : "新增档案后即可生成专属解读";
     return;
   }
 
@@ -235,7 +277,17 @@ function renderProfiles() {
       name.textContent = profile.name;
       const detail = document.createElement("small");
       detail.textContent = formatProfile(profile);
-      copy.append(name, detail);
+      const reportStatus = document.createElement("span");
+      reportStatus.className = "report-profile-status";
+      const state = getProfileReportState(profile.id);
+      reportStatus.dataset.status = state.status;
+      reportStatus.textContent =
+        state.status === "current"
+          ? "已有报告"
+          : state.status === "stale"
+            ? "档案已更新"
+            : "未生成";
+      copy.append(name, detail, reportStatus);
       const check = document.createElement("i");
       check.setAttribute("aria-hidden", "true");
       check.textContent = "✓";
@@ -243,7 +295,7 @@ function renderProfiles() {
       return label;
     }),
   );
-  generateButton.disabled = false;
+  syncSelectedProfileActions();
 }
 
 function reportPayload(profile) {
@@ -344,7 +396,16 @@ function renderReport() {
     ? activeReport.sections.length
     : activeReport.unlockedSectionIds.length;
   overview.textContent = activeReport.overview;
-  profileName.textContent = activeReport.profileSnapshot.name;
+  const sourceProfile = reportState.getProfile(activeReport.profileId);
+  const currentReport = sourceProfile
+    ? reportState.getCurrentProfileReport(activeReport.profileId)
+    : null;
+  const versionLabel = !sourceProfile
+    ? "历史报告 · 原档案已删除"
+    : currentReport?.id === activeReport.id
+      ? ""
+      : "历史版本";
+  profileName.textContent = `${activeReport.profileSnapshot.name}${versionLabel ? ` · ${versionLabel}` : ""}`;
   reportMeta.textContent = `${formatProfile({
     ...activeReport.profileSnapshot,
     id: activeReport.profileId,
@@ -368,6 +429,7 @@ function openReport(report) {
   activeReport = report;
   const url = new URL(window.location.href);
   url.searchParams.set("report", report.id);
+  url.searchParams.delete("mode");
   window.history.replaceState(null, "", url);
   renderReport();
   const hashId = window.location.hash ? decodeURIComponent(window.location.hash.slice(1)) : "";
@@ -377,6 +439,17 @@ function openReport(report) {
   } else {
     window.scrollTo({ top: 0, behavior: "auto" });
   }
+}
+
+function showProfileSelection() {
+  activeReport = null;
+  selectedProfileId = reportState.getActiveProfileId();
+  setup.hidden = false;
+  reader.hidden = true;
+  stickyPurchase.hidden = true;
+  document.body.classList.remove("has-report-purchase");
+  renderProfiles();
+  window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 function openPayment(sectionId = null) {
@@ -450,22 +523,39 @@ profileList.addEventListener("change", (event) => {
   if (event.target.name !== "report-profile") return;
   selectedProfileId = event.target.value;
   reportState.setActiveProfile(selectedProfileId);
+  syncSelectedProfileActions();
 });
 
 generateButton.addEventListener("click", () => {
   const profile = reportState.getProfile(selectedProfileId);
   if (!profile) return;
+  const currentReport = reportState.getCurrentProfileReport(profile.id);
+  if (currentReport) {
+    openReport(currentReport);
+    return;
+  }
+
   generateButton.disabled = true;
   generateButton.textContent = "老师正在整理报告…";
   window.setTimeout(() => {
-    const report = reportState.getOrCreateReport(profile.id, reportPayload(profile));
+    const existingReport = reportState.getCurrentProfileReport(profile.id);
+    const report = existingReport || reportState.getOrCreateReport(profile.id, reportPayload(profile));
+    const wasCreated = Boolean(report && !existingReport);
     generateButton.disabled = false;
-    generateButton.textContent = "生成我的报告";
     if (report) {
       openReport(report);
-      scheduleFirstReportClaim();
+      if (wasCreated) scheduleFirstReportClaim();
+    } else {
+      syncSelectedProfileActions();
+      showToast("暂时无法生成报告，请稍后重试");
     }
   }, 550);
+});
+
+viewPreviousButton.addEventListener("click", () => {
+  const report = reportState.getLatestProfileReport(selectedProfileId);
+  if (report) openReport(report);
+  else showToast("没有找到可查看的旧版报告");
 });
 
 historyButton.addEventListener("click", () => {
@@ -481,8 +571,19 @@ sectionList.addEventListener("click", (event) => {
   }
   const ask = event.target.closest("[data-ask-section]");
   if (!ask) return;
-  reportState.createReportConversation(activeReport.id, ask.dataset.askSection);
-  window.location.href = "./chat.html";
+  if (reportState.getQuota().remaining <= 0) {
+    showToast("今日免费对话次数已用完，报告仍可继续阅读");
+    return;
+  }
+  const conversation = reportState.createReportConversation(
+    activeReport.id,
+    ask.dataset.askSection,
+  );
+  if (!conversation) {
+    showToast("暂时无法进入章节对话");
+    return;
+  }
+  window.location.href = `./report-chat.html?report=${encodeURIComponent(activeReport.id)}&section=${encodeURIComponent(ask.dataset.askSection)}`;
 });
 
 stickyButton.addEventListener("click", () => openPayment());
@@ -560,18 +661,32 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-window.addEventListener("pageshow", () => {
-  const reportId = new URLSearchParams(window.location.search).get("report");
-  const report = reportId ? reportState.getReport(reportId) : null;
-  if (report) openReport(report);
-  else renderProfiles();
+function initializePage({ notifyInvalidReport = false } = {}) {
+  const url = new URL(window.location.href);
+  const reportId = url.searchParams.get("report");
+  const requestedReport = reportId ? reportState.getReport(reportId) : null;
+
+  if (requestedReport) {
+    openReport(requestedReport);
+    return;
+  }
+
+  if (reportId) {
+    url.searchParams.delete("report");
+    window.history.replaceState(null, "", url);
+  }
+
+  showProfileSelection();
+
+  if (reportId && notifyInvalidReport) showToast("原报告不存在，已为你返回国心解读");
+}
+
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) initializePage();
 });
 
 window.addEventListener("beforeunload", () => {
   if (claimTimer) window.clearTimeout(claimTimer);
 });
 
-const initialReportId = new URLSearchParams(window.location.search).get("report");
-const initialReport = initialReportId ? reportState.getReport(initialReportId) : null;
-if (initialReport) openReport(initialReport);
-else renderProfiles();
+initializePage({ notifyInvalidReport: true });

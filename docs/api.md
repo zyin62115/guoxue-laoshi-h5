@@ -25,6 +25,10 @@
 
 八字档案的“姓名或称呼”在不同档案间必须唯一，比较时忽略首尾空格、连续空格和英文大小写；编辑档案时可保留自身原值。`isProfileNameTaken(name, excludeProfileId)` 用于提前检查冲突，`upsertProfile(profile)` 遇到重名时返回 `null` 且不写入本地存储。
 
+## 出生地数据
+
+档案表单通过 `fetch("../../public/data/china-regions.json")` 加载省、市、区三级数据，并在运行时追加“海外”选项。选中结果仍以单个 `birthplace` 文本字段写入档案，因此旧档案结构无需迁移。数据加载失败时会保留已有档案的出生地文本并禁用三级选择器；数据来源与 MIT 许可说明见 `public/data/README.md`。
+
 ## 国心解读报告
 
 报告与模拟订单分别保存在 `guoxueInterpretationReportsV1` 和 `guoxueInterpretationOrdersV1`。报告绑定档案快照指纹；同一快照复用已有报告，档案信息变化后生成新版本。报告上限为 30 份，模拟订单最多保留 100 条。

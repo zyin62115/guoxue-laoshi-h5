@@ -426,12 +426,16 @@ function renderReport() {
   }
 }
 
-function openReport(report) {
+function openReport(report, { push = false } = {}) {
   activeReport = report;
   const url = new URL(window.location.href);
   url.searchParams.set("report", report.id);
   url.searchParams.delete("mode");
-  window.history.replaceState(null, "", url);
+  if (push) {
+    window.history.pushState({ report: report.id }, "", url);
+  } else {
+    window.history.replaceState({ report: report.id }, "", url);
+  }
   renderReport();
   const hashId = window.location.hash ? decodeURIComponent(window.location.hash.slice(1)) : "";
   const hashTarget = hashId ? document.getElementById(hashId) : null;
@@ -539,7 +543,7 @@ generateButton.addEventListener("click", () => {
   if (!profile) return;
   const currentReport = reportState.getCurrentProfileReport(profile.id);
   if (currentReport) {
-    openReport(currentReport);
+    openReport(currentReport, { push: true });
     return;
   }
 
@@ -551,7 +555,7 @@ generateButton.addEventListener("click", () => {
     const wasCreated = Boolean(report && !existingReport);
     generateButton.disabled = false;
     if (report) {
-      openReport(report);
+      openReport(report, { push: true });
       if (wasCreated) scheduleFirstReportClaim();
     } else {
       syncSelectedProfileActions();
@@ -562,7 +566,7 @@ generateButton.addEventListener("click", () => {
 
 viewPreviousButton.addEventListener("click", () => {
   const report = reportState.getLatestProfileReport(selectedProfileId);
-  if (report) openReport(report);
+  if (report) openReport(report, { push: true });
   else showToast("没有找到可查看的旧版报告");
 });
 
@@ -638,24 +642,6 @@ freeClaimButton.addEventListener("click", () => {
   openFirstReportClaim();
 });
 
-// 处于报告阅读视图时，点返回应先回到「选择档案」视图（视图内的上一页），
-// 而不是直接整页跳出到入口页
-const interpretationBack = document.querySelector(".interpretation-back");
-interpretationBack.addEventListener(
-  "click",
-  (event) => {
-    if (!reader.hidden && activeReport) {
-      event.preventDefault();
-      event.stopPropagation();
-      showProfileSelection();
-      const url = new URL(window.location.href);
-      url.searchParams.delete("report");
-      window.history.replaceState(null, "", url);
-    }
-  },
-  true,
-);
-
 document.addEventListener("keydown", (event) => {
   if (claimLayer.classList.contains("is-visible")) {
     if (event.key === "Escape") {
@@ -715,6 +701,19 @@ function initializePage({ notifyInvalidReport = false } = {}) {
 
   if (reportId && notifyInvalidReport) showToast("原报告不存在，已为你返回国心解读");
 }
+
+window.addEventListener("popstate", () => {
+  const url = new URL(window.location.href);
+  const reportId = url.searchParams.get("report");
+  if (reportId) {
+    const report = reportState.getReport(reportId);
+    if (report) {
+      openReport(report);
+      return;
+    }
+  }
+  showProfileSelection();
+});
 
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) initializePage();

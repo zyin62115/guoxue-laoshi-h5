@@ -1058,37 +1058,6 @@ button:focus-visible {
 }
 
 /* 个人资料与设置 */
-[data-avatar="mountain"] {
-  --avatar-from: #ead1ad;
-  --avatar-to: #c9905d;
-  --avatar-ink: #6b4226;
-}
-
-[data-avatar="water"] {
-  --avatar-from: #cbe0df;
-  --avatar-to: #79a9ad;
-  --avatar-ink: #255d66;
-}
-
-[data-avatar="bamboo"] {
-  --avatar-from: #d6dfbd;
-  --avatar-to: #8dab70;
-  --avatar-ink: #3e663b;
-}
-
-[data-avatar="moon"] {
-  --avatar-from: #ded9e8;
-  --avatar-to: #9e94bd;
-  --avatar-ink: #50466f;
-}
-
-.avatar-theme,
-.guest-avatar[data-avatar] {
-  background:
-    radial-gradient(circle at 31% 25%, rgba(255, 255, 255, 0.78), transparent 30%),
-    linear-gradient(145deg, var(--avatar-from), var(--avatar-to));
-}
-
 .settings-shell {
   display: grid;
   align-content: start;
@@ -1131,10 +1100,10 @@ button:focus-visible {
 .settings-field {
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 
-.settings-field > span,
-.settings-avatar-field legend {
+.settings-field > span {
   color: #67513d;
   font-size: calc(12px + var(--app-font-offset));
   font-weight: 700;
@@ -1157,32 +1126,6 @@ button:focus-visible {
   box-shadow: 0 0 0 3px rgba(184, 84, 43, 0.1);
 }
 
-.settings-avatar-field {
-  min-width: 0;
-  margin: 18px 0 0;
-  padding: 0;
-  border: 0;
-}
-
-.settings-avatar-field legend {
-  margin-bottom: 10px;
-}
-
-.settings-avatar-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.settings-avatar-option {
-  position: relative;
-  display: grid;
-  gap: 6px;
-  justify-items: center;
-  cursor: pointer;
-}
-
-.settings-avatar-option input,
 .settings-font-options input {
   position: absolute;
   width: 1px;
@@ -1191,33 +1134,30 @@ button:focus-visible {
   pointer-events: none;
 }
 
-.settings-avatar-option .avatar-theme {
+.settings-profile-editor {
   display: grid;
-  width: clamp(52px, 15vw, 68px);
-  height: clamp(52px, 15vw, 68px);
+  grid-template-columns: 64px minmax(0, 1fr);
+  align-items: end;
+  gap: 14px;
+}
+
+.settings-initial-avatar {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  color: #70472c;
   border: 2px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
+  background:
+    radial-gradient(circle at 31% 25%, rgba(255, 255, 255, 0.78), transparent 30%),
+    linear-gradient(145deg, #ead1ad, #c9905d);
   box-shadow: 0 5px 14px rgba(89, 59, 34, 0.12);
+  font-family: var(--serif);
+  font-size: calc(24px + var(--app-font-offset));
+  font-weight: 700;
   place-items: center;
 }
 
-.settings-avatar-option .avatar-theme b {
-  color: var(--avatar-ink);
-  font-family: var(--serif);
-  font-size: calc(24px + var(--app-font-offset));
-}
-
-.settings-avatar-option small {
-  color: #8e7c6c;
-  font-size: calc(10px + var(--app-font-offset));
-}
-
-.settings-avatar-option input:checked + .avatar-theme {
-  border-color: #b75432;
-  box-shadow: 0 0 0 3px rgba(183, 84, 50, 0.14);
-}
-
-.settings-avatar-option input:focus-visible + .avatar-theme,
 .settings-font-options input:focus-visible + span {
   outline: 2px solid #b75432;
   outline-offset: 3px;

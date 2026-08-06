@@ -35,10 +35,8 @@ let dailyGuideTimer = null;
 
 function renderUserPreferences() {
   const preferences = window.GuoxuePreferences.getPreferences();
-  const avatar = window.GuoxuePreferences.getAvatar(preferences.avatarId);
   drawerTitle.textContent = preferences.nickname;
-  drawerUserAvatar.dataset.avatar = avatar.id;
-  drawerUserAvatar.querySelector("b").textContent = avatar.glyph;
+  drawerUserAvatar.querySelector("b").textContent = Array.from(preferences.nickname)[0];
 }
 
 const DAILY_GUIDES = [

@@ -1,6 +1,7 @@
 const preferencesState = window.GuoxuePreferences;
 const profileForm = document.querySelector("#settings-profile-form");
 const nicknameInput = document.querySelector("#settings-nickname");
+const nicknameAvatar = document.querySelector("#settings-nickname-avatar");
 const settingsError = document.querySelector("#settings-error");
 const fontOptions = document.querySelector("#settings-font-options");
 const settingsToast = document.querySelector("#settings-toast");
@@ -21,9 +22,14 @@ function selectOption(name, value) {
 function renderPreferences() {
   const preferences = preferencesState.getPreferences();
   nicknameInput.value = preferences.nickname;
-  selectOption("avatarId", preferences.avatarId);
+  nicknameAvatar.textContent = Array.from(preferences.nickname)[0];
   selectOption("fontSize", preferences.fontSize);
 }
+
+nicknameInput.addEventListener("input", () => {
+  const nickname = nicknameInput.value.trim();
+  nicknameAvatar.textContent = nickname ? Array.from(nickname)[0] : "访";
+});
 
 profileForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -39,8 +45,7 @@ profileForm.addEventListener("submit", (event) => {
     return;
   }
 
-  const avatarId = profileForm.elements.avatarId.value;
-  preferencesState.updatePreferences({ nickname, avatarId });
+  preferencesState.updatePreferences({ nickname });
   nicknameInput.value = nickname;
   settingsError.textContent = "";
   showToast("个人资料已保存");

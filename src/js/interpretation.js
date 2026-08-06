@@ -638,6 +638,24 @@ freeClaimButton.addEventListener("click", () => {
   openFirstReportClaim();
 });
 
+// 处于报告阅读视图时，点返回应先回到「选择档案」视图（视图内的上一页），
+// 而不是直接整页跳出到入口页
+const interpretationBack = document.querySelector(".interpretation-back");
+interpretationBack.addEventListener(
+  "click",
+  (event) => {
+    if (!reader.hidden && activeReport) {
+      event.preventDefault();
+      event.stopPropagation();
+      showProfileSelection();
+      const url = new URL(window.location.href);
+      url.searchParams.delete("report");
+      window.history.replaceState(null, "", url);
+    }
+  },
+  true,
+);
+
 document.addEventListener("keydown", (event) => {
   if (claimLayer.classList.contains("is-visible")) {
     if (event.key === "Escape") {

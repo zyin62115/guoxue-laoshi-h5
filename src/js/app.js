@@ -5,9 +5,7 @@ const actionButton = document.querySelector("#home-action");
 const voiceDock = document.querySelector(".voice-dock");
 const micButton = document.querySelector('[data-action="voice-mode"]');
 const quotaGuide = document.querySelector("#home-quota-guide");
-const inlineChat = document.querySelector("#inline-chat");
-const chatStartTime = document.querySelector("#chat-start-time");
-const messageList = document.querySelector("#inline-message-list");
+const promotionBadge = document.querySelector("#home-promotion-badge");
 const scrollTopButton = document.querySelector("#scroll-top-button");
 const menuButton = document.querySelector('[data-action="menu"]');
 const drawerLayer = document.querySelector("#drawer-layer");
@@ -18,12 +16,15 @@ const appToast = document.querySelector("#app-toast");
 const interpretationButton = document.querySelector('[data-action="interpretation"]');
 const interpretationDescription = interpretationButton.querySelector(".feature-desc");
 const professionalChartButton = document.querySelector('[data-action="professional-chart"]');
+const learningMaterialsButton = document.querySelector('[data-action="learning-materials"]');
 const guideDate = document.querySelector("#guide-date");
 const guideDateText = document.querySelector("#guide-date-text");
 const guideLineOne = document.querySelector("#guide-line-one");
 const guideLineTwo = document.querySelector("#guide-line-two");
 const guideGood = document.querySelector("#guide-good");
 const guideAvoid = document.querySelector("#guide-avoid");
+const drawerUserAvatar = document.querySelector("#drawer-user-avatar");
+const drawerTitle = document.querySelector("#drawer-title");
 
 function renderInterpretationEntry() {
   const profile = appState.getActiveProfile();
@@ -48,14 +49,18 @@ function renderInterpretationEntry() {
 }
 
 let isComposing = false;
-let isReplying = false;
-let replyTimer = null;
 let scrollTicking = false;
 let isDrawerOpen = false;
 let toastTimer = null;
 let drawerGesture = null;
 let suppressClickUntil = 0;
 let dailyGuideTimer = null;
+
+function renderUserPreferences() {
+  const preferences = window.GuoxuePreferences.getPreferences();
+  drawerTitle.textContent = preferences.nickname;
+  drawerUserAvatar.querySelector("b").textContent = Array.from(preferences.nickname)[0];
+}
 
 const DAILY_GUIDES = [
   {
@@ -184,101 +189,10 @@ pressables.forEach((element) => {
   element.addEventListener("blur", () => clearPressedState(element));
 });
 
-function getMockReply(question) {
-  return window.GuoxueChatReplies.getReply(question);
-}
-
-function formatStartedAt(value) {
-  const date = new Date(value);
-  const today = new Date();
-  const sameDay =
-    date.getFullYear() === today.getFullYear() &&
-    date.getMonth() === today.getMonth() &&
-    date.getDate() === today.getDate();
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-
-  return sameDay
-    ? `今天 ${hours}:${minutes}`
-    : `${date.getMonth() + 1}月${date.getDate()}日 ${hours}:${minutes}`;
-}
-
-function createTeacherAvatar() {
-  const avatar = document.createElement("img");
-  avatar.className = "inline-teacher-avatar";
-    avatar.src = "../../public/images/teacher-avatar-centered.png";
-  avatar.alt = "";
-  return avatar;
-}
-
-function createMessageRow(message) {
-  const row = document.createElement("article");
-  row.className = `inline-message-row ${message.role}`;
-  row.dataset.messageId = message.id;
-
-  const body = document.createElement("div");
-  body.className = "inline-message-body";
-
-  if (message.role === "assistant") {
-    const name = document.createElement("span");
-    name.className = "inline-speaker-name";
-    name.textContent = "国学老师";
-    body.append(name);
-    row.append(createTeacherAvatar());
-  }
-
-  const bubble = document.createElement("div");
-  bubble.className = "inline-message-bubble";
-  bubble.textContent = message.content;
-  body.append(bubble);
-  row.append(body);
-  return row;
-}
-
-function ensureConversationTime(history) {
-  const oldestUser = history.find((message) => message.role === "user");
-  const startedAt = appState.ensureChatStartedAt(oldestUser?.createdAt);
-  chatStartTime.dateTime = startedAt;
-  chatStartTime.textContent = formatStartedAt(startedAt);
-}
-
-function renderHistory() {
-  const history = appState.getHistory();
-  const hasConversation = history.some((message) => message.role === "user");
-  inlineChat.hidden = !hasConversation;
-  document.body.classList.toggle("has-inline-chat", hasConversation);
-
-  if (!hasConversation) {
-    messageList.replaceChildren();
-    return history;
-  }
-
-  ensureConversationTime(history);
-  const fragment = document.createDocumentFragment();
-  history.forEach((message) => fragment.append(createMessageRow(message)));
-  messageList.replaceChildren(fragment);
-  return history;
-}
-
-function scrollToLatest(behavior = "smooth") {
-  const target = messageList.lastElementChild || chatStartTime;
-  if (!target) return;
-
-  requestAnimationFrame(() => {
-    const dockTop = voiceDock.getBoundingClientRect().top;
-    const targetBottom = target.getBoundingClientRect().bottom;
-    const overlap = targetBottom - dockTop + 22;
-
-    if (overlap > 0) {
-      window.scrollBy({ top: overlap, behavior });
-    }
-  });
-}
-
 function syncActionState() {
   const hasQuestion = questionInput.value.trim().length > 0;
   const exhausted = appState.getQuota().remaining <= 0;
-  const canSend = hasQuestion && !exhausted && !isReplying;
+  const canSend = hasQuestion && !exhausted;
 
   actionButton.classList.toggle("is-send", canSend);
   actionButton.dataset.action = canSend ? "submit-question" : "more";
@@ -290,70 +204,18 @@ function syncQuotaState() {
   const exhausted = quota.remaining <= 0;
 
   voiceDock.classList.toggle("is-exhausted", exhausted);
-  questionInput.disabled = exhausted || isReplying;
-  micButton.disabled = exhausted || isReplying;
-  actionButton.disabled = exhausted || isReplying;
+  questionInput.disabled = exhausted;
+  micButton.disabled = exhausted;
+  actionButton.disabled = exhausted;
   quotaGuide.hidden = !exhausted;
   questionInput.placeholder = exhausted
     ? "限时免费体验已结束"
-    : isReplying
-      ? "老师正在思考…"
-      : "请输入问题";
+    : "请输入问题";
   syncActionState();
 }
 
-function addThinkingRow() {
-  const row = document.createElement("article");
-  row.className = "inline-message-row assistant inline-thinking";
-  row.id = "inline-thinking-row";
-
-  const body = document.createElement("div");
-  body.className = "inline-message-body";
-
-  const name = document.createElement("span");
-  name.className = "inline-speaker-name";
-  name.textContent = "国学老师";
-
-  const bubble = document.createElement("div");
-  bubble.className = "inline-message-bubble";
-  bubble.append(document.createTextNode("老师正在思考"));
-
-  const dots = document.createElement("span");
-  dots.className = "inline-thinking-dots";
-  dots.setAttribute("aria-hidden", "true");
-  dots.append(document.createElement("i"), document.createElement("i"), document.createElement("i"));
-
-  bubble.append(dots);
-  body.append(name, bubble);
-  row.append(createTeacherAvatar(), body);
-  messageList.append(row);
-}
-
-function finishReply(question) {
-  document.querySelector("#inline-thinking-row")?.remove();
-  const message = appState.appendMessage("assistant", getMockReply(question));
-  messageList.append(createMessageRow(message));
-  isReplying = false;
-  replyTimer = null;
-  syncQuotaState();
-  renderDrawerContent();
-  scrollToLatest();
-
-  if (!questionInput.disabled) questionInput.focus({ preventScroll: true });
-}
-
-function scheduleReply(question) {
-  if (isReplying) return;
-
-  isReplying = true;
-  syncQuotaState();
-  addThinkingRow();
-  scrollToLatest();
-  replyTimer = window.setTimeout(() => finishReply(question), 700);
-}
-
 function submitQuestion() {
-  if (isReplying || isComposing) return;
+  if (isComposing) return;
 
   const content = questionInput.value.trim();
   if (!content) {
@@ -367,23 +229,9 @@ function submitQuestion() {
     return;
   }
 
-  const previousConversationId = appState.getActiveConversation()?.id;
-  const message = appState.appendMessage("user", content);
-  const currentConversationId = appState.getActiveConversation()?.id;
-  const history = appState.getHistory();
-  ensureConversationTime(history);
-  inlineChat.hidden = false;
-  document.body.classList.add("has-inline-chat");
-  if (previousConversationId && previousConversationId !== currentConversationId) {
-    renderHistory();
-  } else {
-    messageList.append(createMessageRow(message));
-  }
+  appState.appendMessage("user", content);
   questionInput.value = "";
-  syncQuotaState();
-  renderDrawerContent();
-  scrollToLatest();
-  scheduleReply(content);
+  window.location.href = "./chat.html";
 }
 
 function syncScrollTopButton() {
@@ -648,10 +496,12 @@ professionalChartButton.addEventListener("click", () => {
 interpretationButton.addEventListener("click", () => {
   window.location.href = "./interpretation.html";
 });
+learningMaterialsButton.addEventListener("click", () => {
+  window.location.href = "./wechat-simulator.html?context=learning-materials&return=./index.html";
+});
 drawerLayer.addEventListener("click", (event) => {
   const action = event.target.closest("[data-action]")?.dataset.action;
   if (action === "close-drawer") closeDrawer();
-  if (action === "account-placeholder") showToast("个人资料功能开发中");
 });
 
 drawer.addEventListener(
@@ -669,10 +519,7 @@ conversationList.addEventListener("click", (event) => {
   const item = event.target.closest("[data-conversation-id]");
   if (!item) return;
   if (!appState.setActiveConversation(item.dataset.conversationId)) return;
-  renderHistory();
-  renderConversations();
-  closeDrawer({ restoreFocus: false });
-  window.scrollTo({ top: 0, behavior: "auto" });
+  window.location.href = "./chat.html";
 });
 
 document.addEventListener("keydown", (event) => {
@@ -748,11 +595,8 @@ scrollTopButton.addEventListener("click", () => {
 
 window.addEventListener("scroll", queueScrollStateUpdate, { passive: true });
 window.addEventListener("resize", queueScrollStateUpdate);
-window.addEventListener("pageshow", (event) => {
-  if (event.persisted) {
-    appState.activateHomeConversation();
-    renderHistory();
-  }
+window.addEventListener("pageshow", () => {
+  renderUserPreferences();
   renderDailyGuide();
   renderInterpretationEntry();
   syncQuotaState();
@@ -764,14 +608,13 @@ window.addEventListener("focus", () => {
   syncQuotaState();
 });
 window.addEventListener("beforeunload", () => {
-  if (replyTimer) window.clearTimeout(replyTimer);
   if (toastTimer) window.clearTimeout(toastTimer);
   if (dailyGuideTimer) window.clearTimeout(dailyGuideTimer);
 });
+renderUserPreferences();
 renderDailyGuide();
+appState.renderPromotionBadge(promotionBadge);
 renderInterpretationEntry();
-appState.activateHomeConversation();
-const history = renderHistory();
 syncQuotaState();
 syncScrollTopButton();
 renderDrawerContent();
@@ -780,7 +623,6 @@ if (window.location.hash === "#menu") {
   openDrawer();
 }
 
-const lastMessage = history.at(-1);
-if (lastMessage?.role === "user") {
-  scheduleReply(lastMessage.content);
+if (new URLSearchParams(window.location.search).has("reportChat")) {
+  window.location.replace("./chat.html");
 }

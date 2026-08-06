@@ -1,12 +1,16 @@
 (function initializeGuoxueState(global) {
   const STORAGE_VERSION = 2;
-  const DAILY_LIMIT = 10;
+  const DAILY_LIMIT = Number.POSITIVE_INFINITY;
   const HISTORY_LIMIT = 40;
   const CONVERSATION_LIMIT = 90;
   const PROFILE_LIMIT = 20;
   const REPORT_LIMIT = 30;
   const FULL_REPORT_PRICE = 8800;
   const REPORT_SECTION_PRICE = 1680;
+  const PROMOTION_BADGE = Object.freeze({
+    text: "限时免费",
+    ariaLabel: "限时免费",
+  });
 
   const KEYS = Object.freeze({
     profiles: "guoxueProfilesV2",
@@ -333,35 +337,27 @@
   }
 
   function getQuota() {
-    const today = localDateKey();
-    const stored = safeParse(readLocal(KEYS.quota), null);
-    if (
-      !stored ||
-      stored.date !== today ||
-      !Number.isInteger(stored.remaining)
-    ) {
-      return saveQuota({ date: today, remaining: DAILY_LIMIT });
-    }
-    stored.remaining = Math.max(0, Math.min(DAILY_LIMIT, stored.remaining));
-    return stored;
+    return {
+      date: localDateKey(),
+      remaining: DAILY_LIMIT,
+      unlimited: true,
+    };
   }
 
   function consumeQuota() {
-    const quota = getQuota();
-    if (quota.remaining <= 0) return null;
-    return saveQuota({ ...quota, remaining: quota.remaining - 1 });
+    return getQuota();
   }
 
-  function renderQuota(element, quota = getQuota(), compact = false) {
+  function getPromotionBadge() {
+    return PROMOTION_BADGE;
+  }
+
+  function renderPromotionBadge(element) {
     if (!element) return;
-    if (quota.remaining <= 0) {
-      element.textContent = "今日免费对话次数已用完";
-      element.setAttribute("aria-label", "今日免费对话次数已用完");
-      return;
-    }
-    const prefix = compact ? "今日还可对话" : "今日还可免费对话";
-    element.innerHTML = `<span>${prefix}</span><strong>${quota.remaining}</strong><span>次</span>`;
-    element.setAttribute("aria-label", `${prefix}${quota.remaining}次`);
+    const badge = getPromotionBadge();
+    const textElement = element.querySelector("[data-promotion-badge-text]") || element;
+    textElement.textContent = badge.text;
+    element.setAttribute("aria-label", badge.ariaLabel);
   }
 
   function normalizeProfile(profile) {
@@ -836,6 +832,7 @@
     getLatestProfileReport,
     getProfile,
     getProfiles,
+    getPromotionBadge,
     getQuota,
     getOrCreateReport,
     getReport,
@@ -845,7 +842,7 @@
     isProfileNameTaken,
     localDateKey,
     purchaseReport,
-    renderQuota,
+    renderPromotionBadge,
     saveHistory,
     setActiveConversation,
     setActiveProfile,

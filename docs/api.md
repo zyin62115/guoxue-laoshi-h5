@@ -2,7 +2,26 @@
 
 项目没有后端 API。`src/js/shared.js` 通过 `window.GuoxueApp` 暴露共享状态和本地存储能力，页面脚本必须先加载 `shared.js`，再加载对应业务脚本。
 
-问答回复由 `src/js/app.js` 中的本地关键词规则模拟，不代表已接入真实 AI 服务。八字档案、额度和历史会话仅保存在当前浏览器中。
+问答回复由 `src/js/app.js` 中的本地关键词规则模拟，不代表已接入真实 AI 服务。八字档案和历史会话仅保存在当前浏览器中。
+
+## 个人偏好
+
+个人昵称和全站字号保存在 `guoxueUserPreferencesV1`，头像由页面根据昵称首字生成。`src/js/preferences.js` 在页面样式加载前初始化 `window.GuoxuePreferences`，所有页面均应先加载该脚本。
+
+- `getPreferences()`：读取并标准化 `{ nickname, fontSize }`；损坏或非法数据回退为访客和标准字号。
+- `updatePreferences(patch)`：合并并持久化偏好，同时立即应用字号。
+- `applyFontSize(fontSize)`：将小、标准、大三档字号映射到根元素的 `data-font-size`。
+
+客服入口使用 `wechat-simulator.html?context=customer-service&return=./settings.html`。该场景只展示客服添加模拟文案，不调用报告领取接口，也不写入订单。
+
+## 对话额度与运营标签
+
+当前所有页面均允许不限次数对话。额度状态与运营展示彼此独立：
+
+- `getQuota()` / `consumeQuota()` 只负责额度业务状态，始终返回 `{ unlimited: true, remaining: Infinity }`，不会扣减或耗尽，也不提供 UI 文案。
+- `getPromotionBadge()` 返回当前运营标签配置；`renderPromotionBadge(element)` 将“限时免费”渲染到指定标签元素，不读取额度状态。
+
+首页和独立对话页只通过 promotion 接口渲染右上角标签；发送许可仍读取 quota 接口。旧 `localStorage` 中即使保存 `remaining: 0`，也不会影响当前无限额度状态。
 
 八字档案的“姓名或称呼”在不同档案间必须唯一，比较时忽略首尾空格、连续空格和英文大小写；编辑档案时可保留自身原值。`isProfileNameTaken(name, excludeProfileId)` 用于提前检查冲突，`upsertProfile(profile)` 遇到重名时返回 `null` 且不写入本地存储。
 

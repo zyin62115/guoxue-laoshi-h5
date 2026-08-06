@@ -192,7 +192,7 @@ questionInput.addEventListener("keydown", (event) => {
 sendButton.addEventListener("click", submitQuestion);
 backLink.addEventListener("click", (event) => {
   event.preventDefault();
-  window.GuoxueNavigation.goBack(backLink.href);
+  window.GuoxueNavigation.back(backLink.href);
 });
 window.addEventListener("pageshow", () => {
   if (!report || !section) return;

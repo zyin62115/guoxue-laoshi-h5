@@ -1,28 +1,19 @@
-(function initializeNavigation(global) {
-  function goBack(fallback = "./index.html") {
-    if (global.history.length > 1) {
-      global.history.back();
-      return;
-    }
-    global.location.href = fallback;
+function navigateBack(fallbackUrl) {
+  if (window.history.length > 1) {
+    window.history.back();
+    return;
   }
 
-  document.addEventListener("click", (event) => {
-    const backLink = event.target.closest("[data-history-back]");
-    if (
-      !backLink ||
-      event.defaultPrevented ||
-      event.button !== 0 ||
-      event.metaKey ||
-      event.ctrlKey ||
-      event.shiftKey ||
-      event.altKey
-    ) {
-      return;
-    }
-    event.preventDefault();
-    goBack(backLink.getAttribute("href") || "./index.html");
-  });
+  window.location.href = fallbackUrl;
+}
 
-  global.GuoxueNavigation = Object.freeze({ goBack });
-})(window);
+window.GuoxueNavigation = { back: navigateBack };
+
+document.addEventListener("click", (event) => {
+  const target = event.target instanceof Element ? event.target : null;
+  const backButton = target?.closest("[data-navigation-back]");
+  if (!backButton) return;
+
+  event.preventDefault();
+  navigateBack(backButton.href);
+});

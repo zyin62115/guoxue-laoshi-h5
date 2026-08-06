@@ -45,6 +45,7 @@ backLink.addEventListener("click", (event) => {
   if (context === "chart") return;
   if (!reportId) return;
   event.preventDefault();
+  event.stopPropagation();
   const result = window.GuoxueApp.claimFreeReport(reportId);
   if (!result.ok) {
     status.textContent = "暂时无法解锁";
@@ -54,6 +55,6 @@ backLink.addEventListener("click", (event) => {
   backLink.textContent = "报告已解锁，正在返回…";
   backLink.setAttribute("aria-disabled", "true");
   window.setTimeout(() => {
-    window.location.href = backLink.href;
+    window.GuoxueNavigation.back(backLink.href);
   }, 350);
 });

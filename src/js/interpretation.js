@@ -449,11 +449,21 @@ function openReport(report, { push = false } = {}) {
 function showProfileSelection() {
   activeReport = null;
   selectedProfileId = reportState.getActiveProfileId();
+  if (claimLayer.classList.contains("is-visible")) {
+    claimLayer.classList.remove("is-visible");
+    claimLayer.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("claim-open");
+  }
+  if (claimTimer) {
+    window.clearTimeout(claimTimer);
+    claimTimer = null;
+  }
   setup.hidden = false;
   reader.hidden = true;
   stickyPurchase.hidden = true;
   document.body.classList.remove("has-report-purchase");
   renderProfiles();
+  syncFreeClaimButton();
   window.scrollTo({ top: 0, behavior: "auto" });
 }
 

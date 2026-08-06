@@ -176,6 +176,7 @@ const paymentConfirm = document.querySelector("#payment-confirm");
 const claimLayer = document.querySelector("#first-report-claim-layer");
 const claimCard = document.querySelector(".first-report-claim-card");
 const claimWechatButton = document.querySelector("#claim-wechat-button");
+const freeClaimButton = document.querySelector("#free-claim-button");
 const toast = document.querySelector("#report-toast");
 
 let selectedProfileId = reportState.getActiveProfileId();
@@ -425,12 +426,16 @@ function renderReport() {
   }
 }
 
-function openReport(report) {
+function openReport(report, { push = false } = {}) {
   activeReport = report;
   const url = new URL(window.location.href);
   url.searchParams.set("report", report.id);
   url.searchParams.delete("mode");
-  window.history.replaceState(null, "", url);
+  if (push) {
+    window.history.pushState({ report: report.id }, "", url);
+  } else {
+    window.history.replaceState({ report: report.id }, "", url);
+  }
   renderReport();
   const hashId = window.location.hash ? decodeURIComponent(window.location.hash.slice(1)) : "";
   const hashTarget = hashId ? document.getElementById(hashId) : null;
@@ -492,7 +497,7 @@ function syncPaymentButton() {
 }
 
 function openFirstReportClaim() {
-  if (!reportState.shouldShowFirstReportClaim()) return;
+  if (reportState.hasClaimedFreeReport()) return;
   claimOpener = document.activeElement;
   claimLayer.classList.add("is-visible");
   claimLayer.setAttribute("aria-hidden", "false");
@@ -501,15 +506,16 @@ function openFirstReportClaim() {
 }
 
 function scheduleFirstReportClaim() {
-  if (!reportState.shouldShowFirstReportClaim() || claimTimer) return;
+  if (!reportState.shouldAutoShowClaim() || claimTimer) return;
   claimTimer = window.setTimeout(() => {
     claimTimer = null;
+    reportState.markClaimPrompted();
     openFirstReportClaim();
-  }, 5000);
+  }, 2000);
 }
 
-function closeFirstReportClaim(action = "closed") {
-  reportState.dismissFirstReportClaim(action);
+function closeFirstReportClaim() {
+  reportState.dismissClaimPrompt();
   claimLayer.classList.remove("is-visible");
   claimLayer.setAttribute("aria-hidden", "true");
   document.body.classList.remove("claim-open");
@@ -517,6 +523,12 @@ function closeFirstReportClaim(action = "closed") {
     claimOpener.focus({ preventScroll: true });
   }
   claimOpener = null;
+  syncFreeClaimButton();
+}
+
+function syncFreeClaimButton() {
+  const record = reportState.getFirstReportClaim();
+  freeClaimButton.hidden = !record || !record.prompted || Boolean(record.claimed);
 }
 
 profileList.addEventListener("change", (event) => {
@@ -531,7 +543,7 @@ generateButton.addEventListener("click", () => {
   if (!profile) return;
   const currentReport = reportState.getCurrentProfileReport(profile.id);
   if (currentReport) {
-    openReport(currentReport);
+    openReport(currentReport, { push: true });
     return;
   }
 
@@ -543,7 +555,7 @@ generateButton.addEventListener("click", () => {
     const wasCreated = Boolean(report && !existingReport);
     generateButton.disabled = false;
     if (report) {
-      openReport(report);
+      openReport(report, { push: true });
       if (wasCreated) scheduleFirstReportClaim();
     } else {
       syncSelectedProfileActions();
@@ -554,7 +566,7 @@ generateButton.addEventListener("click", () => {
 
 viewPreviousButton.addEventListener("click", () => {
   const report = reportState.getLatestProfileReport(selectedProfileId);
-  if (report) openReport(report);
+  if (report) openReport(report, { push: true });
   else showToast("没有找到可查看的旧版报告");
 });
 
@@ -617,9 +629,17 @@ claimLayer.addEventListener("click", (event) => {
   if (event.target.closest("[data-claim-close]")) closeFirstReportClaim();
 });
 claimWechatButton.addEventListener("click", () => {
-  closeFirstReportClaim("wechat");
+  reportState.markClaimed();
+  claimLayer.classList.remove("is-visible");
+  claimLayer.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("claim-open");
   const returnTarget = `./interpretation.html${window.location.search}${window.location.hash}`;
   window.location.href = `./wechat-simulator.html?return=${encodeURIComponent(returnTarget)}`;
+});
+
+freeClaimButton.addEventListener("click", () => {
+  if (reportState.hasClaimedFreeReport()) return;
+  openFirstReportClaim();
 });
 
 document.addEventListener("keydown", (event) => {
@@ -662,6 +682,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 function initializePage({ notifyInvalidReport = false } = {}) {
+  syncFreeClaimButton();
   const url = new URL(window.location.href);
   const reportId = url.searchParams.get("report");
   const requestedReport = reportId ? reportState.getReport(reportId) : null;
@@ -681,8 +702,22 @@ function initializePage({ notifyInvalidReport = false } = {}) {
   if (reportId && notifyInvalidReport) showToast("原报告不存在，已为你返回国心解读");
 }
 
+window.addEventListener("popstate", () => {
+  const url = new URL(window.location.href);
+  const reportId = url.searchParams.get("report");
+  if (reportId) {
+    const report = reportState.getReport(reportId);
+    if (report) {
+      openReport(report);
+      return;
+    }
+  }
+  showProfileSelection();
+});
+
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) initializePage();
+  syncFreeClaimButton();
 });
 
 window.addEventListener("beforeunload", () => {

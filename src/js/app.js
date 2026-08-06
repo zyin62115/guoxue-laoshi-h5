@@ -15,6 +15,7 @@ const conversationList = document.querySelector("#conversation-list");
 const appToast = document.querySelector("#app-toast");
 const interpretationButton = document.querySelector('[data-action="interpretation"]');
 const professionalChartButton = document.querySelector('[data-action="professional-chart"]');
+const learningMaterialsButton = document.querySelector('[data-action="learning-materials"]');
 const guideDate = document.querySelector("#guide-date");
 const guideDateText = document.querySelector("#guide-date-text");
 const guideLineOne = document.querySelector("#guide-line-one");
@@ -459,6 +460,9 @@ professionalChartButton.addEventListener("click", () => {
 });
 interpretationButton.addEventListener("click", () => {
   window.location.href = "./interpretation.html";
+});
+learningMaterialsButton.addEventListener("click", () => {
+  window.location.href = "./wechat-simulator.html?context=learning-materials&return=./index.html";
 });
 drawerLayer.addEventListener("click", (event) => {
   const action = event.target.closest("[data-action]")?.dataset.action;

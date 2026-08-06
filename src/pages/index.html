@@ -9,6 +9,7 @@
     <meta name="theme-color" content="#fff9f1" />
     <meta name="format-detection" content="telephone=no" />
     <title>国学老师</title>
+    <script src="../js/preferences.js"></script>
     <link rel="stylesheet" href="../css/styles.css" />
   </head>
   <body>
@@ -120,25 +121,21 @@
       >
         <div class="drawer-scroll">
           <header class="drawer-profile">
-            <button
+            <a
               class="guest-avatar pressable"
-              type="button"
-              data-action="account-placeholder"
-              aria-label="个人资料"
+              id="drawer-user-avatar"
+              href="./settings.html"
+              aria-label="打开个人资料与设置"
             >
-              <svg viewBox="0 0 64 64" aria-hidden="true">
-                <circle cx="32" cy="24" r="11" />
-                <path d="M13 55c2-12 9-18 19-18s17 6 19 18" />
-              </svg>
-            </button>
-            <button
+              <b aria-hidden="true">访</b>
+            </a>
+            <a
               class="guest-copy pressable"
-              type="button"
-              data-action="account-placeholder"
+              href="./settings.html"
             >
               <strong id="drawer-title">访客</strong>
               <span>个人资料与设置 <i aria-hidden="true"></i></span>
-            </button>
+            </a>
             <button
               class="drawer-close pressable"
               type="button"

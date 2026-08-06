@@ -22,6 +22,8 @@ const guideLineOne = document.querySelector("#guide-line-one");
 const guideLineTwo = document.querySelector("#guide-line-two");
 const guideGood = document.querySelector("#guide-good");
 const guideAvoid = document.querySelector("#guide-avoid");
+const drawerUserAvatar = document.querySelector("#drawer-user-avatar");
+const drawerTitle = document.querySelector("#drawer-title");
 
 let isComposing = false;
 let scrollTicking = false;
@@ -30,6 +32,12 @@ let toastTimer = null;
 let drawerGesture = null;
 let suppressClickUntil = 0;
 let dailyGuideTimer = null;
+
+function renderUserPreferences() {
+  const preferences = window.GuoxuePreferences.getPreferences();
+  drawerTitle.textContent = preferences.nickname;
+  drawerUserAvatar.querySelector("b").textContent = Array.from(preferences.nickname)[0];
+}
 
 const DAILY_GUIDES = [
   {
@@ -467,7 +475,6 @@ learningMaterialsButton.addEventListener("click", () => {
 drawerLayer.addEventListener("click", (event) => {
   const action = event.target.closest("[data-action]")?.dataset.action;
   if (action === "close-drawer") closeDrawer();
-  if (action === "account-placeholder") showToast("个人资料功能开发中");
 });
 
 drawer.addEventListener(
@@ -562,6 +569,7 @@ scrollTopButton.addEventListener("click", () => {
 window.addEventListener("scroll", queueScrollStateUpdate, { passive: true });
 window.addEventListener("resize", queueScrollStateUpdate);
 window.addEventListener("pageshow", () => {
+  renderUserPreferences();
   renderDailyGuide();
   syncQuotaState();
   syncScrollTopButton();
@@ -576,6 +584,7 @@ window.addEventListener("beforeunload", () => {
   if (dailyGuideTimer) window.clearTimeout(dailyGuideTimer);
 });
 
+renderUserPreferences();
 renderDailyGuide();
 appState.renderPromotionBadge(promotionBadge);
 syncQuotaState();

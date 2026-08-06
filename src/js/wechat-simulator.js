@@ -24,6 +24,13 @@ if (context === "chart") {
   } else {
     backLink.href = "./chart-prototypes.html";
   }
+} else if (context === "learning-materials") {
+  title.textContent = "已进入学习资料领取流程";
+  copy.textContent = "正式接入后，这里将打开企业微信客服，为你发送精选国学学习资料。";
+  status.textContent = "模拟添加已完成";
+  description.textContent = "本次不会真实添加微信，也不会上传你的个人信息。";
+  backLink.textContent = "完成添加，返回主页";
+  backLink.href = "./index.html";
 }
 
 backLink.addEventListener("click", (event) => {

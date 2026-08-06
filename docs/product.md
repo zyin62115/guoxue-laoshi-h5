@@ -348,13 +348,28 @@ chart-entry.html                              │  ├─► report-chat.html?re
 
 ---
 
-## 七、待修复问题（代码实测）
+## 七、已知问题与修复记录（代码实测）
 
-| 级别 | 位置                          | 问题                                                  | 影响                                                              |
-| -- | --------------------------- | --------------------------------------------------- | --------------------------------------------------------------- |
-| 高  | `src/js/report-chat.js:100` | ~~调用 `GuoxueApp.renderQuota()`（`shared.js` 未导出）~~ **已修复**：`docs/api.md` 明确 quota 业务方法不提供 UI 文案，改为调用既有的 `renderPromotionBadge(quotaDisplay)` 渲染「限时免费」。初始化不再抛错，输入框/发送/返回监听正常绑定 → **报告章节对话页已可正常发消息** | 已解决（见 `feature/report-chat-send-fix`） |
-| 中  | `src/js/profile.js:255`     | 调用 `GuoxueNavigation.goBack()`，实际导出的是 `back()`      | 档案表单「取消」按钮点击无反应                                                 |
-| 低  | `src/js/chat.js:20-60`      | 关键词回复规则与 `chat-replies.js` 完全重复                     | 维护时容易两处不同步，建议 `chat.js` 改为复用 `GuoxueChatReplies`                |
+### 7.1 已修复
+
+| 级别 | 位置                          | 问题                                             | 修复方式                                                                            | 分支                                |
+| -- | --------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------- |
+| 高  | `src/js/report-chat.js:100` | 调用 `GuoxueApp.renderQuota()`，`shared.js` 未导出该方法 | `docs/api.md` 明确 quota 业务方法不提供 UI 文案，改为调用既有的 `renderPromotionBadge(quotaDisplay)`。初始化不再抛错，输入/发送/返回监听正常绑定 | `feature/report-chat-send-fix`    |
+| 中  | `src/js/profile.js:255`     | 调用 `GuoxueNavigation.goBack()`，实际导出的是 `back()`  | 改为 `window.GuoxueNavigation.back(exitTarget())`，档案表单「取消」按钮恢复可用                    | `feature/chat-profile-fixes`      |
+| 中  | `src/js/interpretation.js`  | 报告阅读态用 `replaceState` 未压历史栈，返回键直接跳回入口页          | `openReport` 增加 `push` 选项，页面内进入阅读态时 `pushState`；新增 `popstate` 监听按 URL 还原视图        | `feature/interpretation-back-fix` |
+| 低  | `src/js/chat.js:20-60`      | 关键词回复规则与 `chat-replies.js` 完全重复                 | 删除重复规则改为复用 `GuoxueChatReplies.getReply()`，并在 `chat.html` 补加载 `chat-replies.js`   | `feature/chat-profile-fixes`      |
+
+### 7.2 返回键行为约定
+
+`interpretation.html` 是同页双态（选择档案态 ⇄ 报告阅读态），返回键行为按入口区分：
+
+| 入口                                   | 进入方式                              | 历史栈处理        | 点返回后            |
+| ------------------------------------ | --------------------------------- | ------------ | --------------- |
+| 首页 → 国心解读 → 页面内生成/查看报告               | `openReport(report, {push:true})` | `pushState`  | 回到「选择档案」态，再返回回首页 |
+| 报告列表 → 某份报告（`?report=xxx`）           | 整页跳转后 `initializePage` 直接开阅读态     | `replaceState` | 直接回报告列表         |
+| 直接刷新 / 外部带 `?report=` 打开             | 同上                                | `replaceState` | 回浏览器上一页         |
+
+新增页面内视图切换时，务必同步 `pushState` 与 `popstate` 两侧，否则会重现「返回直接跳出整页」的问题。
 
 ---
 

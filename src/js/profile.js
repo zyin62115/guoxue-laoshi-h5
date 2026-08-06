@@ -252,7 +252,7 @@ form.addEventListener("submit", (event) => {
 });
 
 cancelButton.addEventListener("click", () => {
-  window.GuoxueNavigation.goBack(exitTarget());
+  window.GuoxueNavigation.back(exitTarget());
 });
 
 deleteButton.addEventListener("click", () => {

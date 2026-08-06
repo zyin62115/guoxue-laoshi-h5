@@ -97,7 +97,7 @@ function renderMessages() {
 
 function syncQuota() {
   const quota = reportChatState.getQuota();
-  reportChatState.renderQuota(quotaDisplay, quota, true);
+  reportChatState.renderPromotionBadge(quotaDisplay);
   const exhausted = quota.remaining <= 0;
   dock.classList.toggle("is-exhausted", exhausted);
   questionInput.disabled = exhausted;

@@ -2584,7 +2584,7 @@ body.drawer-open {
   left: 50%;
   z-index: 30;
   display: grid;
-  grid-template-columns: 44px 1fr 44px;
+  grid-template-columns: 44px 1fr auto;
   align-items: center;
   width: min(100%, 560px);
   min-height: calc(env(safe-area-inset-top, 0px) + 64px);
@@ -2654,6 +2654,28 @@ body.drawer-open {
   border-radius: 12px;
   font-size: calc(12px + var(--app-font-offset));
   font-weight: 600;
+}
+
+.interpretation-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: end;
+}
+
+.interpretation-claim-button {
+  height: 34px;
+  padding: 0 12px;
+  color: #fff;
+  border-radius: 12px;
+  font-size: calc(12px + var(--app-font-offset));
+  font-weight: 700;
+  background: linear-gradient(135deg, #d07b2f, #b8431d);
+  box-shadow: 0 6px 16px rgba(184, 67, 29, 0.22);
+}
+
+.interpretation-claim-button[hidden] {
+  display: none;
 }
 
 .teacher-welcome,

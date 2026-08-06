@@ -11,6 +11,7 @@
 - `src/css/`：共享样式
 - `src/components/`：可复用公共组件
 - `public/images/`：运行时图片
+- `public/data/`：运行时静态数据及其来源许可说明
 - `public/icons/`：独立图标资源
 - `public/fonts/`：本地字体资源
 - `docs/`：产品与接口文档
@@ -46,7 +47,7 @@
 
 ## Git 与拉取请求
 
-## 分支规则
+### 分支规则
 
 禁止直接修改 main 分支。
 
@@ -63,7 +64,7 @@ feature/chat-ui
 feature/payment
 
 
-## 修改流程
+### 修改流程
 
 执行任何代码修改前：
 
@@ -72,7 +73,7 @@ feature/payment
 3. 如果在main分支，需要创建feature分支
 
 
-## Commit规范
+### Commit 规范
 
 每完成一个独立功能必须提交commit。
 
@@ -89,7 +90,7 @@ fix: 修复按钮间距问题
 style: 优化首页UI样式
 
 
-## 合并规则
+### 合并规则
 
 禁止自动merge到main。
 

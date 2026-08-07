@@ -453,12 +453,11 @@ button,
 .date-badge {
   position: absolute;
   top: calc(210 * var(--unit));
-  left: calc(600 * var(--unit) + 3px);
+  right: calc(95 * var(--unit));
   z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: calc(14 * var(--unit));
   width: max-content;
   height: calc(72 * var(--unit));
   padding: 0 calc(26 * var(--unit));
@@ -483,26 +482,6 @@ button,
 
 .date-badge time {
   font-size: calc(calc(24 * var(--unit)) + var(--app-font-offset));
-}
-
-.calendar-entry-label {
-  display: inline-flex;
-  align-items: center;
-  gap: calc(8 * var(--unit));
-  padding-left: calc(16 * var(--unit));
-  border-left: calc(1 * var(--unit)) solid rgba(111, 79, 42, 0.24);
-  color: #b55416;
-  font-family: var(--sans);
-  font-size: calc(calc(24 * var(--unit)) + var(--app-font-offset));
-  font-weight: 700;
-}
-
-.calendar-entry-label i {
-  width: calc(7 * var(--unit));
-  height: calc(7 * var(--unit));
-  border-top: calc(1.5 * var(--unit)) solid currentColor;
-  border-right: calc(1.5 * var(--unit)) solid currentColor;
-  transform: rotate(45deg);
 }
 
 .guidance {

@@ -13,6 +13,7 @@
     flying: `<rect x="12" y="12" width="40" height="40" rx="3"/><path d="M25 12v40M39 12v40M12 25h40M12 39h40"/><path d="m32 21 2.5 7.5H42l-6 4.5 2.2 7-6.2-4-6.2 4 2.2-7-6-4.5h7.5L32 21Z"/>`,
     library: `<path d="M13 14c7-3 13-2 19 2v36c-6-4-12-5-19-2V14ZM51 14c-7-3-13-2-19 2v36c6-4 12-5 19-2V14Z"/><path d="M22 27h4M20 35h8M38 27h6M38 35h6"/>`,
     kangxi: `<path d="M14 10h30l7 7v37H18c-3 0-5-2-5-5s2-5 5-5h26V10"/><path d="M22 19h15M22 27h19M22 35h15"/><path d="M44 10v34"/>`,
+    calendar: `<rect x="12" y="16" width="40" height="38" rx="5"/><path d="M12 26h40M22 10v12M42 10v12M20 36h6M38 36h6M20 46h6M38 46h6"/>`,
   };
 
   const methods = [
@@ -82,6 +83,7 @@
     { id: "kangxi", name: "康熙字典", category: "文化工具", tone: "orange", desc: "繁体笔画与字义查询", action: "开始测算", fields: [
       { id: "name", label: "姓名", type: "text", placeholder: "最多 4 字", maxlength: 4 },
     ] },
+    { id: "calendar", name: "万年历", category: "文化工具", tone: "blue", desc: "阴阳历对照与每日宜忌", action: "查看", href: "./calendar.html" },
   ];
 
   function getMethod(id) {

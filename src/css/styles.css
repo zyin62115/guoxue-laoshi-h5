@@ -453,7 +453,7 @@ button,
 .date-badge {
   position: absolute;
   top: calc(210 * var(--unit));
-  left: calc(600 * var(--unit) + 3px);
+  right: calc(66 * var(--unit));
   z-index: 5;
   display: flex;
   align-items: center;

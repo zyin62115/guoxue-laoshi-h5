@@ -281,39 +281,49 @@ button,
   cursor: pointer;
 }
 
-.menu-button {
-  top: calc(6 * var(--unit));
+.my-entry {
+  position: absolute;
+  top: calc(3 * var(--unit));
   left: 0;
-  width: calc(42 * var(--unit));
-  height: calc(43 * var(--unit));
+  display: inline-flex;
+  align-items: center;
+  gap: calc(12 * var(--unit));
+  height: calc(60 * var(--unit));
+  padding: 0 calc(28 * var(--unit));
+  border: calc(2 * var(--unit)) solid rgba(232, 178, 121, 0.6);
+  border-radius: calc(30 * var(--unit));
+  background: rgba(250, 226, 199, 0.98);
+  box-shadow:
+    inset 0 calc(1 * var(--unit)) 0 rgba(255, 255, 255, 0.7),
+    0 calc(6 * var(--unit)) calc(18 * var(--unit)) rgba(191, 120, 50, 0.16);
+  cursor: pointer;
 }
 
-.menu-button svg {
-  width: calc(39 * var(--unit));
-  height: calc(36 * var(--unit));
+.my-entry-icon {
+  width: calc(42 * var(--unit));
+  height: calc(42 * var(--unit));
   overflow: visible;
 }
 
-.menu-button path {
+.my-entry-icon circle,
+.my-entry-icon path {
   fill: none;
   stroke: var(--ink);
-  stroke-width: 5;
+  stroke-width: 4;
   stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.brand {
-  position: absolute;
-  top: 0;
-  left: calc(65 * var(--unit));
-  display: flex;
+.my-entry-text {
+  display: inline-flex;
   align-items: center;
-  height: calc(54 * var(--unit));
-  margin: 0;
-  font-family: var(--sans);
-  font-size: calc(calc(38 * var(--unit)) + var(--app-font-offset));
+  height: 100%;
+  color: #33291c;
+  font-family: var(--serif);
+  font-size: calc(calc(32 * var(--unit)) + var(--app-font-offset));
   font-weight: 600;
   line-height: 1;
-  letter-spacing: calc(1.5 * var(--unit));
+  letter-spacing: calc(3 * var(--unit));
   white-space: nowrap;
 }
 
@@ -1030,9 +1040,10 @@ button,
     0 calc(3 * var(--unit)) calc(12 * var(--unit)) rgba(145, 94, 44, 0.035);
 }
 
-.menu-button.is-pressed,
-.menu-button:active {
-  transform: scale(0.9);
+.my-entry.is-pressed,
+.my-entry:active {
+  transform: scale(0.96);
+  background: rgba(245, 212, 178, 0.98);
 }
 
 .dock-icon.is-pressed,

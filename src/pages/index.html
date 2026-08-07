@@ -15,19 +15,22 @@
   <body>
     <main class="page-shell">
       <header class="topbar" aria-label="页面导航">
+        <h1 class="sr-only">国学老师</h1>
+
         <button
-          class="icon-button menu-button pressable"
+          class="my-entry pressable"
           type="button"
           data-action="menu"
-          aria-label="打开个人中心"
+          aria-label="打开我的"
           aria-controls="personal-drawer"
           aria-expanded="false"
         >
-          <svg viewBox="0 0 44 38" aria-hidden="true">
-            <path d="M3 4h34M3 19h28M3 34h22" />
+          <svg class="my-entry-icon" viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="18" r="9" />
+            <path d="M9 42c0-9 6.7-15 15-15s15 6 15 15" />
           </svg>
+          <span class="my-entry-text">我的</span>
         </button>
-        <h1 class="brand">国学老师</h1>
 
         <div class="quota" id="home-promotion-badge" aria-label="限时免费">
           <span data-promotion-badge-text>限时免费</span>

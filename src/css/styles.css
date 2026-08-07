@@ -300,6 +300,7 @@ button,
 }
 
 .my-entry-icon {
+  display: block;
   width: calc(42 * var(--unit));
   height: calc(42 * var(--unit));
   overflow: visible;

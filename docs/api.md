@@ -50,7 +50,7 @@
 
 `activateHomeConversation()` 用于进入首页时切换或创建当天的普通问答会话。报告章节对话通过 `report-chat.html?report=<id>&section=<id>` 独立展示和发送消息，不作为首页问答或首页对话记录的一部分；对话页返回地址固定指向对应报告章节。
 
-首次免费领取卡片状态保存在 `guoxueFirstReportClaimPromptV1`。用户首次生成报告并看到付费页面 5 秒后才检查和展示卡片，直接打开历史报告不会触发。`shouldShowFirstReportClaim()` 判断是否应展示；`dismissFirstReportClaim(action)` 记录用户选择，`action` 为 `wechat` 或 `closed`；`getFirstReportClaim()` 可读取处理结果。当前微信按钮跳转至本地 `wechat-simulator.html`，只有完成模拟添加并返回时才授予免费权益。
+首次免费领取卡片状态保存在 `guoxueFirstReportClaimPromptV1`，记录含 `prompted`（是否展示过弹窗）与 `claimed`（是否通过该渠道完成过一次领取）。用户首次生成报告并看到付费页面 2 秒后自动展示卡片一次（直接打开历史报告不会触发）。`shouldAutoShowClaim()` 决定是否自动弹窗（仅在未 prompted 且未 claimed 时触发一次）；`dismissClaimPrompt()` 记录用户关掉弹窗（仅标记 prompted，右上角常驻「免费领取」按钮继续显示）；`markClaimed()` 记录完成领取（按钮永久消失）；`getFirstReportClaim()` 可读取整个记录，`hasClaimedFreeReport()` 判断是否已领取。关掉弹窗后，顶部右上角「报告」按钮左侧会常驻一个「免费领取」按钮，只要未通过该渠道领取过一次即可点击再次打开卡片。当前微信按钮跳转至本地 `wechat-simulator.html`，只有完成模拟添加并返回时由 `claimFreeReport(reportId)` 授予免费权益并标记 claimed。
 
 微信模拟页完成添加并返回时调用 `claimFreeReport(reportId)`，将对应报告的八章完整解锁，并写入一条金额为 0、状态为 `claimed` 的领取订单。找不到原报告时不授予权益，并提示用户返回重新生成。
 

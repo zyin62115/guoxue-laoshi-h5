@@ -176,6 +176,7 @@ const paymentConfirm = document.querySelector("#payment-confirm");
 const claimLayer = document.querySelector("#first-report-claim-layer");
 const claimCard = document.querySelector(".first-report-claim-card");
 const claimWechatButton = document.querySelector("#claim-wechat-button");
+const freeClaimButton = document.querySelector("#free-claim-button");
 const toast = document.querySelector("#report-toast");
 
 let selectedProfileId = reportState.getActiveProfileId();
@@ -462,6 +463,7 @@ function showProfileSelection() {
   stickyPurchase.hidden = true;
   document.body.classList.remove("has-report-purchase");
   renderProfiles();
+  syncFreeClaimButton();
   window.scrollTo({ top: 0, behavior: "auto" });
 }
 
@@ -505,7 +507,7 @@ function syncPaymentButton() {
 }
 
 function openFirstReportClaim() {
-  if (!reportState.shouldShowFirstReportClaim()) return;
+  if (reportState.hasClaimedFreeReport()) return;
   claimOpener = document.activeElement;
   claimLayer.classList.add("is-visible");
   claimLayer.setAttribute("aria-hidden", "false");
@@ -514,15 +516,16 @@ function openFirstReportClaim() {
 }
 
 function scheduleFirstReportClaim() {
-  if (!reportState.shouldShowFirstReportClaim() || claimTimer) return;
+  if (!reportState.shouldAutoShowClaim() || claimTimer) return;
   claimTimer = window.setTimeout(() => {
     claimTimer = null;
+    reportState.markClaimPrompted();
     openFirstReportClaim();
-  }, 5000);
+  }, 2000);
 }
 
-function closeFirstReportClaim(action = "closed") {
-  reportState.dismissFirstReportClaim(action);
+function closeFirstReportClaim() {
+  reportState.dismissClaimPrompt();
   claimLayer.classList.remove("is-visible");
   claimLayer.setAttribute("aria-hidden", "true");
   document.body.classList.remove("claim-open");
@@ -530,6 +533,12 @@ function closeFirstReportClaim(action = "closed") {
     claimOpener.focus({ preventScroll: true });
   }
   claimOpener = null;
+  syncFreeClaimButton();
+}
+
+function syncFreeClaimButton() {
+  const record = reportState.getFirstReportClaim();
+  freeClaimButton.hidden = !record || !record.prompted || Boolean(record.claimed);
 }
 
 profileList.addEventListener("change", (event) => {
@@ -630,9 +639,17 @@ claimLayer.addEventListener("click", (event) => {
   if (event.target.closest("[data-claim-close]")) closeFirstReportClaim();
 });
 claimWechatButton.addEventListener("click", () => {
-  closeFirstReportClaim("wechat");
+  reportState.markClaimed();
+  claimLayer.classList.remove("is-visible");
+  claimLayer.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("claim-open");
   const returnTarget = `./interpretation.html${window.location.search}${window.location.hash}`;
   window.location.href = `./wechat-simulator.html?return=${encodeURIComponent(returnTarget)}`;
+});
+
+freeClaimButton.addEventListener("click", () => {
+  if (reportState.hasClaimedFreeReport()) return;
+  openFirstReportClaim();
 });
 
 document.addEventListener("keydown", (event) => {
@@ -675,6 +692,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 function initializePage({ notifyInvalidReport = false } = {}) {
+  syncFreeClaimButton();
   const url = new URL(window.location.href);
   const reportId = url.searchParams.get("report");
   const requestedReport = reportId ? reportState.getReport(reportId) : null;
@@ -709,6 +727,7 @@ window.addEventListener("popstate", () => {
 
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) initializePage();
+  syncFreeClaimButton();
 });
 
 window.addEventListener("beforeunload", () => {

@@ -587,19 +587,38 @@
     return stored && typeof stored === "object" ? stored : null;
   }
 
-  function shouldShowFirstReportClaim() {
-    return !getFirstReportClaim();
+  // 是否已通过该渠道完成一次免费领取；完成后常驻「免费领取」按钮不再显示
+  function hasClaimedFreeReport() {
+    return Boolean(getFirstReportClaim()?.claimed);
   }
 
-  function dismissFirstReportClaim(action = "closed") {
-    const existing = getFirstReportClaim();
-    if (existing) return existing;
-    const record = {
-      action: action === "wechat" ? "wechat" : "closed",
-      handledAt: new Date().toISOString(),
-    };
+  // 2 秒自动弹窗：仅在该用户尚未见过弹窗、且未领取过时触发一次
+  function shouldAutoShowClaim() {
+    const record = getFirstReportClaim();
+    return !(record && (record.prompted || record.claimed));
+  }
+
+  // 弹窗已展示过，记录 prompted，避免反复自动弹出
+  function markClaimPrompted() {
+    const record = getFirstReportClaim() || {};
+    record.prompted = true;
     writeLocal(KEYS.firstReportClaim, JSON.stringify(record));
-    return record;
+  }
+
+  // 用户关掉弹窗（未领取）：仅标记 prompted，常驻按钮继续显示
+  function dismissClaimPrompt() {
+    const record = getFirstReportClaim() || {};
+    record.prompted = true;
+    writeLocal(KEYS.firstReportClaim, JSON.stringify(record));
+  }
+
+  // 用户完成一次免费领取：标记 claimed，常驻按钮永久消失
+  function markClaimed() {
+    const record = getFirstReportClaim() || {};
+    record.prompted = true;
+    record.claimed = true;
+    record.claimedAt = new Date().toISOString();
+    writeLocal(KEYS.firstReportClaim, JSON.stringify(record));
   }
 
   function purchaseReport(reportId, purchase) {
@@ -668,6 +687,7 @@
     };
     reports[index] = updated;
     saveReports(reports);
+    markClaimed();
 
     const order = {
       id: createId("order"),
@@ -819,7 +839,7 @@
     consumeQuota,
     createReportConversation,
     deleteProfile,
-    dismissFirstReportClaim,
+    dismissClaimPrompt,
     ensureChatStartedAt,
     getActiveConversation,
     getActiveProfile,
@@ -828,6 +848,9 @@
     getConversations,
     getCurrentProfileReport,
     getFirstReportClaim,
+    hasClaimedFreeReport,
+    markClaimed,
+    markClaimPrompted,
     getHistory,
     getLatestProfileReport,
     getProfile,
@@ -846,7 +869,7 @@
     saveHistory,
     setActiveConversation,
     setActiveProfile,
-    shouldShowFirstReportClaim,
+    shouldAutoShowClaim,
     upsertProfile,
   });
 })(window);

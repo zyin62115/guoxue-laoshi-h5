@@ -1,3 +1,4 @@
 test-output/
 debug.log
 .agents/
+.workbuddy/

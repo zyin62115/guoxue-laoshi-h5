@@ -1559,9 +1559,17 @@ body.drawer-open {
   color: #fff9f0;
   border-radius: 14px;
   background: linear-gradient(145deg, #c8793d, #92502c);
-  font-family: var(--serif);
-  font-size: calc(max(calc(30 * var(--unit)), 20px) + var(--app-font-offset));
   place-items: center;
+}
+
+.drawer-entry-mark svg {
+  width: max(calc(46 * var(--unit)), 30px);
+  height: max(calc(46 * var(--unit)), 30px);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
 }
 
 .drawer-entry strong,

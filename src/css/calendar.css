@@ -5,6 +5,7 @@
   --paper: #fcefe0;
   --orange: #de6a0a;
   --app-font-offset: 0px;
+  --app-page-max-width: 941px;
   --serif: "STSong", "Songti SC", "Noto Serif CJK SC", "SimSun", serif;
   --sans: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
 }
@@ -26,7 +27,7 @@ button { color: inherit; border: 0; background: none; }
 .pressable:active { transform: scale(.96); filter: saturate(1.05); }
 
 .calendar-page {
-  width: min(100%, 430px);
+  width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
   padding: 0 18px max(30px, env(safe-area-inset-bottom));

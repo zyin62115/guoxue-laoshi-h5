@@ -8,6 +8,7 @@
   --orange: #de6a0a;
   --blue: #2397d3;
   --app-font-offset: 0px;
+  --app-page-max-width: 941px;
   --serif: "STSong", "Songti SC", "Noto Serif CJK SC", "SimSun", serif;
   --sans: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
 }
@@ -31,7 +32,7 @@ button { color: inherit; font: inherit; }
 .pressable:active { transform: scale(.975); filter: saturate(1.04); }
 
 .chart-page {
-  width: min(100%, 430px);
+  width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
   padding: 0 18px max(30px, env(safe-area-inset-bottom));

@@ -7,6 +7,7 @@
   --orange: #de6a0a;
   --blue: #2397d3;
   --app-font-offset: 0px;
+  --app-page-max-width: 941px;
   --unit: min(0.1062699256vw, 1px);
   --content-lift: calc(-128 * var(--unit) + 16px);
   --serif: "STSong", "Songti SC", "Noto Serif CJK SC", "SimSun", serif;
@@ -71,7 +72,7 @@ body {
   display: grid;
   grid-template-columns: max(calc(78 * var(--unit)), 50px) 1fr auto;
   align-items: center;
-  width: min(100%, 941px);
+  width: min(100%, var(--app-page-max-width));
   min-height: calc(env(safe-area-inset-top, 0px) + max(calc(106 * var(--unit)), 68px));
   margin: auto;
   padding: env(safe-area-inset-top, 0px) max(calc(36 * var(--unit)), 18px) 0;
@@ -161,7 +162,7 @@ body {
 }
 
 .chat-shell {
-  width: min(100%, 941px);
+  width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
   padding: calc(env(safe-area-inset-top, 0px) + max(calc(142 * var(--unit)), 92px))
@@ -212,7 +213,7 @@ button,
 
 .design-canvas {
   position: relative;
-  width: min(100vw, 941px);
+  width: min(100vw, var(--app-page-max-width));
   min-height: max(calc(1592 * var(--unit)), calc(100svh - env(safe-area-inset-top, 0px)));
   margin: 0 auto;
   overflow-x: hidden;
@@ -263,7 +264,7 @@ button,
   top: calc(0px - env(safe-area-inset-top, 0px) - calc(18 * var(--unit)));
   left: 50%;
   z-index: -1;
-  width: min(100vw, 941px);
+  width: min(100vw, var(--app-page-max-width));
   height: calc(env(safe-area-inset-top, 0px) + calc(88 * var(--unit)));
   content: "";
   border: 0;
@@ -1362,7 +1363,7 @@ body.drawer-open {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: max(0px, calc((100vw - 941px) / 2));
+  left: max(0px, calc((100vw - var(--app-page-max-width)) / 2));
   width: min(86vw, 809px);
   overflow: hidden;
   outline: 0;
@@ -1890,7 +1891,7 @@ body.drawer-open {
 }
 
 .profile-page-shell {
-  width: min(100%, 720px);
+  width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
   padding:
@@ -2133,7 +2134,7 @@ body.drawer-open {
 }
 
 .collection-shell {
-  width: min(100%, 720px);
+  width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
   padding:
@@ -2327,7 +2328,7 @@ body.drawer-open {
   grid-template-columns: 44px 1fr auto;
   gap: 8px;
   align-items: center;
-  width: min(100%, 560px);
+  width: min(100%, var(--app-page-max-width));
   min-height: calc(env(safe-area-inset-top, 0px) + 68px);
   padding: env(safe-area-inset-top, 0px) 12px 0;
   border-bottom: 1px solid rgba(184, 130, 83, 0.16);
@@ -2406,7 +2407,7 @@ body.drawer-open {
 }
 
 .report-chat-shell {
-  width: min(100%, 560px);
+  width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
   padding: calc(env(safe-area-inset-top, 0px) + 88px) 16px calc(env(safe-area-inset-bottom, 0px) + 128px);
@@ -2559,7 +2560,7 @@ body.drawer-open {
 }
 
 .interpretation-shell {
-  width: min(100%, 560px);
+  width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
   padding: calc(env(safe-area-inset-top, 0px) + 74px) 16px 42px;
@@ -2577,7 +2578,7 @@ body.drawer-open {
   display: grid;
   grid-template-columns: 44px 1fr auto;
   align-items: center;
-  width: min(100%, 560px);
+  width: min(100%, var(--app-page-max-width));
   min-height: calc(env(safe-area-inset-top, 0px) + 64px);
   padding: env(safe-area-inset-top, 0px) 12px 0;
   border-bottom: 1px solid rgba(184, 130, 83, 0.16);
@@ -3186,7 +3187,7 @@ body.drawer-open {
   grid-template-columns: 1fr 1.35fr;
   gap: 12px;
   align-items: center;
-  width: min(100%, 560px);
+  width: min(100%, var(--app-page-max-width));
   margin: auto;
   padding: 10px 16px calc(env(safe-area-inset-bottom, 0px) + 10px);
   border-top: 1px solid rgba(181, 129, 87, 0.24);
@@ -3569,7 +3570,7 @@ body.drawer-open {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: min(100%, 520px);
+  width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
   padding: calc(env(safe-area-inset-top, 0px) + 34px) 24px

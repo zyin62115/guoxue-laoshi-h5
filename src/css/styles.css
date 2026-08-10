@@ -1053,12 +1053,35 @@ button:focus-visible {
 .settings-shell {
   display: grid;
   align-content: start;
-  gap: 16px;
+  gap: max(calc(32 * var(--unit)), 16px);
+}
+
+.settings-shell .collection-header {
+  grid-template-columns:
+    max(calc(66 * var(--unit)), 44px)
+    minmax(0, 1fr)
+    max(calc(66 * var(--unit)), 44px);
+  min-height: max(calc(78 * var(--unit)), 52px);
+}
+
+.settings-shell .profile-back {
+  width: max(calc(66 * var(--unit)), 44px);
+  height: max(calc(66 * var(--unit)), 44px);
+}
+
+.settings-shell .profile-back::before {
+  width: max(calc(17 * var(--unit)), 11px);
+  height: max(calc(17 * var(--unit)), 11px);
+}
+
+.settings-shell .collection-header span {
+  margin-top: max(calc(6 * var(--unit)), 3px);
+  font-size: calc(max(calc(15 * var(--unit)), 10px) + var(--app-font-offset));
 }
 
 .settings-card {
   margin: 0;
-  padding: 20px;
+  padding: max(calc(40 * var(--unit)), 20px);
   border: 1px solid rgba(222, 181, 138, 0.42);
   border-radius: 22px;
   background: rgba(255, 251, 246, 0.78);
@@ -1066,51 +1089,51 @@ button:focus-visible {
 }
 
 .settings-card:first-of-type {
-  margin-top: 8px;
+  margin-top: max(calc(16 * var(--unit)), 8px);
 }
 
 .settings-heading {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
+  gap: max(calc(24 * var(--unit)), 12px);
+  margin-bottom: max(calc(36 * var(--unit)), 18px);
 }
 
 .settings-heading > strong {
   color: #55371f;
   font-family: var(--serif);
-  font-size: calc(18px + var(--app-font-offset));
+  font-size: calc(max(calc(28 * var(--unit)), 18px) + var(--app-font-offset));
 }
 
 .settings-heading > small {
   color: #9a8878;
-  font-size: calc(10px + var(--app-font-offset));
+  font-size: calc(max(calc(15 * var(--unit)), 10px) + var(--app-font-offset));
   text-align: right;
 }
 
 .settings-field {
   display: grid;
-  gap: 8px;
+  gap: max(calc(16 * var(--unit)), 8px);
   min-width: 0;
 }
 
 .settings-field > span {
   color: #67513d;
-  font-size: calc(12px + var(--app-font-offset));
+  font-size: calc(max(calc(18 * var(--unit)), 12px) + var(--app-font-offset));
   font-weight: 700;
 }
 
 .settings-field input {
   width: 100%;
-  height: 48px;
-  padding: 0 14px;
+  height: max(calc(72 * var(--unit)), 48px);
+  padding: 0 max(calc(28 * var(--unit)), 14px);
   color: #263548;
   border: 1px solid rgba(199, 158, 117, 0.46);
   border-radius: 14px;
   outline: 0;
   background: rgba(255, 255, 255, 0.72);
-  font-size: calc(14px + var(--app-font-offset));
+  font-size: calc(max(calc(21 * var(--unit)), 14px) + var(--app-font-offset));
 }
 
 .settings-field input:focus {
@@ -1128,15 +1151,15 @@ button:focus-visible {
 
 .settings-profile-editor {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-columns: max(calc(96 * var(--unit)), 64px) minmax(0, 1fr);
   align-items: end;
-  gap: 14px;
+  gap: max(calc(28 * var(--unit)), 14px);
 }
 
 .settings-initial-avatar {
   display: grid;
-  width: 64px;
-  height: 64px;
+  width: max(calc(96 * var(--unit)), 64px);
+  height: max(calc(96 * var(--unit)), 64px);
   color: #70472c;
   border: 2px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
@@ -1145,7 +1168,7 @@ button:focus-visible {
     linear-gradient(145deg, #ead1ad, #c9905d);
   box-shadow: 0 5px 14px rgba(89, 59, 34, 0.12);
   font-family: var(--serif);
-  font-size: calc(24px + var(--app-font-offset));
+  font-size: calc(max(calc(36 * var(--unit)), 24px) + var(--app-font-offset));
   font-weight: 700;
   place-items: center;
 }
@@ -1156,13 +1179,13 @@ button:focus-visible {
 }
 
 .settings-error {
-  min-height: 18px;
-  margin: 12px 0 4px;
+  min-height: max(calc(27 * var(--unit)), 18px);
+  margin: max(calc(24 * var(--unit)), 12px) 0 max(calc(8 * var(--unit)), 4px);
 }
 
 .settings-save {
   width: 100%;
-  min-height: 48px;
+  min-height: max(calc(72 * var(--unit)), 48px);
   color: #fff;
   border: 0;
   border-radius: 15px;
@@ -1170,7 +1193,7 @@ button:focus-visible {
   box-shadow: 0 8px 18px rgba(156, 59, 40, 0.17);
   cursor: pointer;
   font-family: var(--serif);
-  font-size: calc(14px + var(--app-font-offset));
+  font-size: calc(max(calc(21 * var(--unit)), 14px) + var(--app-font-offset));
   font-weight: 700;
   letter-spacing: 0.08em;
 }
@@ -1178,7 +1201,7 @@ button:focus-visible {
 .settings-font-options {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  padding: 4px;
+  padding: max(calc(8 * var(--unit)), 4px);
   border: 1px solid rgba(207, 173, 139, 0.46);
   border-radius: 14px;
   background: rgba(240, 226, 211, 0.58);
@@ -1191,10 +1214,10 @@ button:focus-visible {
 
 .settings-font-options span {
   display: grid;
-  min-height: 40px;
+  min-height: max(calc(60 * var(--unit)), 40px);
   color: #826f5e;
   border-radius: 10px;
-  font-size: calc(12px + var(--app-font-offset));
+  font-size: calc(max(calc(18 * var(--unit)), 12px) + var(--app-font-offset));
   place-items: center;
 }
 
@@ -1206,31 +1229,31 @@ button:focus-visible {
 }
 
 .settings-font-preview {
-  margin: 14px 0 0;
+  margin: max(calc(28 * var(--unit)), 14px) 0 0;
   color: #755e49;
   font-family: var(--serif);
-  font-size: calc(14px + var(--app-font-offset));
+  font-size: calc(max(calc(21 * var(--unit)), 14px) + var(--app-font-offset));
   text-align: center;
 }
 
 .settings-service {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 14px;
+  grid-template-columns: max(calc(66 * var(--unit)), 44px) minmax(0, 1fr) max(calc(21 * var(--unit)), 14px);
   align-items: center;
-  gap: 12px;
+  gap: max(calc(24 * var(--unit)), 12px);
   color: inherit;
   text-decoration: none;
 }
 
 .settings-service-mark {
   display: grid;
-  width: 44px;
-  height: 44px;
+  width: max(calc(66 * var(--unit)), 44px);
+  height: max(calc(66 * var(--unit)), 44px);
   color: #fff;
   border-radius: 14px;
   background: linear-gradient(145deg, #29c76f, #12a853);
   font-family: var(--serif);
-  font-size: calc(20px + var(--app-font-offset));
+  font-size: calc(max(calc(30 * var(--unit)), 20px) + var(--app-font-offset));
   font-weight: 700;
   place-items: center;
 }
@@ -1246,18 +1269,18 @@ button:focus-visible {
 
 .settings-service strong {
   color: #493323;
-  font-size: calc(14px + var(--app-font-offset));
+  font-size: calc(max(calc(21 * var(--unit)), 14px) + var(--app-font-offset));
 }
 
 .settings-service small {
-  margin-top: 4px;
+  margin-top: max(calc(8 * var(--unit)), 4px);
   color: #998675;
-  font-size: calc(10px + var(--app-font-offset));
+  font-size: calc(max(calc(15 * var(--unit)), 10px) + var(--app-font-offset));
 }
 
 .settings-service i {
-  width: 8px;
-  height: 8px;
+  width: max(calc(12 * var(--unit)), 8px);
+  height: max(calc(12 * var(--unit)), 8px);
   border-top: 1.5px solid #a58e79;
   border-right: 1.5px solid #a58e79;
   transform: rotate(45deg);

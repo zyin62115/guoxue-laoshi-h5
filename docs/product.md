@@ -1,6 +1,6 @@
 # 国学老师 H5 · 产品功能与页面跳转文档
 
-> 版本：基于当前代码库实测整理（2026-08-06）  
+> 版本：基于当前代码库实测整理（2026-08-10）
 > 形态：移动端 H5 原型，原生 HTML / CSS / JavaScript，无构建步骤、无后端。  
 > 所有数据保存在浏览器 `localStorage`；AI 回答、支付、微信跳转均为本地模拟。
 
@@ -16,7 +16,7 @@
 | ---------- | -------------------------------- | ---------------- |
 | 日常陪伴       | 今日指引、万年历、随时向老师提问                 | 首页、万年历、对话页       |
 | 深度解读（付费主线） | 建立八字档案 → 生成八章报告 → 试读 → 解锁 → 逐章追问 | 国心解读、报告章节对话、我的报告 |
-| 专业工具       | 十三种排盘法门的信息录入入口                   | 专业排盘、排盘信息        |
+| 专业工具       | 十三种排盘法门的信息录入入口及万年历查询              | 专业排盘、排盘信息、万年历   |
 
 商业化设计：完整报告 ¥88，单章 ¥16.8，单章金额可抵扣完整报告；另设「加微信免费领取一次完整报告」的导流通道。当前版本支付与领取均为模拟，不产生真实扣款。
 
@@ -37,7 +37,7 @@
 | 7  | 我的档案    | `profiles.html`         | 八字档案列表与切换                         | `preferences` `shared` `profiles`                |
 | 8  | 档案表单    | `profile.html`          | 新增 / 编辑 / 删除八字档案                  | `preferences` `shared` `profile`                 |
 | 9  | 个人资料与设置 | `settings.html`         | 昵称、字号、客服入口                        | `preferences` `settings`                         |
-| 10 | 专业排盘    | `chart-prototypes.html` | 十三法门宫格入口                          | `preferences` `chart-methods` `chart-prototypes` |
+| 10 | 专业排盘    | `chart-prototypes.html` | 十三法门及万年历宫格入口                      | `preferences` `chart-methods` `chart-prototypes` |
 | 11 | 排盘信息    | `chart-entry.html`      | 按法门动态生成的信息录入表单                    | `preferences` `chart-methods` `chart-entry`      |
 | 12 | 微信模拟页   | `wechat-simulator.html` | 四种导流场景的统一模拟中转页                    | `preferences` `shared` `wechat-simulator`        |
 
@@ -183,8 +183,8 @@
 
 ### 10. 专业排盘 `chart-prototypes.html`
 
-- 四列宫格展示 13 个法门：生平子时、遁甲学、决策学、阴盘决策、梅花学、逻辑学、星像学、姓名学、数字规律、山向决策、玄空飞星、观复字库（标「外部」）、康熙字典。
-- 每项配独立国风线性图标，点击 → `chart-entry.html?method=<id>`。
+- 四列宫格展示 13 个排盘法门：生平子时、遁甲学、决策学、阴盘决策、梅花学、逻辑学、星像学、姓名学、数字规律、山向决策、玄空飞星、观复字库（标「外部」）、康熙字典；另提供 1 个万年历工具入口。
+- 排盘法门配独立国风线性图标，点击 → `chart-entry.html?method=<id>`；万年历点击 → `calendar.html`。
 - 顶部「排盘记录」当前仅 toast「暂无排盘记录」（占位）。
 - 微信咨询 Banner → `wechat-simulator.html?context=chart&return=./chart-prototypes.html`。
 
@@ -217,21 +217,22 @@
                          │        index.html        │  首页（枢纽）
                          │  指引 / 入口 / 提问 / 抽屉  │
                          └──┬───┬───┬───┬────────┬───┘
-        日期徽章            │   │   │   │        │  提问发送
-   ┌────────────────────────┘   │   │   │        └──────────────┐
-   ▼                            │   │   │                       ▼
-calendar.html                   │   │   └──► wechat-simulator   chat.html
-（万年历）                       │   │        ?context=learning  （通用对话）
-                                │   │                             │
+                                 │   │   │        │  提问发送
+                                 │   │   │        └──────────────┐
+                                 │   │   │                       ▼
+                                 │   │   └──► wechat-simulator   chat.html
+                                 │   │        ?context=learning  （通用对话）
+                                 │   │                             │
               专业排盘           │   │  国心解读                    │ 报告上下文卡片
    ┌────────────────────────────┘   └────────────┐               │
    ▼                                             ▼               ▼
 chart-prototypes.html                    interpretation.html ◄────┘
-（十三法门）                              （档案选择 ⇄ 报告阅读）
-   │  ├─► wechat-simulator?context=chart      │  ├─► reports.html（顶部「报告」）
-   ▼                                          │  ├─► profile.html?return=interpretation
-chart-entry.html                              │  ├─► report-chat.html?report=&section=
-（排盘表单，终点）                              │  └─► wechat-simulator（免费领取 → 解锁）
+（十三法门 + 万年历）                      （档案选择 ⇄ 报告阅读）
+   │  ├─► calendar.html（万年历）              │  ├─► reports.html（顶部「报告」）
+   │  ├─► wechat-simulator?context=chart      │  ├─► profile.html?return=interpretation
+   ▼                                          │  ├─► report-chat.html?report=&section=
+chart-entry.html                              │  └─► wechat-simulator（免费领取 → 解锁）
+（排盘表单，终点）                              │
    └─► wechat-simulator?context=chart         │
                                               ▼
 抽屉入口 ──► profiles.html ──► profile.html    report-chat.html
@@ -243,7 +244,6 @@ chart-entry.html                              │  ├─► report-chat.html?re
 
 | 起点   | 触发元素              | 目标                                                                      | 方式                       |
 | ---- | ----------------- | ----------------------------------------------------------------------- | ------------------------ |
-| 首页   | 日期徽章              | `calendar.html`                                                         | 链接                       |
 | 首页   | 专业排盘卡             | `chart-prototypes.html`                                                 | JS 跳转                    |
 | 首页   | 国心解读卡             | `interpretation.html`                                                   | JS 跳转                    |
 | 首页   | 学习资料卡             | `wechat-simulator.html?context=learning-materials&return=./index.html`  | JS 跳转                    |
@@ -264,6 +264,7 @@ chart-entry.html                              │  ├─► report-chat.html?re
 | 档案表单 | 保存 / 删除           | `?return` 指定的页面                                                         | `location.replace`       |
 | 设置页  | 添加客服微信            | `wechat-simulator.html?context=customer-service&return=./settings.html` | 链接                       |
 | 专业排盘 | 法门卡 / Banner      | `chart-entry.html?method=` / 微信模拟页                                      | 链接                       |
+| 专业排盘 | 万年历卡             | `calendar.html`                                                             | 链接                       |
 | 排盘表单 | 咨询 / 非法 method    | 微信模拟页 / `chart-prototypes.html`                                         | 链接 / `replace`           |
 | 各子页  | 顶部返回键             | 浏览器上一页（无历史时回落站内地址）                                                      | `history.back()`         |
 

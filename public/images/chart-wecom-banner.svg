@@ -20,7 +20,7 @@
   <path d="M561 45c17-14 33-14 48 0 15-14 31-14 48 0M675 65c10-9 21-9 31 0 10-9 20-9 30 0" fill="none" stroke="#d69459" stroke-linecap="round" stroke-width="3" opacity=".48"/>
   <g filter="url(#shadow)">
     <rect x="34" y="42" width="102" height="102" rx="30" fill="url(#seal)"/>
-    <g transform="translate(0 7)">
+    <g transform="translate(-5 7)">
       <path d="M60 83c0-16 13-28 30-28s30 12 30 28c0 8-4 16-11 21l4 13-16-7c-3 1-6 1-9 1-16 0-28-12-28-28Z" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
       <circle cx="80" cy="82" r="3.5" fill="#fff"/><circle cx="99" cy="82" r="3.5" fill="#fff"/>
     </g>

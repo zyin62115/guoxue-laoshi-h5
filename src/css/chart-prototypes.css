@@ -142,7 +142,7 @@ button { color: inherit; font: inherit; }
 
 @media (min-width: 700px) {
   body { padding: 24px 0; }
-  .chart-page { min-height: calc(100svh - 48px); border-radius: 32px; }
+  .chart-page { min-height: calc(100svh - 48px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

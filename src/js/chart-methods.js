@@ -1,21 +1,4 @@
 (function exposeChartMethods(global) {
-  const iconPaths = {
-    bazi: `<circle cx="32" cy="32" r="22"/><circle cx="32" cy="32" r="15"/><path d="M32 17v5M47 32h-5M32 47v-5M17 32h5M32 25v9l7 4"/>`,
-    dunjia: `<path d="M14 13c6-3 12-3 18 0v38c-6-3-12-3-18 0V13ZM50 13c-6-3-12-3-18 0v38c6-3 12-3 18 0V13Z"/><path d="M20 22h7M20 30h7M37 22h7M37 30h7"/>`,
-    qimen: `<rect x="12" y="12" width="40" height="40" rx="4"/><path d="M25 12v40M39 12v40M12 25h40M12 39h40"/><circle cx="32" cy="32" r="5"/>`,
-    yinpan: `<path d="m32 8 8 4 8 8 4 12-4 12-8 8-8 4-8-4-8-8-4-12 4-12 8-8 8-4Z"/><path d="M32 20a12 12 0 1 0 0 24 6 6 0 0 0 0-12 6 6 0 0 1 0-12Z"/><circle cx="32" cy="26" r="1.5"/><circle cx="32" cy="38" r="1.5"/>`,
-    meihua: `<path d="M32 29c-13-3-14-15-7-18 5-2 8 4 7 12M32 29c3-13 15-14 18-7 2 5-4 8-12 7M32 29c13 3 14 15 7 18-5 2-8-4-7-12M32 29c-3 13-15 14-18 7-2-5 4-8 12-7"/><circle cx="32" cy="29" r="5"/><path d="M35 34c5 7 9 12 15 17"/>`,
-    liuyao: `<circle cx="32" cy="32" r="21"/><circle cx="32" cy="32" r="14"/><circle cx="32" cy="32" r="6"/><path d="M32 11v42M11 32h42"/>`,
-    ziwei: `<circle cx="32" cy="32" r="7"/><ellipse cx="32" cy="32" rx="24" ry="11"/><ellipse cx="32" cy="32" rx="11" ry="24" transform="rotate(35 32 32)"/><path d="m48 14 1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5 1.5-4Z"/>`,
-    name: `<path d="M15 13h27l7 7v31H15V13Z"/><path d="M42 13v8h8M22 27h18M22 35h14M22 43h10"/><path d="m45 38 7 7-13 9-5 1 2-5 9-12Z"/>`,
-    number: `<rect x="11" y="14" width="42" height="36" rx="4"/><path d="M18 22h28M18 30h28M18 38h28M18 46h28"/><circle cx="25" cy="22" r="3"/><circle cx="39" cy="30" r="3"/><circle cx="30" cy="38" r="3"/><circle cx="43" cy="46" r="3"/>`,
-    direction: `<path d="M9 47 22 28l8 11 7-10 18 18"/><circle cx="32" cy="38" r="15"/><path d="m37 31-3 9-9 3 3-9 9-3Z"/>`,
-    flying: `<rect x="12" y="12" width="40" height="40" rx="3"/><path d="M25 12v40M39 12v40M12 25h40M12 39h40"/><path d="m32 21 2.5 7.5H42l-6 4.5 2.2 7-6.2-4-6.2 4 2.2-7-6-4.5h7.5L32 21Z"/>`,
-    library: `<path d="M13 14c7-3 13-2 19 2v36c-6-4-12-5-19-2V14ZM51 14c-7-3-13-2-19 2v36c6-4 12-5 19-2V14Z"/><path d="M22 27h4M20 35h8M38 27h6M38 35h6"/>`,
-    kangxi: `<path d="M14 10h30l7 7v37H18c-3 0-5-2-5-5s2-5 5-5h26V10"/><path d="M22 19h15M22 27h19M22 35h15"/><path d="M44 10v34"/>`,
-    calendar: `<rect x="12" y="16" width="40" height="38" rx="5"/><path d="M12 26h40M22 10v12M42 10v12M20 36h6M38 36h6M20 46h6M38 46h6"/>`,
-  };
-
   const methods = [
     { id: "bazi", name: "生平子时", category: "命理排盘", tone: "orange", desc: "四柱命局与十年大运", action: "开始排盘", fields: [
       { id: "name", label: "姓名", type: "text", placeholder: "选填，最多 10 字", maxlength: 10, optional: true },
@@ -91,7 +74,7 @@
   }
 
   function iconMarkup(method) {
-    return `<svg viewBox="0 0 64 64" aria-hidden="true">${iconPaths[method.id]}</svg>`;
+    return `<img src="../../public/icons/chart-${method.id}.png" alt="">`;
   }
 
   global.ChartMethods = Object.freeze({ getMethod, iconMarkup, methods });

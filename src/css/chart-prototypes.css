@@ -145,11 +145,6 @@ button { color: inherit; font: inherit; }
   .method-card strong { font-size: calc(11px + var(--app-font-offset)); }
 }
 
-@media (min-width: 700px) {
-  body { padding: 24px 0; }
-  .chart-page { min-height: calc(100svh - 48px); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }

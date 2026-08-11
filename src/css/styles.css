@@ -1476,7 +1476,7 @@ body.drawer-open {
 .guest-avatar b {
   color: var(--avatar-ink, #79502f);
   font-family: var(--serif);
-  font-size: calc(clamp(25px, 6.4vw, 42px) + var(--app-font-offset));
+  font-size: calc(max(calc(39 * var(--unit)), 25px) + var(--app-font-offset));
   font-weight: 700;
   text-shadow: 0 1px rgba(255, 255, 255, 0.68);
 }
@@ -1492,7 +1492,7 @@ body.drawer-open {
   margin-bottom: max(calc(16 * var(--unit)), 8px);
   color: #18273d;
   font-family: var(--serif);
-  font-size: calc(clamp(24px, 5.7vw, 39px) + var(--app-font-offset));
+  font-size: calc(max(var(--app-font-page-title), 24px) + var(--app-font-offset));
   line-height: 1;
 }
 
@@ -1500,7 +1500,7 @@ body.drawer-open {
   display: flex;
   align-items: center;
   color: #8d8174;
-  font-size: calc(clamp(13px, 3vw, 20px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-body) + var(--app-font-offset));
 }
 
 .guest-copy i {
@@ -1589,14 +1589,14 @@ body.drawer-open {
 .drawer-entry strong {
   color: #26364b;
   font-family: var(--serif);
-  font-size: calc(clamp(16px, 3.8vw, 23px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-subtitle) + var(--app-font-offset));
 }
 
 .drawer-entry small {
   margin-top: max(calc(10 * var(--unit)), 5px);
   overflow: hidden;
   color: #9a8a7c;
-  font-size: calc(clamp(10px, 2.4vw, 14px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-caption) + var(--app-font-offset));
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1622,14 +1622,14 @@ body.drawer-open {
   margin: 0;
   color: #14233a;
   font-family: var(--serif);
-  font-size: calc(clamp(22px, 5.2vw, 34px) + var(--app-font-offset));
+  font-size: calc(max(var(--app-font-page-title), 22px) + var(--app-font-offset));
   line-height: 1.1;
 }
 
 .drawer-section-heading p {
   margin: max(calc(14 * var(--unit)), 7px) 0 0;
   color: #9a8d80;
-  font-size: calc(clamp(11px, 2.7vw, 17px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-secondary) + var(--app-font-offset));
 }
 
 .section-link {
@@ -1639,7 +1639,7 @@ body.drawer-open {
   border: 1px solid rgba(206, 130, 66, 0.35);
   border-radius: 999px;
   background: rgba(255, 250, 244, 0.68);
-  font-size: calc(clamp(12px, 2.8vw, 17px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-small) + var(--app-font-offset));
   text-decoration: none;
 }
 
@@ -1678,9 +1678,14 @@ body.drawer-open {
   display: block;
 }
 
+.profile-empty strong {
+  font-size: calc(var(--app-font-subtitle) + var(--app-font-offset));
+}
+
 .profile-empty small {
   margin-top: max(calc(8 * var(--unit)), 4px);
   color: #9a8c7d;
+  font-size: calc(var(--app-font-small) + var(--app-font-offset));
 }
 
 .archive-card {
@@ -1734,13 +1739,13 @@ body.drawer-open {
 
 .archive-copy strong {
   color: #24344a;
-  font-size: calc(max(calc(24 * var(--unit)), 16px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-subtitle) + var(--app-font-offset));
 }
 
 .archive-copy small {
   margin-top: max(calc(10 * var(--unit)), 5px);
   color: #998a7c;
-  font-size: calc(max(calc(17 * var(--unit)), 11px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-secondary) + var(--app-font-offset));
 }
 
 .archive-check {
@@ -1750,7 +1755,7 @@ body.drawer-open {
   color: transparent;
   border: 1px solid #d9c4ae;
   border-radius: 50%;
-  font-size: calc(max(calc(18 * var(--unit)), 12px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-small) + var(--app-font-offset));
   place-items: center;
 }
 
@@ -1765,7 +1770,7 @@ body.drawer-open {
   min-width: max(calc(84 * var(--unit)), 56px);
   color: #9b6138;
   border-left: 1px solid rgba(226, 205, 183, 0.68);
-  font-size: calc(max(calc(18 * var(--unit)), 12px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-small) + var(--app-font-offset));
   text-decoration: none;
   place-items: center;
 }
@@ -1827,12 +1832,12 @@ body.drawer-open {
 
 .conversation-empty strong {
   color: #68594c;
-  font-size: calc(max(calc(23 * var(--unit)), 15px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-subtitle) + var(--app-font-offset));
 }
 
 .conversation-empty small {
   margin-top: max(calc(14 * var(--unit)), 7px);
-  font-size: calc(max(calc(17 * var(--unit)), 11px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-secondary) + var(--app-font-offset));
 }
 
 .conversation-group + .conversation-group {
@@ -1842,7 +1847,7 @@ body.drawer-open {
 .conversation-group h3 {
   margin: 0 0 max(calc(16 * var(--unit)), 8px) max(calc(8 * var(--unit)), 4px);
   color: #a09285;
-  font-size: calc(max(calc(18 * var(--unit)), 12px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-small) + var(--app-font-offset));
   font-weight: 500;
 }
 
@@ -1878,21 +1883,21 @@ body.drawer-open {
 .conversation-item strong {
   color: #28364b;
   font-family: var(--serif);
-  font-size: calc(clamp(15px, 3.7vw, 22px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-subtitle) + var(--app-font-offset));
   font-weight: 600;
 }
 
 .conversation-item small {
   margin-top: max(calc(12 * var(--unit)), 6px);
   color: #9a8c80;
-  font-size: calc(clamp(10px, 2.5vw, 14px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-caption) + var(--app-font-offset));
 }
 
 .conversation-item time {
   align-self: start;
   padding-top: max(calc(4 * var(--unit)), 2px);
   color: #b2a69b;
-  font-size: calc(clamp(10px, 2.4vw, 13px) + var(--app-font-offset));
+  font-size: calc(var(--app-font-caption) + var(--app-font-offset));
   white-space: nowrap;
 }
 
@@ -1910,7 +1915,7 @@ body.drawer-open {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   opacity: 0;
   transform: translate(-50%, 12px);
-  font-size: calc(13px + var(--app-font-offset));
+  font-size: calc(var(--app-font-body) + var(--app-font-offset));
   white-space: nowrap;
   transition:
     opacity 180ms ease,
@@ -2555,14 +2560,14 @@ body.drawer-open {
 .drawer-report-card strong {
   overflow: hidden;
   color: #5b4030;
-  font-size: calc(13px + var(--app-font-offset));
+  font-size: calc(var(--app-font-body) + var(--app-font-offset));
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .drawer-report-card small {
   color: #9b8371;
-  font-size: calc(10px + var(--app-font-offset));
+  font-size: calc(var(--app-font-caption) + var(--app-font-offset));
 }
 
 .drawer-report-card i {
@@ -2584,7 +2589,7 @@ body.drawer-open {
   background: rgba(255, 251, 245, 0.52);
   text-align: center;
   text-decoration: none;
-  font-size: calc(11px + var(--app-font-offset));
+  font-size: calc(var(--app-font-secondary) + var(--app-font-offset));
 }
 
 /* 国心解读 */

@@ -60,7 +60,7 @@
       { id: "chartType", label: "盘式", type: "select", options: ["下盘", "替盘"] },
       { id: "note", label: "备注", type: "text", placeholder: "选填，最多 10 字", maxlength: 10, optional: true },
     ] },
-    { id: "library", name: "观复字库", category: "文化工具", tone: "blue", desc: "古文字形与文化释义", action: "开始查询", external: true, fields: [
+    { id: "library", name: "观复字库", category: "文化工具", tone: "blue", desc: "古文字形与文化释义", action: "开始查询", fields: [
       { id: "character", label: "查询汉字", type: "text", placeholder: "请输入一个汉字", maxlength: 1 },
     ] },
     { id: "kangxi", name: "康熙字典", category: "文化工具", tone: "orange", desc: "繁体笔画与字义查询", action: "开始测算", fields: [

@@ -72,17 +72,63 @@ button { color: inherit; font: inherit; }
 .header-copy { position: relative; z-index: 3; height: max(calc(60 * var(--unit)), 40px); display: grid; place-items: center; }
 .header-copy h1 { margin: 0; font-family: var(--serif); font-size: calc(max(calc(32 * var(--unit)), 21px) + var(--app-font-offset)); line-height: 1.1; letter-spacing: .08em; text-indent: .08em; }
 
-.wechat-banner {
+.consultation-poster {
   position: relative;
   z-index: 3;
   margin: max(calc(6 * var(--unit)), 3px) 0 max(calc(36 * var(--unit)), 18px);
   display: block;
+  aspect-ratio: 3.78846 / 1;
   overflow: hidden;
   border-radius: 18px;
+  color: var(--warm-ink);
   text-decoration: none;
   box-shadow: 0 10px 24px rgba(123, 75, 31, .11);
 }
-.wechat-banner img { width: 100%; height: auto; display: block; }
+.consultation-poster-art { width: 100%; height: 100%; display: block; object-fit: cover; }
+.consultation-poster-copy {
+  position: absolute;
+  top: 50%;
+  left: 33%;
+  width: 57%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: max(calc(13 * var(--unit)), 4px);
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+.consultation-poster-label {
+  color: #aa5b28;
+  font-size: calc(max(calc(18 * var(--unit)), 7px) + var(--app-font-offset));
+  line-height: 1;
+}
+.consultation-poster-copy strong {
+  color: #332814;
+  font-family: var(--serif);
+  font-size: calc(max(calc(44 * var(--unit)), 14px) + var(--app-font-offset));
+  line-height: 1;
+  letter-spacing: .02em;
+}
+.consultation-poster-description {
+  color: #7e624b;
+  font-size: calc(max(calc(20 * var(--unit)), 7px) + var(--app-font-offset));
+  line-height: 1;
+}
+.consultation-poster-action {
+  min-width: max(calc(250 * var(--unit)), 86px);
+  min-height: max(calc(65 * var(--unit)), 25px);
+  margin-top: max(calc(8 * var(--unit)), 1px);
+  padding: 0 max(calc(34 * var(--unit)), 12px);
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #d34b16;
+  box-shadow: 0 max(calc(5 * var(--unit)), 2px) max(calc(12 * var(--unit)), 5px) rgba(154, 58, 19, .2);
+  color: #fff;
+  font-size: calc(max(calc(23 * var(--unit)), 9px) + var(--app-font-offset));
+  font-weight: 700;
+  line-height: 1;
+}
 
 .method-section { position: relative; z-index: 2; }
 .section-heading { margin: 0 max(calc(4 * var(--unit)), 2px) max(calc(28 * var(--unit)), 14px); }
@@ -135,6 +181,8 @@ button { color: inherit; font: inherit; }
 @media (max-width: 370px) {
   .chart-page { padding-inline: 13px; }
   .chart-header { margin-inline: -13px; }
+  .consultation-poster { border-radius: 13px; }
+  .consultation-poster-copy { left: 32.5%; width: 57%; gap: 3px; }
   .method-grid { gap: 8px 6px; }
   .method-card { min-height: 90px; border-radius: 13px; }
   .method-icon { width: 50px; height: 50px; }

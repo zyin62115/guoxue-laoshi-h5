@@ -3896,10 +3896,6 @@ body.drawer-open {
     top: calc(112 * var(--unit));
   }
 
-  .topbar::before {
-    background: transparent;
-  }
-
   .design-canvas,
   .chat-shell,
   .profile-page-shell,

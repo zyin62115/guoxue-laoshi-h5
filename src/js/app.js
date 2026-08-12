@@ -2,6 +2,10 @@ const appState = window.GuoxueApp;
 const pressables = document.querySelectorAll("[data-action]");
 const questionInput = document.querySelector("#home-question");
 const actionButton = document.querySelector("#home-action");
+const profileTrigger = document.querySelector("#home-profile-trigger");
+const profileMenu = document.querySelector("#home-profile-menu");
+const profileAvatar = document.querySelector("#home-profile-avatar");
+const profileName = document.querySelector("#home-profile-name");
 const voiceDock = document.querySelector(".voice-dock");
 const micButton = document.querySelector('[data-action="voice-mode"]');
 const quotaGuide = document.querySelector("#home-quota-guide");
@@ -31,6 +35,64 @@ let toastTimer = null;
 let drawerGesture = null;
 let suppressClickUntil = 0;
 let dailyGuideTimer = null;
+let isProfileMenuOpen = false;
+
+function closeProfileMenu() {
+  isProfileMenuOpen = false;
+  profileMenu.hidden = true;
+  profileTrigger.setAttribute("aria-expanded", "false");
+}
+
+function renderProfileSwitcher() {
+  const profiles = appState.getProfiles();
+  const activeProfile = appState.getActiveProfile();
+  profileName.textContent = activeProfile?.name || "选择档案";
+  profileAvatar.textContent = activeProfile ? Array.from(activeProfile.name)[0] : "档";
+
+  const items = profiles.map((profile) => {
+    const item = document.createElement("button");
+    const isActive = profile.id === activeProfile?.id;
+    item.className = "profile-menu-item pressable";
+    item.classList.toggle("is-active", isActive);
+    item.type = "button";
+    item.dataset.profileId = profile.id;
+    item.setAttribute("role", "menuitemradio");
+    item.setAttribute("aria-checked", String(isActive));
+
+    const avatar = document.createElement("span");
+    avatar.className = "profile-menu-avatar";
+    avatar.textContent = Array.from(profile.name)[0];
+    const name = document.createElement("span");
+    name.textContent = profile.name;
+    item.append(avatar, name);
+    if (isActive) {
+      const check = document.createElement("span");
+      check.className = "profile-menu-check";
+      check.textContent = "✓";
+      check.setAttribute("aria-hidden", "true");
+      item.append(check);
+    }
+    return item;
+  });
+
+  const add = document.createElement("a");
+  add.className = "profile-menu-add pressable";
+  add.href = profiles.length ? "./profiles.html" : "./profile.html?return=profiles";
+  add.textContent = profiles.length ? "管理档案" : "添加咨询档案";
+  profileMenu.setAttribute("role", "menu");
+  profileMenu.replaceChildren(...items, add);
+}
+
+function toggleProfileMenu() {
+  if (isProfileMenuOpen) {
+    closeProfileMenu();
+    return;
+  }
+  renderProfileSwitcher();
+  isProfileMenuOpen = true;
+  profileMenu.hidden = false;
+  profileTrigger.setAttribute("aria-expanded", "true");
+}
 
 function renderUserPreferences() {
   const preferences = window.GuoxuePreferences.getPreferences();
@@ -169,9 +231,7 @@ function syncActionState() {
   const exhausted = appState.getQuota().remaining <= 0;
   const canSend = hasQuestion && !exhausted;
 
-  actionButton.classList.toggle("is-send", canSend);
-  actionButton.dataset.action = canSend ? "submit-question" : "more";
-  actionButton.setAttribute("aria-label", canSend ? "发送问题" : "更多功能");
+  actionButton.disabled = !canSend;
 }
 
 function syncQuotaState() {
@@ -181,7 +241,6 @@ function syncQuotaState() {
   voiceDock.classList.toggle("is-exhausted", exhausted);
   questionInput.disabled = exhausted;
   micButton.disabled = exhausted;
-  actionButton.disabled = exhausted;
   quotaGuide.hidden = !exhausted;
   questionInput.placeholder = exhausted
     ? "限时免费体验已结束"
@@ -560,7 +619,27 @@ questionInput.addEventListener("keydown", (event) => {
 });
 
 actionButton.addEventListener("click", () => {
-  if (actionButton.classList.contains("is-send")) submitQuestion();
+  submitQuestion();
+});
+
+profileTrigger.addEventListener("click", toggleProfileMenu);
+profileMenu.addEventListener("click", (event) => {
+  const item = event.target.closest("[data-profile-id]");
+  if (!item) return;
+  appState.setActiveProfile(item.dataset.profileId);
+  renderProfileSwitcher();
+  closeProfileMenu();
+});
+
+document.addEventListener("click", (event) => {
+  if (isProfileMenuOpen && !event.target.closest(".profile-switcher")) closeProfileMenu();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && isProfileMenuOpen) {
+    closeProfileMenu();
+    profileTrigger.focus();
+  }
 });
 
 scrollTopButton.addEventListener("click", () => {
@@ -576,6 +655,7 @@ window.addEventListener("pageshow", () => {
   syncQuotaState();
   syncScrollTopButton();
   renderDrawerContent();
+  renderProfileSwitcher();
 });
 window.addEventListener("focus", () => {
   renderDailyGuide();
@@ -591,6 +671,7 @@ appState.renderPromotionBadge(promotionBadge);
 syncQuotaState();
 syncScrollTopButton();
 renderDrawerContent();
+renderProfileSwitcher();
 
 if (window.location.hash === "#menu") {
   openDrawer();

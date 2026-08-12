@@ -194,6 +194,26 @@
     <div class="app-toast" id="app-toast" role="status" aria-live="polite"></div>
 
     <div class="voice-dock" aria-label="对话工具栏">
+      <div class="profile-switcher">
+        <button
+          id="home-profile-trigger"
+          class="profile-switch-button pressable"
+          type="button"
+          data-action="switch-profile"
+          aria-label="切换咨询档案"
+          aria-controls="home-profile-menu"
+          aria-expanded="false"
+        >
+          <span class="profile-switch-avatar" id="home-profile-avatar" aria-hidden="true">档</span>
+          <span class="profile-switch-name" id="home-profile-name">选择档案</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m7 9 5 5 5-5" />
+          </svg>
+        </button>
+
+        <div class="profile-switch-menu" id="home-profile-menu" hidden></div>
+      </div>
+
       <button
         class="dock-icon mic-button pressable"
         type="button"
@@ -218,18 +238,15 @@
 
       <button
         id="home-action"
-        class="dock-icon plus-button home-action pressable"
+        class="dock-icon send-button home-action pressable"
         type="button"
-        data-action="more"
-        aria-label="更多功能"
+        data-action="submit-question"
+        aria-label="发送问题"
+        disabled
       >
-        <svg class="plus-icon" viewBox="0 0 72 72" aria-hidden="true">
+        <svg viewBox="0 0 72 72" aria-hidden="true">
           <circle cx="36" cy="36" r="30" />
-          <path d="M36 20v32M20 36h32" />
-        </svg>
-        <svg class="send-icon" viewBox="0 0 72 72" aria-hidden="true">
-          <circle cx="36" cy="36" r="30" />
-          <path d="M23 36h25M39 26l10 10-10 10" />
+          <path d="M36 49V23M25 34l11-11 11 11" />
         </svg>
       </button>
 

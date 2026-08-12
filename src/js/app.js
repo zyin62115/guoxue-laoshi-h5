@@ -18,9 +18,7 @@ const professionalChartButton = document.querySelector('[data-action="profession
 const learningMaterialsButton = document.querySelector('[data-action="learning-materials"]');
 const guideDate = document.querySelector("#guide-date");
 const guideDateText = document.querySelector("#guide-date-text");
-const guideLineOne = document.querySelector("#guide-line-one");
-const guideLineTwo = document.querySelector("#guide-line-two");
-const guideLineThree = document.querySelector("#guide-line-three");
+const guideContent = document.querySelector("#guide-content");
 const guideGood = document.querySelector("#guide-good");
 const guideAvoid = document.querySelector("#guide-avoid");
 const drawerUserAvatar = document.querySelector("#drawer-user-avatar");
@@ -141,9 +139,7 @@ function renderDailyGuide() {
   const guide = DAILY_GUIDES[getDailyGuideIndex(now)];
   guideDate.dateTime = appState.localDateKey(now);
   guideDateText.textContent = formatGuideDate(now);
-  guideLineOne.textContent = guide.lines[0];
-  guideLineTwo.textContent = guide.lines[1];
-  guideLineThree.textContent = guide.lines[2];
+  guideContent.textContent = guide.lines.join("");
   guideGood.textContent = guide.good;
   guideAvoid.textContent = guide.avoid;
 

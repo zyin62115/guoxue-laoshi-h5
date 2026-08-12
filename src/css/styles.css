@@ -497,21 +497,21 @@ button,
 .guidance {
   position: absolute;
   top: calc(272 * var(--unit));
-  left: calc(340 * var(--unit));
-  width: calc(535 * var(--unit));
+  right: calc(95 * var(--unit));
+  width: calc(440 * var(--unit) + 14 * var(--app-font-offset));
   margin: 0;
   font-family: var(--serif);
   font-size: calc(calc(31.5 * var(--unit)) + var(--app-font-offset));
   font-weight: 600;
   line-height: calc(51 * var(--unit));
   letter-spacing: calc(0.5 * var(--unit));
-  white-space: normal;
+  text-align: justify;
+  text-align-last: left;
   transform: translateY(16px);
 }
 
 .guidance span {
-  display: block;
-  white-space: nowrap;
+  display: inline;
 }
 
 .advice-row {

@@ -391,10 +391,10 @@ button,
 }
 
 .hero-left {
-  top: calc(173.29 * var(--unit));
+  top: calc(74 * var(--unit));
   left: 0;
   width: calc(334 * var(--unit));
-  height: calc(416.71 * var(--unit));
+  height: calc(516 * var(--unit));
   object-fit: cover;
   -webkit-mask-image: linear-gradient(to bottom, #000 0 86%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0 86%, transparent 100%);
@@ -3873,7 +3873,7 @@ body.drawer-open {
 
 @media (min-width: 700px) {
   .hero-left {
-    top: calc(211.29 * var(--unit));
+    top: calc(112 * var(--unit));
   }
 
   .design-canvas,

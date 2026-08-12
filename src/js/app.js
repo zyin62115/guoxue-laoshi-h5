@@ -20,6 +20,7 @@ const guideDate = document.querySelector("#guide-date");
 const guideDateText = document.querySelector("#guide-date-text");
 const guideLineOne = document.querySelector("#guide-line-one");
 const guideLineTwo = document.querySelector("#guide-line-two");
+const guideLineThree = document.querySelector("#guide-line-three");
 const guideGood = document.querySelector("#guide-good");
 const guideAvoid = document.querySelector("#guide-avoid");
 const drawerUserAvatar = document.querySelector("#drawer-user-avatar");
@@ -41,62 +42,62 @@ function renderUserPreferences() {
 
 const DAILY_GUIDES = [
   {
-    lines: ["顺势而为，稳中求进，保持平和心态，", "善用耐心，方能见长远之效。"],
+    lines: ["顺势而为，稳中求进，", "保持平和，善用耐心，", "从容落子，自见长远。"],
     good: "静心学习",
     avoid: "急躁冲动",
   },
   {
-    lines: ["心定则事明，步稳则路远，", "从容安排，今日自有所得。"],
+    lines: ["心定则事明，步稳则路远，", "从容安排，理清先后，", "循序而行，今日有得。"],
     good: "整理计划",
     avoid: "仓促决定",
   },
   {
-    lines: ["守正而行，专注眼前可为之事，", "日积小功，终能汇成长进。"],
+    lines: ["守正而行，专注眼前，", "做好当下可为之事，", "日积小功，终成大进。"],
     good: "专注行动",
     avoid: "贪多求快",
   },
   {
-    lines: ["言缓则贵，心静则安，", "多听一分，更能看清彼此所需。"],
+    lines: ["言缓则贵，心静则安，", "多听一分，多想一步，", "彼此所需，自会明朗。"],
     good: "坦诚沟通",
     avoid: "意气争辩",
   },
   {
-    lines: ["张弛有度，劳逸相宜，", "养足精神，方可从容应对。"],
+    lines: ["张弛有度，劳逸相宜，", "养足精神，安顿身心，", "从容应对，自有余裕。"],
     good: "规律作息",
     avoid: "过度劳累",
   },
   {
-    lines: ["旧事宜清，新机渐显，", "舍去纷扰，才能轻装前行。"],
+    lines: ["旧事宜清，新机渐显，", "舍去纷扰，收拢心绪，", "轻装前行，更见开阔。"],
     good: "清理积压",
     avoid: "反复拖延",
   },
   {
-    lines: ["见微知著，先察后行，", "留心细节，可避无谓周折。"],
+    lines: ["见微知著，先察后行，", "留心细节，核清脉络，", "稳妥落步，可避周折。"],
     good: "核对细节",
     avoid: "粗心大意",
   },
   {
-    lines: ["和气能聚，真诚可通，", "以善意相待，自有温暖回应。"],
+    lines: ["和气能聚，真诚可通，", "以善意相待，以诚意相交，", "温暖回应，自会到来。"],
     good: "关怀他人",
     avoid: "冷言相向",
   },
   {
-    lines: ["知止而后定，量力而后行，", "守好边界，心中自会安稳。"],
+    lines: ["知止而后定，量力而后行，", "守好边界，照顾本心，", "心有定处，自会安稳。"],
     good: "量力而行",
     avoid: "勉强逞强",
   },
   {
-    lines: ["晨光宜启新章，今日宜立小愿，", "方向既明，行动便有力量。"],
+    lines: ["晨光初启，今日立愿，", "方向既明，脚步便稳，", "勇敢行动，自有力量。"],
     good: "开启新事",
     avoid: "犹豫不前",
   },
   {
-    lines: ["温故可以知新，回望亦为前行，", "总结得失，下一步会更清晰。"],
+    lines: ["温故知新，回望亦是前行，", "总结得失，梳理来路，", "下一步，自会更加清晰。"],
     good: "复盘总结",
     avoid: "重蹈旧误",
   },
   {
-    lines: ["静中有思，独处亦能生慧，", "给心留白，答案自会浮现。"],
+    lines: ["静中有思，独处亦能生慧，", "给心留白，听见本心，", "所求答案，自会浮现。"],
     good: "安静独处",
     avoid: "随波逐流",
   },
@@ -142,6 +143,7 @@ function renderDailyGuide() {
   guideDateText.textContent = formatGuideDate(now);
   guideLineOne.textContent = guide.lines[0];
   guideLineTwo.textContent = guide.lines[1];
+  guideLineThree.textContent = guide.lines[2];
   guideGood.textContent = guide.good;
   guideAvoid.textContent = guide.avoid;
 

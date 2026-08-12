@@ -436,7 +436,7 @@ button,
 
 .guide-heading {
   position: absolute;
-  top: calc(214 * var(--unit));
+  top: calc(174 * var(--unit));
   left: calc(326 * var(--unit));
   display: flex;
   align-items: center;
@@ -462,7 +462,7 @@ button,
 
 .date-badge {
   position: absolute;
-  top: calc(210 * var(--unit));
+  top: calc(170 * var(--unit));
   right: calc(95 * var(--unit));
   z-index: 5;
   display: flex;
@@ -496,7 +496,7 @@ button,
 
 .guidance {
   position: absolute;
-  top: calc(302 * var(--unit));
+  top: calc(294 * var(--unit));
   left: calc(340 * var(--unit));
   width: calc(535 * var(--unit));
   margin: 0;
@@ -509,9 +509,14 @@ button,
   transform: translateY(16px);
 }
 
+.guidance span {
+  display: block;
+  white-space: nowrap;
+}
+
 .advice-row {
   position: absolute;
-  top: calc(432 * var(--unit));
+  top: calc(460 * var(--unit));
   left: calc(340 * var(--unit));
   display: flex;
   align-items: center;

@@ -3892,6 +3892,14 @@ body.drawer-open {
 }
 
 @media (min-width: 700px) {
+  .hero-left {
+    top: calc(112 * var(--unit));
+  }
+
+  .topbar::before {
+    background: transparent;
+  }
+
   .design-canvas,
   .chat-shell,
   .profile-page-shell,

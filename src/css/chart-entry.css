@@ -127,11 +127,6 @@ button, a, input, select, textarea { font: inherit; -webkit-tap-highlight-color:
   .chart-form { padding-inline: 13px; }
 }
 
-@media (min-width: 700px) {
-  body { padding: 24px 0; }
-  .entry-page { min-height: calc(100svh - 48px); border-radius: 32px; overflow: hidden; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }

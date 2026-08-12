@@ -3742,6 +3742,18 @@ body.drawer-open {
   }
 }
 
+@media (min-width: 700px) {
+  .design-canvas,
+  .chat-shell,
+  .profile-page-shell,
+  .collection-shell,
+  .interpretation-shell,
+  .report-chat-shell,
+  .wechat-simulator-shell {
+    box-shadow: 0 0 34px rgba(71, 51, 30, 0.1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .drawer-scrim,
   .personal-drawer,

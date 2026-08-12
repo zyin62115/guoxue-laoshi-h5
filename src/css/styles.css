@@ -811,7 +811,8 @@ button,
 }
 
 .dock-icon,
-.text-input {
+.text-input,
+.mic-button {
   cursor: pointer;
 }
 
@@ -825,15 +826,19 @@ button,
 }
 
 .mic-button {
-  background: rgba(255, 253, 249, 0.84);
-  box-shadow:
-    0 0 calc(14 * var(--unit)) rgba(115, 78, 33, 0.08),
-    inset 0 0 0 calc(1 * var(--unit)) rgba(204, 176, 143, 0.18);
+  display: grid;
+  flex: 0 0 calc(62 * var(--unit));
+  width: calc(62 * var(--unit));
+  height: calc(62 * var(--unit));
+  color: #242116;
+  border-radius: 50%;
+  background: transparent;
+  place-items: center;
 }
 
 .mic-button svg {
-  width: calc(48 * var(--unit));
-  height: calc(48 * var(--unit));
+  width: calc(42 * var(--unit));
+  height: calc(42 * var(--unit));
 }
 
 .mic-button rect,
@@ -845,14 +850,13 @@ button,
   stroke-linejoin: round;
 }
 
-.text-input {
+.text-input-shell {
+  display: flex;
   min-width: 0;
-  flex: 1 1 auto;
-  width: auto;
   height: calc(86 * var(--unit));
-  padding: 0 calc(34 * var(--unit));
-  color: var(--warm-ink);
-  outline: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  padding-left: calc(10 * var(--unit));
   border: calc(1 * var(--unit)) solid rgba(255, 255, 255, 0.96);
   border-radius: calc(45 * var(--unit));
   background:
@@ -861,6 +865,26 @@ button,
   box-shadow:
     inset 0 calc(1 * var(--unit)) 0 #fff,
     0 calc(4 * var(--unit)) calc(18 * var(--unit)) rgba(183, 116, 43, 0.035);
+}
+
+.text-input-shell:focus-within {
+  border-color: rgba(213, 143, 72, 0.32);
+  background: linear-gradient(100deg, #fffbf6, #fbe9d5);
+  box-shadow:
+    inset 0 calc(1 * var(--unit)) 0 #fff,
+    0 0 0 calc(3 * var(--unit)) rgba(222, 106, 10, 0.05);
+}
+
+.text-input {
+  min-width: 0;
+  flex: 1 1 auto;
+  width: auto;
+  height: 100%;
+  padding: 0 calc(24 * var(--unit)) 0 calc(6 * var(--unit));
+  color: var(--warm-ink);
+  outline: 0;
+  border: 0;
+  background: transparent;
   cursor: text;
   font-family: var(--serif);
   font-size: calc(max(calc(29 * var(--unit)), 14px) + var(--app-font-offset));
@@ -871,14 +895,6 @@ button,
 .text-input::placeholder {
   color: #9b8d78;
   opacity: 0.82;
-}
-
-.text-input:focus {
-  border-color: rgba(213, 143, 72, 0.32);
-  background: linear-gradient(100deg, #fffbf6, #fbe9d5);
-  box-shadow:
-    inset 0 calc(1 * var(--unit)) 0 #fff,
-    0 0 0 calc(3 * var(--unit)) rgba(222, 106, 10, 0.05);
 }
 
 .send-button svg {
@@ -1057,7 +1073,7 @@ button,
 }
 
 .voice-dock.is-exhausted .mic-button,
-.voice-dock.is-exhausted .text-input,
+.voice-dock.is-exhausted .text-input-shell,
 .voice-dock.is-exhausted .home-action,
 .voice-dock.is-exhausted .profile-switcher {
   display: none;

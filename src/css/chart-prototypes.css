@@ -94,7 +94,8 @@ button { color: inherit; font: inherit; }
   flex-direction: column;
   align-items: flex-start;
   gap: max(calc(13 * var(--unit)), 4px);
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(.8);
+  transform-origin: left center;
   white-space: nowrap;
 }
 .consultation-poster-label {

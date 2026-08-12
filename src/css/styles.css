@@ -496,22 +496,27 @@ button,
 
 .guidance {
   position: absolute;
-  top: calc(302 * var(--unit));
-  left: calc(340 * var(--unit));
-  width: calc(535 * var(--unit));
+  top: calc(289 * var(--unit));
+  left: calc(326 * var(--unit));
+  width: calc(440 * var(--unit) + 14 * var(--app-font-offset));
   margin: 0;
   font-family: var(--serif);
   font-size: calc(calc(31.5 * var(--unit)) + var(--app-font-offset));
   font-weight: 600;
   line-height: calc(51 * var(--unit));
   letter-spacing: calc(0.5 * var(--unit));
-  white-space: normal;
-  transform: translateY(16px);
+  text-align: justify;
+  text-align-last: left;
+  transform: translate(5%, 16px);
+}
+
+.guidance span {
+  display: inline;
 }
 
 .advice-row {
   position: absolute;
-  top: calc(432 * var(--unit));
+  top: calc(460 * var(--unit));
   left: calc(340 * var(--unit));
   display: flex;
   align-items: center;

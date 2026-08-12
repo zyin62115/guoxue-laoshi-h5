@@ -2456,7 +2456,7 @@ body.drawer-open {
 }
 
 .report-chat-shell {
-  width: min(100%, 760px);
+  width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
   padding: calc(env(safe-area-inset-top, 0px) + 88px) 16px calc(env(safe-area-inset-bottom, 0px) + 128px);
@@ -3058,7 +3058,7 @@ body.drawer-open {
 }
 
 .report-reader {
-  width: min(100%, 760px);
+  width: min(100%, var(--app-page-max-width));
   margin: 0 auto;
 }
 
@@ -3739,6 +3739,18 @@ body.drawer-open {
     grid-column: 1;
     width: 100%;
     margin-top: 6px;
+  }
+}
+
+@media (min-width: 700px) {
+  .design-canvas,
+  .chat-shell,
+  .profile-page-shell,
+  .collection-shell,
+  .interpretation-shell,
+  .report-chat-shell,
+  .wechat-simulator-shell {
+    box-shadow: 0 0 34px rgba(71, 51, 30, 0.1);
   }
 }
 

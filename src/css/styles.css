@@ -867,7 +867,7 @@ button,
   height: calc(86 * var(--unit));
   flex: 1 1 auto;
   align-items: center;
-  padding-left: calc(10 * var(--unit));
+  padding-left: 0;
   border: calc(1 * var(--unit)) solid rgba(255, 255, 255, 0.96);
   border-radius: calc(45 * var(--unit));
   background:
@@ -891,7 +891,7 @@ button,
   flex: 1 1 auto;
   width: auto;
   height: 100%;
-  padding: 0 calc(24 * var(--unit)) 0 calc(6 * var(--unit));
+  padding: 0 calc(24 * var(--unit));
   color: var(--warm-ink);
   outline: 0;
   border: 0;
@@ -1083,7 +1083,6 @@ button,
   font-size: calc(max(calc(21 * var(--unit)), 12px) + var(--app-font-offset));
 }
 
-.voice-dock.is-exhausted .mic-button,
 .voice-dock.is-exhausted .text-input-shell,
 .voice-dock.is-exhausted .home-action,
 .voice-dock.is-exhausted .profile-switcher {

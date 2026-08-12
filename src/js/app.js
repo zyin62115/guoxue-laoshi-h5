@@ -7,7 +7,6 @@ const profileMenu = document.querySelector("#home-profile-menu");
 const profileAvatar = document.querySelector("#home-profile-avatar");
 const profileName = document.querySelector("#home-profile-name");
 const voiceDock = document.querySelector(".voice-dock");
-const micButton = document.querySelector('[data-action="voice-mode"]');
 const quotaGuide = document.querySelector("#home-quota-guide");
 const promotionBadge = document.querySelector("#home-promotion-badge");
 const scrollTopButton = document.querySelector("#scroll-top-button");
@@ -240,7 +239,6 @@ function syncQuotaState() {
 
   voiceDock.classList.toggle("is-exhausted", exhausted);
   questionInput.disabled = exhausted;
-  micButton.disabled = exhausted;
   quotaGuide.hidden = !exhausted;
   questionInput.placeholder = exhausted
     ? "限时免费体验已结束"

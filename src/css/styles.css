@@ -251,6 +251,24 @@ button,
     radial-gradient(ellipse at 88% 15%, rgba(255, 250, 242, 0.12), transparent 25%);
 }
 
+.design-canvas::after {
+  position: absolute;
+  top: calc(88 * var(--unit));
+  left: 0;
+  z-index: 3;
+  width: calc(158 * var(--unit));
+  height: calc(92 * var(--unit));
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(
+    to bottom,
+    #fdf2e6 0%,
+    rgba(253, 242, 230, 0.94) 22%,
+    rgba(253, 242, 230, 0.5) 58%,
+    rgba(253, 242, 230, 0) 100%
+  );
+}
+
 .topbar {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px) + calc(18 * var(--unit)));
@@ -270,9 +288,11 @@ button,
   height: calc(env(safe-area-inset-top, 0px) + calc(88 * var(--unit)));
   content: "";
   border: 0;
-  background: transparent;
+  background: #fdf2e6;
   box-shadow: none;
   transform: translateX(-50%);
+  backdrop-filter: blur(calc(12 * var(--unit)));
+  -webkit-backdrop-filter: blur(calc(12 * var(--unit)));
 }
 
 .icon-button {
@@ -3874,6 +3894,10 @@ body.drawer-open {
 @media (min-width: 700px) {
   .hero-left {
     top: calc(112 * var(--unit));
+  }
+
+  .topbar::before {
+    background: transparent;
   }
 
   .design-canvas,

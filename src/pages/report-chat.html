@@ -37,23 +37,20 @@
     </main>
 
     <div class="voice-dock report-chat-dock" id="report-chat-dock" aria-label="对话工具栏">
-      <span class="report-chat-topic-mark" aria-hidden="true">解</span>
-      <input
-        class="text-input"
-        id="report-chat-question"
-        type="text"
-        placeholder="继续问老师"
-        autocomplete="off"
-        aria-label="输入章节问题"
-      />
-      <button class="dock-icon plus-button home-action pressable" id="report-chat-send" type="button" aria-label="发送问题">
-        <svg class="plus-icon" viewBox="0 0 72 72" aria-hidden="true">
+      <div class="profile-switcher">
+        <button id="report-profile-trigger" class="profile-switch-button report-profile-display" type="button" aria-label="当前报告档案" disabled>
+          <span class="profile-switch-avatar" id="report-profile-avatar" aria-hidden="true">档</span>
+          <span class="profile-switch-name" id="report-profile-name">选择档案</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9 5 5 5-5" /></svg>
+        </button>
+      </div>
+      <div class="text-input-shell">
+        <input class="text-input" id="report-chat-question" type="text" placeholder="继续问老师" autocomplete="off" aria-label="输入章节问题" />
+      </div>
+      <button class="dock-icon send-button home-action pressable" id="report-chat-send" type="button" aria-label="发送问题" disabled>
+        <svg viewBox="0 0 72 72" aria-hidden="true">
           <circle cx="36" cy="36" r="30" />
-          <path d="M36 20v32M20 36h32" />
-        </svg>
-        <svg class="send-icon" viewBox="0 0 72 72" aria-hidden="true">
-          <circle cx="36" cy="36" r="30" />
-          <path d="M23 36h25M39 26l10 10-10 10" />
+          <path d="M36 49V23M25 34l11-11 11 11" />
         </svg>
       </button>
       <p class="quota-guide" id="report-chat-quota-guide">今日免费对话次数已用完</p>

@@ -822,8 +822,7 @@ button,
 }
 
 .dock-icon,
-.text-input,
-.mic-button {
+.text-input {
   cursor: pointer;
 }
 
@@ -834,31 +833,6 @@ button,
   height: calc(72 * var(--unit));
   place-items: center;
   border-radius: 50%;
-}
-
-.mic-button {
-  display: grid;
-  flex: 0 0 calc(62 * var(--unit));
-  width: calc(62 * var(--unit));
-  height: calc(62 * var(--unit));
-  color: #242116;
-  border-radius: 50%;
-  background: transparent;
-  place-items: center;
-}
-
-.mic-button svg {
-  width: calc(42 * var(--unit));
-  height: calc(42 * var(--unit));
-}
-
-.mic-button rect,
-.mic-button path {
-  fill: none;
-  stroke: #242116;
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 .text-input-shell {
@@ -988,6 +962,14 @@ button,
 
 .profile-switch-button[aria-expanded="true"] > svg {
   transform: rotate(180deg);
+}
+
+.report-profile-display {
+  cursor: default;
+}
+
+.report-profile-display > svg {
+  display: none;
 }
 
 .profile-switch-menu {
@@ -2647,23 +2629,8 @@ body.drawer-open {
 }
 
 .report-chat-dock {
-  width: min(520px, calc(100vw - 24px));
-  max-width: none;
-}
-
-.report-chat-topic-mark {
-  position: absolute;
-  top: 50%;
-  left: calc(33 * var(--unit));
-  display: grid;
-  width: calc(72 * var(--unit));
-  height: calc(72 * var(--unit));
-  color: #fff8ed;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #bd7547, #8e492e);
-  transform: translateY(-50%);
-  font-family: var(--serif);
-  place-items: center;
+  width: calc(864 * var(--unit));
+  max-width: calc(100vw - calc(40 * var(--unit)));
 }
 
 .report-chat-context span {

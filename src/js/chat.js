@@ -2,7 +2,10 @@ const chatState = window.GuoxueApp;
 const questionInput = document.querySelector("#chat-question");
 const actionButton = document.querySelector("#chat-action");
 const voiceDock = document.querySelector(".chat-dock");
-const micButton = document.querySelector("#chat-mic");
+const profileTrigger = document.querySelector("#chat-profile-trigger");
+const profileMenu = document.querySelector("#chat-profile-menu");
+const profileAvatar = document.querySelector("#chat-profile-avatar");
+const profileName = document.querySelector("#chat-profile-name");
 const quotaGuide = document.querySelector("#chat-quota-guide");
 const promotionBadge = document.querySelector("#chat-promotion-badge");
 const chatStartTime = document.querySelector("#chat-start-time");
@@ -10,12 +13,63 @@ const messageList = document.querySelector("#inline-message-list");
 const reportContext = document.querySelector("#report-chat-context");
 const reportContextTitle = document.querySelector("#report-chat-context-title");
 const reportContextLink = document.querySelector("#report-chat-context-link");
-const toast = document.querySelector("#chat-toast");
 
 let isComposing = false;
 let isReplying = false;
 let replyTimer = null;
-let toastTimer = null;
+let isProfileMenuOpen = false;
+
+function closeProfileMenu() {
+  isProfileMenuOpen = false;
+  profileMenu.hidden = true;
+  profileTrigger.setAttribute("aria-expanded", "false");
+}
+
+function renderProfileSwitcher() {
+  const profiles = chatState.getProfiles();
+  const activeProfile = chatState.getActiveProfile();
+  profileName.textContent = activeProfile?.name || "选择档案";
+  profileAvatar.textContent = activeProfile ? Array.from(activeProfile.name)[0] : "档";
+
+  const items = profiles.map((profile) => {
+    const item = document.createElement("button");
+    const isActive = profile.id === activeProfile?.id;
+    item.className = "profile-menu-item pressable";
+    item.classList.toggle("is-active", isActive);
+    item.type = "button";
+    item.dataset.profileId = profile.id;
+    item.setAttribute("role", "menuitemradio");
+    item.setAttribute("aria-checked", String(isActive));
+    const avatar = document.createElement("span");
+    avatar.className = "profile-menu-avatar";
+    avatar.textContent = Array.from(profile.name)[0];
+    const name = document.createElement("span");
+    name.textContent = profile.name;
+    item.append(avatar, name);
+    if (isActive) {
+      const check = document.createElement("span");
+      check.className = "profile-menu-check";
+      check.textContent = "✓";
+      check.setAttribute("aria-hidden", "true");
+      item.append(check);
+    }
+    return item;
+  });
+  const manage = document.createElement("a");
+  manage.className = "profile-menu-add pressable";
+  manage.href = profiles.length ? "./profiles.html" : "./profile.html?return=profiles";
+  manage.textContent = profiles.length ? "管理档案" : "添加咨询档案";
+  profileMenu.setAttribute("role", "menu");
+  profileMenu.replaceChildren(...items, manage);
+}
+
+function toggleProfileMenu() {
+  if (isProfileMenuOpen) return closeProfileMenu();
+  renderProfileSwitcher();
+  isProfileMenuOpen = true;
+  profileMenu.hidden = false;
+  profileTrigger.setAttribute("aria-expanded", "true");
+}
 
 // 回复规则统一由 src/js/chat-replies.js 的 window.GuoxueChatReplies.getReply 提供，避免两套规则重复维护。
 
@@ -101,8 +155,7 @@ function syncActionState() {
   const hasQuestion = questionInput.value.trim().length > 0;
   const exhausted = chatState.getQuota().remaining <= 0;
   const canSend = hasQuestion && !exhausted && !isReplying;
-  actionButton.classList.toggle("is-send", canSend);
-  actionButton.setAttribute("aria-label", canSend ? "发送问题" : "更多功能");
+  actionButton.disabled = !canSend;
 }
 
 function syncQuotaState() {
@@ -110,8 +163,6 @@ function syncQuotaState() {
   const exhausted = quota.remaining <= 0;
   voiceDock.classList.toggle("is-exhausted", exhausted);
   questionInput.disabled = exhausted || isReplying;
-  micButton.disabled = exhausted || isReplying;
-  actionButton.disabled = exhausted || isReplying;
   quotaGuide.hidden = !exhausted;
   questionInput.placeholder = exhausted
     ? "今日免费对话次数已用完"
@@ -191,13 +242,6 @@ function submitQuestion() {
   scheduleReply(content);
 }
 
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add("is-visible");
-  if (toastTimer) window.clearTimeout(toastTimer);
-  toastTimer = window.setTimeout(() => toast.classList.remove("is-visible"), 1800);
-}
-
 questionInput.addEventListener("input", syncActionState);
 questionInput.addEventListener("compositionstart", () => {
   isComposing = true;
@@ -213,18 +257,33 @@ questionInput.addEventListener("keydown", (event) => {
   }
 });
 actionButton.addEventListener("click", () => {
-  if (actionButton.classList.contains("is-send")) submitQuestion();
-  else showToast("请输入问题后发送");
+  submitQuestion();
 });
-micButton.addEventListener("click", () => showToast("语音输入功能开发中"));
-window.addEventListener("pageshow", syncQuotaState);
+profileTrigger.addEventListener("click", toggleProfileMenu);
+profileMenu.addEventListener("click", (event) => {
+  const item = event.target.closest("[data-profile-id]");
+  if (!item) return;
+  chatState.setActiveProfile(item.dataset.profileId);
+  renderProfileSwitcher();
+  closeProfileMenu();
+});
+document.addEventListener("click", (event) => {
+  if (isProfileMenuOpen && !event.target.closest(".profile-switcher")) closeProfileMenu();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && isProfileMenuOpen) closeProfileMenu();
+});
+window.addEventListener("pageshow", () => {
+  renderProfileSwitcher();
+  syncQuotaState();
+});
 window.addEventListener("beforeunload", () => {
   if (replyTimer) window.clearTimeout(replyTimer);
-  if (toastTimer) window.clearTimeout(toastTimer);
 });
 
 const history = renderHistory();
 chatState.renderPromotionBadge(promotionBadge);
+renderProfileSwitcher();
 syncQuotaState();
 scrollToLatest("auto");
 const lastMessage = history.at(-1);

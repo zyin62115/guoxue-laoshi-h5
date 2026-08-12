@@ -47,40 +47,29 @@
     </main>
 
     <div class="voice-dock chat-dock" aria-label="对话工具栏">
-      <button
-        class="dock-icon mic-button pressable"
-        type="button"
-        id="chat-mic"
-        aria-label="语音输入暂未开放"
-      >
-        <svg viewBox="0 0 64 64" aria-hidden="true">
-          <rect x="23" y="8" width="18" height="34" rx="9" />
-          <path d="M15 31c0 10 7.6 18 17 18s17-8 17-18M32 49v8M23 57h18" />
-        </svg>
-      </button>
+      <div class="profile-switcher">
+        <button id="chat-profile-trigger" class="profile-switch-button pressable" type="button" aria-label="切换咨询档案" aria-controls="chat-profile-menu" aria-expanded="false">
+          <span class="profile-switch-avatar" id="chat-profile-avatar" aria-hidden="true">档</span>
+          <span class="profile-switch-name" id="chat-profile-name">选择档案</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9 5 5 5-5" /></svg>
+        </button>
+        <div class="profile-switch-menu" id="chat-profile-menu" hidden></div>
+      </div>
 
-      <input
-        id="chat-question"
-        class="text-input"
-        type="text"
-        aria-label="文字输入"
-        placeholder="请输入问题"
-        autocomplete="off"
-      />
+      <div class="text-input-shell">
+        <input id="chat-question" class="text-input" type="text" aria-label="文字输入" placeholder="请输入问题" autocomplete="off" />
+      </div>
 
       <button
         id="chat-action"
-        class="dock-icon plus-button home-action pressable"
+        class="dock-icon send-button home-action pressable"
         type="button"
-        aria-label="更多功能"
+        aria-label="发送问题"
+        disabled
       >
-        <svg class="plus-icon" viewBox="0 0 72 72" aria-hidden="true">
+        <svg viewBox="0 0 72 72" aria-hidden="true">
           <circle cx="36" cy="36" r="30" />
-          <path d="M36 20v32M20 36h32" />
-        </svg>
-        <svg class="send-icon" viewBox="0 0 72 72" aria-hidden="true">
-          <circle cx="36" cy="36" r="30" />
-          <path d="M23 36h25M39 26l10 10-10 10" />
+          <path d="M36 49V23M25 34l11-11 11 11" />
         </svg>
       </button>
 

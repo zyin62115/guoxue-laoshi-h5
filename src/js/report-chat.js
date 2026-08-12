@@ -14,12 +14,24 @@ const startTime = document.querySelector("#report-chat-start-time");
 const dock = document.querySelector("#report-chat-dock");
 const questionInput = document.querySelector("#report-chat-question");
 const sendButton = document.querySelector("#report-chat-send");
+const profileTrigger = document.querySelector("#report-profile-trigger");
+const profileAvatar = document.querySelector("#report-profile-avatar");
+const profileName = document.querySelector("#report-profile-name");
 const toast = document.querySelector("#report-chat-toast");
 let conversation = null;
 let replyTimer = null;
 let toastTimer = null;
 let isReplying = false;
 let isComposing = false;
+
+function renderReportProfile() {
+  const name = report?.profileSnapshot?.name || "报告档案";
+  profileName.textContent = name;
+  profileAvatar.textContent = Array.from(name)[0] || "档";
+  profileTrigger.removeAttribute("aria-controls");
+  profileTrigger.removeAttribute("aria-expanded");
+  profileTrigger.setAttribute("aria-label", `当前报告档案：${name}`);
+}
 
 function showToast(message) {
   window.clearTimeout(toastTimer);
@@ -105,10 +117,8 @@ function syncQuota() {
 }
 
 function syncSendButton() {
-  sendButton.classList.toggle(
-    "is-send",
-    Boolean(questionInput.value.trim()) && !isReplying && !questionInput.disabled,
-  );
+  sendButton.disabled =
+    !questionInput.value.trim() || isReplying || questionInput.disabled;
 }
 
 function scrollToLatest(behavior = "smooth") {
@@ -203,3 +213,4 @@ window.addEventListener("beforeunload", () => {
   window.clearTimeout(replyTimer);
   window.clearTimeout(toastTimer);
 });
+renderReportProfile();

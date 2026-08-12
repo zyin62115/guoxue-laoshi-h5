@@ -766,6 +766,30 @@ button,
     inset 0 0 0 calc(1 * var(--unit)) rgba(224, 161, 98, 0.36);
 }
 
+.message-image-frame {
+  display: grid;
+  width: min(max(calc(330 * var(--unit)), 180px), 58vw);
+  min-height: max(calc(190 * var(--unit)), 120px);
+  margin: 0 0 max(calc(10 * var(--unit)), 7px);
+  overflow: hidden;
+  color: #8c735e;
+  border-radius: max(calc(16 * var(--unit)), 12px);
+  background: rgba(255, 249, 242, 0.72);
+  font-size: calc(max(calc(16 * var(--unit)), 11px) + var(--app-font-offset));
+  place-items: center;
+}
+
+.message-image-frame img {
+  display: block;
+  width: 100%;
+  max-height: min(52vh, 420px);
+  object-fit: contain;
+}
+
+.message-image-frame.is-error {
+  border: 1px dashed rgba(151, 113, 78, 0.45);
+}
+
 .inline-thinking .inline-message-bubble {
   display: flex;
   align-items: center;
@@ -852,6 +876,62 @@ button,
     0 calc(4 * var(--unit)) calc(18 * var(--unit)) rgba(183, 116, 43, 0.035);
 }
 
+.image-upload-button {
+  display: grid;
+  flex: 0 0 max(calc(56 * var(--unit)), 38px);
+  width: max(calc(56 * var(--unit)), 38px);
+  height: max(calc(56 * var(--unit)), 38px);
+  margin-left: max(calc(10 * var(--unit)), 5px);
+  color: #8c5b32;
+  border-radius: 50%;
+  background: rgba(255, 249, 241, 0.62);
+  place-items: center;
+}
+
+.image-upload-button svg {
+  width: max(calc(30 * var(--unit)), 20px);
+  height: max(calc(30 * var(--unit)), 20px);
+}
+
+.image-upload-button rect,
+.image-upload-button circle,
+.image-upload-button path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.image-upload-button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.image-preview-card {
+  position: absolute;
+  right: calc(22 * var(--unit));
+  bottom: calc(100% + max(calc(12 * var(--unit)), 8px));
+  left: calc(22 * var(--unit));
+  display: flex;
+  min-height: max(calc(98 * var(--unit)), 70px);
+  align-items: center;
+  gap: max(calc(14 * var(--unit)), 10px);
+  padding: max(calc(10 * var(--unit)), 8px);
+  border: calc(1 * var(--unit)) solid rgba(210, 176, 140, 0.5);
+  border-radius: max(calc(24 * var(--unit)), 16px);
+  background: rgba(255, 250, 244, 0.98);
+  box-shadow: 0 max(calc(8 * var(--unit)), 6px) max(calc(26 * var(--unit)), 18px) rgba(103, 64, 27, 0.13);
+}
+
+.image-preview-card[hidden] { display: none; }
+.image-preview-card img { flex: 0 0 max(calc(76 * var(--unit)), 54px); width: max(calc(76 * var(--unit)), 54px); height: max(calc(76 * var(--unit)), 54px); object-fit: cover; border-radius: max(calc(16 * var(--unit)), 11px); }
+.image-preview-card > span { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: max(calc(5 * var(--unit)), 3px); color: #5b4030; font-family: var(--serif); }
+.image-preview-card strong, .image-preview-card small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.image-preview-card strong { font-size: calc(max(calc(19 * var(--unit)), 13px) + var(--app-font-offset)); }
+.image-preview-card small { color: #9b8371; font-size: calc(max(calc(16 * var(--unit)), 11px) + var(--app-font-offset)); }
+.image-preview-card > button { flex: 0 0 max(calc(48 * var(--unit)), 34px); width: max(calc(48 * var(--unit)), 34px); height: max(calc(48 * var(--unit)), 34px); color: #815633; border-radius: 50%; background: #f8ead9; font-size: max(calc(32 * var(--unit)), 22px); line-height: 1; }
+
 .text-input-shell:focus-within {
   border-color: rgba(213, 143, 72, 0.32);
   background: linear-gradient(100deg, #fffbf6, #fbe9d5);
@@ -912,7 +992,8 @@ button,
   align-items: center;
   gap: calc(7 * var(--unit));
   height: calc(72 * var(--unit));
-  max-width: calc(172 * var(--unit));
+  width: max(calc(172 * var(--unit)), 112px);
+  max-width: none;
   padding: 0 calc(12 * var(--unit)) 0 calc(6 * var(--unit));
   border: calc(1 * var(--unit)) solid rgba(204, 176, 143, 0.22);
   border-radius: calc(38 * var(--unit));
@@ -1417,13 +1498,12 @@ button:focus-visible {
   }
 
   .profile-switch-button {
-    max-width: calc(126 * var(--unit));
     padding-right: calc(6 * var(--unit));
   }
 
-  .profile-switch-name,
-  .profile-switch-button > svg {
-    display: none;
+  .text-input {
+    padding-right: max(calc(10 * var(--unit)), 5px);
+    padding-left: max(calc(10 * var(--unit)), 5px);
   }
 
   .settings-card {

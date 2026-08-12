@@ -47,6 +47,11 @@
     </main>
 
     <div class="voice-dock chat-dock" aria-label="对话工具栏">
+      <div class="image-preview-card" id="chat-image-preview" hidden>
+        <img id="chat-image-preview-image" alt="待发送图片预览" />
+        <span><strong>已选择 1 张图片</strong><small id="chat-image-preview-name"></small></span>
+        <button id="chat-image-remove" type="button" aria-label="移除已选择的图片">×</button>
+      </div>
       <div class="profile-switcher">
         <button id="chat-profile-trigger" class="profile-switch-button pressable" type="button" aria-label="切换咨询档案" aria-controls="chat-profile-menu" aria-expanded="false">
           <span class="profile-switch-avatar" id="chat-profile-avatar" aria-hidden="true">档</span>
@@ -57,6 +62,10 @@
       </div>
 
       <div class="text-input-shell">
+        <button class="image-upload-button pressable" id="chat-image-upload" type="button" aria-label="上传图片">
+          <svg viewBox="0 0 28 28" aria-hidden="true"><rect x="3.5" y="5" width="21" height="18" rx="3" /><circle cx="10" cy="11" r="2" /><path d="m5.5 20 5.5-5 4 3 3.5-4 4 6" /></svg>
+        </button>
+        <input class="sr-only" id="chat-image-input" type="file" accept="image/jpeg,image/png,image/webp" />
         <input id="chat-question" class="text-input" type="text" aria-label="文字输入" placeholder="请输入问题" autocomplete="off" />
       </div>
 
@@ -79,6 +88,7 @@
     <div class="app-toast" id="chat-toast" role="status" aria-live="polite"></div>
 
     <script src="../js/shared.js"></script>
+    <script src="../js/image-attachments.js"></script>
     <script src="../js/chat-replies.js"></script>
     <script src="../js/chat.js"></script>
     <script src="../js/navigation.js"></script>

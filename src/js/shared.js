@@ -1,5 +1,5 @@
 (function initializeGuoxueState(global) {
-  const STORAGE_VERSION = 2;
+  const STORAGE_VERSION = 3;
   const DAILY_LIMIT = Number.POSITIVE_INFINITY;
   const HISTORY_LIMIT = 40;
   const CONVERSATION_LIMIT = 90;
@@ -18,7 +18,7 @@
     conversations: "guoxueConversationsV2",
     activeConversation: "guoxueActiveConversationV2",
     quota: "guoxueDailyQuotaV2",
-    migration: "guoxueStorageMigrationV2",
+    migration: "guoxueStorageMigrationV3",
     reports: "guoxueInterpretationReportsV1",
     reportOrders: "guoxueInterpretationOrdersV1",
     firstReportClaim: "guoxueFirstReportClaimPromptV1",
@@ -91,8 +91,30 @@
       message &&
       typeof message.id === "string" &&
       (message.role === "user" || message.role === "assistant") &&
-      typeof message.content === "string"
+      typeof message.content === "string" &&
+      (message.content.trim() || normalizeAttachments(message.attachments).length)
     );
+  }
+
+  function normalizeAttachments(attachments) {
+    if (!Array.isArray(attachments)) return [];
+    return attachments
+      .filter(
+        (attachment) =>
+          attachment &&
+          typeof attachment.id === "string" &&
+          typeof attachment.type === "string" &&
+          attachment.type.startsWith("image/"),
+      )
+      .slice(0, 1)
+      .map((attachment) => ({
+        id: attachment.id,
+        type: attachment.type,
+        name: String(attachment.name || "咨询图片"),
+        size: Number(attachment.size) || 0,
+        width: Number(attachment.width) || 0,
+        height: Number(attachment.height) || 0,
+      }));
   }
 
   function normalizeMessage(message) {
@@ -100,6 +122,7 @@
       id: message.id || createId("message"),
       role: message.role,
       content: String(message.content || "").trim(),
+      attachments: normalizeAttachments(message.attachments),
       createdAt:
         typeof message.createdAt === "string"
           ? message.createdAt
@@ -111,7 +134,13 @@
     const firstQuestion = messages.find(
       (message) => message.role === "user" && message.content.trim(),
     );
-    if (!firstQuestion) return "新的对话";
+    if (!firstQuestion) {
+      return messages.some(
+        (message) => message.role === "user" && message.attachments?.length,
+      )
+        ? "图片咨询"
+        : "新的对话";
+    }
     const compact = firstQuestion.content.replace(/\s+/g, " ").trim();
     return compact.length > 24 ? `${compact.slice(0, 24)}…` : compact;
   }
@@ -258,18 +287,19 @@
     return conversation;
   }
 
-  function createMessage(role, content) {
+  function createMessage(role, content, attachments = []) {
     return {
       id: createId("message"),
       role,
       content: content.trim(),
+      attachments: normalizeAttachments(attachments),
       createdAt: new Date().toISOString(),
     };
   }
 
-  function appendMessage(role, content) {
+  function appendMessage(role, content, attachments = []) {
     const conversation = getOrCreateTodayConversation();
-    const message = createMessage(role, content);
+    const message = createMessage(role, content, attachments);
     const conversations = getConversations();
     const index = conversations.findIndex((item) => item.id === conversation.id);
     const updated = {

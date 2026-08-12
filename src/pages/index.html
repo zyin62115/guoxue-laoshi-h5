@@ -194,6 +194,11 @@
     <div class="app-toast" id="app-toast" role="status" aria-live="polite"></div>
 
     <div class="voice-dock" aria-label="对话工具栏">
+      <div class="image-preview-card" id="home-image-preview" hidden>
+        <img id="home-image-preview-image" alt="待发送图片预览" />
+        <span><strong>已选择 1 张图片</strong><small id="home-image-preview-name"></small></span>
+        <button id="home-image-remove" type="button" aria-label="移除已选择的图片">×</button>
+      </div>
       <div class="profile-switcher">
         <button
           id="home-profile-trigger"
@@ -215,6 +220,10 @@
       </div>
 
       <div class="text-input-shell">
+        <button class="image-upload-button pressable" id="home-image-upload" type="button" aria-label="上传图片">
+          <svg viewBox="0 0 28 28" aria-hidden="true"><rect x="3.5" y="5" width="21" height="18" rx="3" /><circle cx="10" cy="11" r="2" /><path d="m5.5 20 5.5-5 4 3 3.5-4 4 6" /></svg>
+        </button>
+        <input class="sr-only" id="home-image-input" type="file" accept="image/jpeg,image/png,image/webp" />
         <input
           id="home-question"
           class="text-input"
@@ -260,6 +269,7 @@
     </button>
 
     <script src="../js/shared.js"></script>
+    <script src="../js/image-attachments.js"></script>
     <script src="../js/app.js"></script>
   </body>
 </html>

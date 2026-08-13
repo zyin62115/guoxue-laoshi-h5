@@ -5,6 +5,9 @@ const nicknameAvatar = document.querySelector("#settings-nickname-avatar");
 const settingsError = document.querySelector("#settings-error");
 const fontOptions = document.querySelector("#settings-font-options");
 const settingsToast = document.querySelector("#settings-toast");
+const accountSection = document.querySelector("#settings-account");
+const accountPhone = document.querySelector("#settings-account-phone");
+const logoutButton = document.querySelector("#settings-logout");
 let toastTimer = null;
 
 function showToast(message) {
@@ -24,7 +27,15 @@ function renderPreferences() {
   nicknameInput.value = preferences.nickname;
   nicknameAvatar.textContent = Array.from(preferences.nickname)[0];
   selectOption("fontSize", preferences.fontSize);
+  const user = window.GuoxueApp.getCurrentUser();
+  accountSection.hidden = !user;
+  if (user) accountPhone.textContent = `${user.phone.slice(0, 3)}****${user.phone.slice(-4)}`;
 }
+
+logoutButton.addEventListener("click", () => {
+  window.GuoxueApp.logout();
+  window.location.replace("./index.html");
+});
 
 nicknameInput.addEventListener("input", () => {
   const nickname = nicknameInput.value.trim();

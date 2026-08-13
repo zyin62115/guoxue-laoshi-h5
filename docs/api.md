@@ -27,6 +27,12 @@
 
 ## 出生地数据
 
+## MVP 登录与访问状态
+
+登录状态保存在 `guoxueCurrentUserV1`，结构为 `{ phone, loggedInAt }`。`getCurrentUser()` / `isLoggedIn()` 负责读取，`login(phone)` 写入通过格式校验的手机号，`logout()` 仅清除登录键。`getMvpState()` 返回 `logged-out`、`no-profile` 或 `ready`，供首页和 AI 页面统一实施访问门槛。
+
+手机号登录为纯前端演示，验证码固定为 `123456`；账号不对档案和会话做多用户隔离。
+
 档案表单通过 `fetch("../../public/data/china-regions.json")` 加载省、市、区三级数据，并在运行时追加“海外”选项。选中结果仍以单个 `birthplace` 文本字段写入档案，因此旧档案结构无需迁移。数据加载失败时会保留已有档案的出生地文本并禁用三级选择器；数据来源与 MIT 许可说明见 `public/data/README.md`。
 
 ## 国心解读报告
@@ -46,7 +52,7 @@
 - `getReportOrders()`：读取模拟订单。
 - `createReportConversation(reportId, sectionId)`：创建或恢复当天对应章节的报告会话。
 
-会话结构增加可选的 `context` 字段，包含 `reportId`、`sectionId` 和 `sectionTitle`。没有上下文的旧会话继续按原有结构读取。
+会话结构的可选 `context` 支持两类：既有报告上下文 `{ type: "report", reportId, sectionId, sectionTitle }`，以及 MVP 国心解读上下文 `{ type: "interpretation", profileId }`。`createInterpretationConversation(profileId)` 创建一段不含预设消息的空会话并绑定档案；用户实际发送问题后才生成回复。没有上下文的旧会话继续按原有结构读取。
 
 `activateHomeConversation()` 用于进入首页时切换或创建当天的普通问答会话。报告章节对话通过 `report-chat.html?report=<id>&section=<id>` 独立展示和发送消息，不作为首页问答或首页对话记录的一部分；对话页返回地址固定指向对应报告章节。
 

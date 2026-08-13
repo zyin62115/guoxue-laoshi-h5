@@ -604,6 +604,60 @@ button,
   padding-top: calc(562 * var(--unit) + var(--content-lift));
 }
 
+.mvp-state-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: calc(24 * var(--unit));
+  margin: 0 0 calc(22 * var(--unit));
+  padding: calc(24 * var(--unit)) calc(28 * var(--unit));
+  border: 1px solid rgba(145, 94, 48, 0.16);
+  border-radius: calc(26 * var(--unit));
+  background: rgba(255, 252, 245, 0.9);
+  box-shadow: 0 8px 22px rgba(91, 59, 33, 0.07);
+}
+
+.mvp-state-card[hidden] { display: none; }
+.mvp-state-mark {
+  display: grid;
+  width: calc(76 * var(--unit));
+  height: calc(76 * var(--unit));
+  place-items: center;
+  border-radius: 50%;
+  color: #fff9ef;
+  background: #9b4d36;
+  font-weight: 700;
+}
+.mvp-state-card strong { display: block; color: #432b20; font-size: calc(calc(30 * var(--unit)) + var(--app-font-offset)); }
+.mvp-state-card p { margin: calc(6 * var(--unit)) 0 0; color: #7b6759; font-size: calc(calc(24 * var(--unit)) + var(--app-font-offset)); line-height: 1.45; }
+.mvp-state-action {
+  min-width: calc(128 * var(--unit));
+  padding: calc(18 * var(--unit)) calc(24 * var(--unit));
+  border-radius: 999px;
+  color: #fff;
+  background: #9b4d36;
+  text-align: center;
+  font-size: calc(calc(26 * var(--unit)) + var(--app-font-offset));
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.login-page { min-height: 100vh; background: #fff9f1; }
+.login-shell { width: min(100%, 480px); min-height: 100vh; margin: 0 auto; padding: calc(28px + env(safe-area-inset-top)) 20px 32px; }
+.login-back { display: block; width: 42px; height: 42px; margin-bottom: 22px; }
+.login-card { padding: 30px 22px 24px; border: 1px solid rgba(145, 94, 48, 0.14); border-radius: 24px; background: rgba(255,255,255,.72); box-shadow: 0 18px 50px rgba(91,59,33,.08); text-align: center; }
+.login-card > img { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; }
+.login-card h1 { margin: 14px 0 8px; color: #432b20; font-size: 24px; }
+.login-card > p { margin: 0 auto 24px; max-width: 300px; color: #7b6759; font-size: 14px; line-height: 1.7; }
+.login-card form { text-align: left; }
+.login-card label { display: block; margin-top: 16px; color: #594338; font-size: 13px; font-weight: 700; }
+.login-card label > input, .login-code-row input { box-sizing: border-box; width: 100%; height: 48px; margin-top: 7px; padding: 0 14px; border: 1px solid rgba(111,74,48,.2); border-radius: 12px; background: #fffdf9; color: #38261e; font: inherit; }
+.login-code-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 9px; }
+.login-code-row button { align-self: end; height: 48px; padding: 0 13px; border: 0; border-radius: 12px; color: #8d4733; background: #f4e7d8; font-weight: 700; }
+.login-error { min-height: 22px; margin: 8px 0 4px; }
+.login-card > small { display: block; margin-top: 18px; color: #998579; line-height: 1.55; }
+.settings-account .profile-delete { width: 100%; margin-top: 12px; }
+
 .feature-list {
   display: grid;
   gap: calc(11 * var(--unit));

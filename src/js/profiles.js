@@ -1,4 +1,7 @@
 const profileState = window.GuoxueApp;
+if (!profileState.isLoggedIn()) {
+  window.location.replace("./login.html?return=./index.html");
+}
 const profilesPageList = document.querySelector("#profiles-page-list");
 const collectionToast = document.querySelector("#collection-toast");
 let toastTimer = null;

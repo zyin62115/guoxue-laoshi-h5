@@ -22,6 +22,7 @@
     reports: "guoxueInterpretationReportsV1",
     reportOrders: "guoxueInterpretationOrdersV1",
     firstReportClaim: "guoxueFirstReportClaimPromptV1",
+    currentUser: "guoxueCurrentUserV1",
   });
 
   const LEGACY_KEYS = Object.freeze({
@@ -164,17 +165,27 @@
       typeof conversation.updatedAt === "string"
         ? conversation.updatedAt
         : messages.at(-1)?.createdAt || createdAt;
-    const context =
+    let context = null;
+    if (
+      conversation.context?.type === "interpretation" &&
+      typeof conversation.context.profileId === "string"
+    ) {
+      context = {
+        type: "interpretation",
+        profileId: conversation.context.profileId,
+      };
+    } else if (
       conversation.context &&
       typeof conversation.context.reportId === "string" &&
       typeof conversation.context.sectionId === "string"
-        ? {
-            type: "report",
-            reportId: conversation.context.reportId,
-            sectionId: conversation.context.sectionId,
-            sectionTitle: String(conversation.context.sectionTitle || "报告解读"),
-          }
-        : null;
+    ) {
+      context = {
+        type: "report",
+        reportId: conversation.context.reportId,
+        sectionId: conversation.context.sectionId,
+        sectionTitle: String(conversation.context.sectionTitle || "报告解读"),
+      };
+    }
     return {
       id: typeof conversation.id === "string" ? conversation.id : createId("conversation"),
       dateKey:
@@ -291,6 +302,62 @@
 
     writeLocal(KEYS.activeConversation, conversation.id);
     return conversation;
+  }
+
+  function createInterpretationConversation(profileId) {
+    const profile = getProfile(profileId);
+    if (!profile) return null;
+    const now = new Date().toISOString();
+    const conversation = normalizeConversation({
+      id: createId("conversation"),
+      dateKey: localDateKey(now),
+      title: "国心解读",
+      messages: [],
+      context: { type: "interpretation", profileId: profile.id },
+      createdAt: now,
+      updatedAt: now,
+    });
+    saveConversations([conversation, ...getConversations()]);
+    writeLocal(KEYS.activeConversation, conversation.id);
+    return conversation;
+  }
+
+  function normalizeCurrentUser(user) {
+    if (!user || !/^1[3-9]\d{9}$/.test(String(user.phone || ""))) return null;
+    return {
+      phone: String(user.phone),
+      loggedInAt:
+        typeof user.loggedInAt === "string" ? user.loggedInAt : new Date().toISOString(),
+    };
+  }
+
+  function getCurrentUser() {
+    return normalizeCurrentUser(safeParse(readLocal(KEYS.currentUser), null));
+  }
+
+  function isLoggedIn() {
+    return Boolean(getCurrentUser());
+  }
+
+  function login(phone) {
+    const user = normalizeCurrentUser({ phone: String(phone || "").trim() });
+    if (!user) return null;
+    writeLocal(KEYS.currentUser, JSON.stringify(user));
+    return user;
+  }
+
+  function logout() {
+    removeFrom(global.localStorage, KEYS.currentUser);
+  }
+
+  function getMvpState() {
+    const user = getCurrentUser();
+    const profile = user ? getActiveProfile() : null;
+    return {
+      status: !user ? "logged-out" : profile ? "ready" : "no-profile",
+      user,
+      profile,
+    };
   }
 
   function createMessage(role, content, attachments = []) {
@@ -873,6 +940,7 @@
     appendMessage,
     claimFreeReport,
     consumeQuota,
+    createInterpretationConversation,
     createReportConversation,
     deleteProfile,
     dismissClaimPrompt,
@@ -883,6 +951,7 @@
     getActiveProfileId,
     getChatStartedAt,
     getConversations,
+    getCurrentUser,
     getCurrentProfileReport,
     getFirstReportClaim,
     hasClaimedFreeReport,
@@ -890,6 +959,7 @@
     markClaimPrompted,
     getHistory,
     getLatestProfileReport,
+    getMvpState,
     getProfile,
     getProfiles,
     getPromotionBadge,
@@ -900,7 +970,10 @@
     getReportUpgradePrice,
     getReports,
     isProfileNameTaken,
+    isLoggedIn,
+    login,
     localDateKey,
+    logout,
     purchaseReport,
     renderPromotionBadge,
     saveHistory,

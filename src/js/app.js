@@ -32,6 +32,11 @@ const imagePreview = document.querySelector("#home-image-preview");
 const imagePreviewImage = document.querySelector("#home-image-preview-image");
 const imagePreviewName = document.querySelector("#home-image-preview-name");
 const imageRemoveButton = document.querySelector("#home-image-remove");
+const mvpStateCard = document.querySelector("#mvp-state-card");
+const mvpStateMark = document.querySelector("#mvp-state-mark");
+const mvpStateTitle = document.querySelector("#mvp-state-title");
+const mvpStateDescription = document.querySelector("#mvp-state-description");
+const mvpStateAction = document.querySelector("#mvp-state-action");
 
 let isComposing = false;
 let scrollTicking = false;
@@ -103,8 +108,49 @@ function toggleProfileMenu() {
 
 function renderUserPreferences() {
   const preferences = window.GuoxuePreferences.getPreferences();
-  drawerTitle.textContent = preferences.nickname;
-  drawerUserAvatar.querySelector("b").textContent = Array.from(preferences.nickname)[0];
+  const user = appState.getCurrentUser();
+  const displayName = user ? preferences.nickname : "访客";
+  drawerTitle.textContent = displayName;
+  drawerUserAvatar.querySelector("b").textContent = Array.from(displayName)[0];
+}
+
+function renderMvpState() {
+  const state = appState.getMvpState();
+  mvpStateCard.hidden = state.status === "ready";
+  if (state.status === "logged-out") {
+    mvpStateMark.textContent = "登";
+    mvpStateTitle.textContent = "登录后获得完整解读";
+    mvpStateDescription.textContent = "保存个人档案，让老师更连贯地了解你。";
+    mvpStateAction.textContent = "登录";
+    mvpStateAction.href = "./login.html?return=./index.html";
+  } else if (state.status === "no-profile") {
+    mvpStateMark.textContent = "档";
+    mvpStateTitle.textContent = "完善个人档案";
+    mvpStateDescription.textContent = "完善出生信息，让老师更准确地为您解读。";
+    mvpStateAction.textContent = "填写档案";
+    mvpStateAction.href = "./profile.html?return=home";
+  }
+  const ready = state.status === "ready";
+  profileTrigger.disabled = !ready;
+  profileTrigger.closest(".profile-switcher").hidden = !ready;
+  questionInput.disabled = !ready;
+  imageComposer?.setDisabled(!ready);
+  questionInput.placeholder = ready ? "请输入问题" : state.status === "logged-out" ? "登录后开始咨询" : "填写档案后开始咨询";
+  renderProfileSwitcher();
+  syncActionState();
+}
+
+function requireAiReady() {
+  const state = appState.getMvpState();
+  if (state.status === "logged-out") {
+    window.location.href = "./login.html?return=./index.html";
+    return null;
+  }
+  if (state.status === "no-profile") {
+    window.location.href = "./profile.html?return=home";
+    return null;
+  }
+  return state.profile;
 }
 
 const DAILY_GUIDES = [
@@ -236,7 +282,8 @@ pressables.forEach((element) => {
 function syncActionState() {
   const hasQuestion = questionInput.value.trim().length > 0;
   const exhausted = appState.getQuota().remaining <= 0;
-  const canSend = (hasQuestion || imageComposer?.hasImage()) && !exhausted && !isSending;
+  const ready = appState.getMvpState().status === "ready";
+  const canSend = ready && (hasQuestion || imageComposer?.hasImage()) && !exhausted && !isSending;
 
   actionButton.disabled = !canSend;
 }
@@ -244,19 +291,26 @@ function syncActionState() {
 function syncQuotaState() {
   const quota = appState.getQuota();
   const exhausted = quota.remaining <= 0;
+  const mvpState = appState.getMvpState();
+  const ready = mvpState.status === "ready";
 
   voiceDock.classList.toggle("is-exhausted", exhausted);
-  questionInput.disabled = exhausted;
-  imageComposer?.setDisabled(exhausted || isSending);
+  questionInput.disabled = exhausted || !ready;
+  imageComposer?.setDisabled(exhausted || !ready || isSending);
   quotaGuide.hidden = !exhausted;
   questionInput.placeholder = exhausted
     ? "限时免费体验已结束"
-    : "请输入问题";
+    : ready
+      ? "请输入问题"
+      : mvpState.status === "logged-out"
+        ? "登录后开始咨询"
+        : "填写档案后开始咨询";
   syncActionState();
 }
 
 async function submitQuestion() {
   if (isComposing || isSending) return;
+  if (!requireAiReady()) return;
 
   const content = questionInput.value.trim();
   if (!content && !imageComposer.hasImage()) {
@@ -283,6 +337,7 @@ async function submitQuestion() {
     syncQuotaState();
     return;
   }
+  appState.activateHomeConversation();
   appState.appendMessage("user", content, attachment ? [attachment] : []);
   questionInput.value = "";
   imageComposer.clear();
@@ -361,7 +416,7 @@ function renderConversations() {
     .getConversations()
     .filter(
       (conversation) =>
-        !conversation.context &&
+        conversation.context?.type !== "report" &&
         conversation.messages.some((message) => message.role === "user"),
     );
   const activeId = appState.getActiveConversation()?.id;
@@ -561,7 +616,10 @@ professionalChartButton.addEventListener("click", () => {
   window.location.href = "./chart-prototypes.html";
 });
 interpretationButton.addEventListener("click", () => {
-  window.location.href = "./interpretation.html";
+  const profile = requireAiReady();
+  if (!profile) return;
+  appState.createInterpretationConversation(profile.id);
+  window.location.href = "./chat.html";
 });
 learningMaterialsButton.addEventListener("click", () => {
   window.location.href = "./wechat-simulator.html?context=learning-materials&return=./index.html";
@@ -688,7 +746,7 @@ window.addEventListener("pageshow", () => {
   syncQuotaState();
   syncScrollTopButton();
   renderDrawerContent();
-  renderProfileSwitcher();
+  renderMvpState();
 });
 window.addEventListener("focus", () => {
   renderDailyGuide();
@@ -704,7 +762,7 @@ appState.renderPromotionBadge(promotionBadge);
 syncQuotaState();
 syncScrollTopButton();
 renderDrawerContent();
-renderProfileSwitcher();
+renderMvpState();
 
 if (window.location.hash === "#menu") {
   openDrawer();

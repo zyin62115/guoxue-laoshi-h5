@@ -78,6 +78,11 @@
         </section>
 
         <div class="home-content-flow">
+          <section class="mvp-state-card" id="mvp-state-card" hidden aria-live="polite">
+            <span class="mvp-state-mark" id="mvp-state-mark" aria-hidden="true">登</span>
+            <div><strong id="mvp-state-title"></strong><p id="mvp-state-description"></p></div>
+            <a class="mvp-state-action pressable" id="mvp-state-action" href="./login.html">登录</a>
+          </section>
           <nav class="feature-list" aria-label="国学功能">
             <button class="feature-card pressable" type="button" data-action="professional-chart">
               <img src="../../public/images/candidates/simple-luopan.png" alt="" />
@@ -166,20 +171,6 @@
               <span>
                 <strong>我的档案</strong>
                 <small>管理出生信息与当前使用档案</small>
-              </span>
-              <i aria-hidden="true"></i>
-            </a>
-            <a class="drawer-entry pressable" href="./reports.html">
-              <span class="drawer-entry-mark" aria-hidden="true">
-                <svg viewBox="0 0 48 48">
-                  <path d="M13 7.5h15l7 7v26H13z" />
-                  <path d="M28 7.5v8h7" />
-                  <path d="M18.5 23h11M18.5 29h11M18.5 35h7" />
-                </svg>
-              </span>
-              <span>
-                <strong>我的报告</strong>
-                <small>查看已生成和已解锁的国心解读</small>
               </span>
               <i aria-hidden="true"></i>
             </a>

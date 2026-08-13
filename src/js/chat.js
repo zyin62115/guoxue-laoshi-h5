@@ -29,6 +29,25 @@ let toastTimer = null;
 let imageComposer = null;
 let isSending = false;
 
+function requireChatAccess() {
+  const state = chatState.getMvpState();
+  if (state.status === "logged-out") {
+    window.location.replace("./login.html?return=./chat.html");
+    return false;
+  }
+  if (state.status === "no-profile") {
+    window.location.replace("./profile.html?return=home");
+    return false;
+  }
+  return true;
+}
+
+function conversationProfile() {
+  const context = chatState.getActiveConversation()?.context;
+  if (context?.type === "interpretation") return chatState.getProfile(context.profileId);
+  return chatState.getActiveProfile();
+}
+
 function showToast(message) {
   window.clearTimeout(toastTimer);
   chatToast.textContent = message;
@@ -44,11 +63,12 @@ function closeProfileMenu() {
 
 function renderProfileSwitcher() {
   const profiles = chatState.getProfiles();
-  const activeProfile = chatState.getActiveProfile();
+  const activeProfile = conversationProfile();
+  const isBound = chatState.getActiveConversation()?.context?.type === "interpretation";
   profileName.textContent = chatState.formatProfileDisplayName(activeProfile?.name);
   profileAvatar.textContent = activeProfile ? Array.from(activeProfile.name)[0] : "档";
 
-  const items = profiles.map((profile) => {
+  const items = isBound ? [] : profiles.map((profile) => {
     const item = document.createElement("button");
     const isActive = profile.id === activeProfile?.id;
     item.className = "profile-menu-item pressable";
@@ -74,8 +94,8 @@ function renderProfileSwitcher() {
   });
   const manage = document.createElement("a");
   manage.className = "profile-menu-add pressable";
-  manage.href = profiles.length ? "./profiles.html" : "./profile.html?return=profiles";
-  manage.textContent = profiles.length ? "管理档案" : "添加咨询档案";
+  manage.href = "./profiles.html";
+  manage.textContent = isBound ? "本次解读已绑定此档案" : "管理档案";
   profileMenu.setAttribute("role", "menu");
   profileMenu.replaceChildren(...items, manage);
 }
@@ -140,8 +160,15 @@ function renderReportContext() {
   const context = chatState.getActiveConversation()?.context;
   reportContext.hidden = !context;
   if (!context) return;
-  reportContextTitle.textContent = `正在结合《${context.sectionTitle}》为你解读`;
-  reportContextLink.href = `./interpretation.html?report=${encodeURIComponent(context.reportId)}#report-section-${encodeURIComponent(context.sectionId)}`;
+  if (context.type === "interpretation") {
+    const profile = chatState.getProfile(context.profileId);
+    reportContextTitle.textContent = `正在结合${profile?.name || "当前"}的个人档案为你解读`;
+    reportContextLink.textContent = "管理档案";
+    reportContextLink.href = "./profiles.html";
+  } else {
+    reportContextTitle.textContent = `正在结合《${context.sectionTitle}》为你解读`;
+    reportContextLink.href = `./interpretation.html?report=${encodeURIComponent(context.reportId)}#report-section-${encodeURIComponent(context.sectionId)}`;
+  }
 }
 
 function renderHistory() {
@@ -217,7 +244,12 @@ function finishReply(question, hasImage = false) {
   document.querySelector("#inline-thinking-row")?.remove();
   const message = chatState.appendMessage(
     "assistant",
-    window.GuoxueChatReplies.getReply(question, chatState.getActiveConversation()?.context, hasImage),
+    window.GuoxueChatReplies.getReply(
+      question,
+      chatState.getActiveConversation()?.context,
+      hasImage,
+      conversationProfile(),
+    ),
   );
   messageList.append(createMessageRow(message));
   isReplying = false;
@@ -320,10 +352,14 @@ window.addEventListener("beforeunload", () => {
   if (replyTimer) window.clearTimeout(replyTimer);
 });
 
-const history = renderHistory();
-chatState.renderPromotionBadge(promotionBadge);
-renderProfileSwitcher();
-syncQuotaState();
-scrollToLatest("auto");
-const lastMessage = history.at(-1);
-if (lastMessage?.role === "user") scheduleReply(lastMessage.content, Boolean(lastMessage.attachments?.length));
+if (requireChatAccess()) {
+  const history = renderHistory();
+  chatState.renderPromotionBadge(promotionBadge);
+  renderProfileSwitcher();
+  syncQuotaState();
+  scrollToLatest("auto");
+  const lastMessage = history.at(-1);
+  if (lastMessage?.role === "user") {
+    scheduleReply(lastMessage.content, Boolean(lastMessage.attachments?.length));
+  }
+}

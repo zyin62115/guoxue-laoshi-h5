@@ -30,22 +30,31 @@
   const fallback =
     "你所问之事，不妨先从正心开始：看清自己的真实愿望，也看清眼前的条件与限制。\n\n把大问题拆成今天能够完成的一小步，做完再观其变化。顺势而为，并非等待，而是在合适的方向上稳稳前行。";
 
-  function getReply(question, context = null, hasImage = false) {
+  function profileLead(profile) {
+    if (!profile) return "";
+    const { year, month, day } = profile.birthDate || {};
+    const calendar = profile.calendar === "lunar" ? "农历" : "公历";
+    const birth = year && month && day ? `${calendar}${year}年${month}月${day}日` : "已填写的出生信息";
+    const place = profile.birthplace ? `、出生地${profile.birthplace}` : "";
+    return `结合${profile.name}的档案（${birth}${place}）来看，`;
+  }
+
+  function getReply(question, context = null, hasImage = false, profile = null) {
     if (hasImage) {
       const imageReply = question
         ? `我已收到你上传的图片和补充问题“${question}”。当前为前端演示，我暂时不能识别图片内容；你可以继续用文字描述图片中希望咨询的部分。`
         : "我已收到你上传的图片。当前为前端演示，我暂时不能识别图片内容；你可以继续用文字描述图片中希望咨询的部分。";
-      return context
-        ? `关于《${context.sectionTitle}》，${imageReply}`
-        : imageReply;
+      if (context?.type === "report") return `关于《${context.sectionTitle}》，${imageReply}`;
+      return `${profileLead(profile)}${imageReply}`;
     }
     const matched = rules.find((rule) =>
       rule.keywords.some((keyword) => question.includes(keyword)),
     );
     const reply = matched ? matched.reply : fallback;
-    return context
-      ? `结合你在《${context.sectionTitle}》报告中的特点来看，${reply}`
-      : reply;
+    if (context?.type === "report") {
+      return `结合你在《${context.sectionTitle}》报告中的特点来看，${reply}`;
+    }
+    return `${profileLead(profile)}${reply}`;
   }
 
   global.GuoxueChatReplies = Object.freeze({ getReply });

@@ -1,4 +1,7 @@
 const appState = window.GuoxueApp;
+if (!appState.isLoggedIn()) {
+  window.location.replace("./login.html?return=./index.html");
+}
 const form = document.querySelector("#profile-form");
 const pageTitle = document.querySelector("#profile-page-title");
 const nameInput = document.querySelector("#profile-name");
@@ -26,6 +29,7 @@ let birthplaceRegions = [];
 function exitTarget() {
   if (returnTarget === "interpretation") return "./interpretation.html";
   if (returnTarget === "profiles") return "./profiles.html";
+  if (returnTarget === "home") return "./index.html";
   return "./index.html#menu";
 }
 

@@ -322,6 +322,21 @@
     return conversation;
   }
 
+  function createEmptyConversation() {
+    const now = new Date().toISOString();
+    const conversation = normalizeConversation({
+      id: createId("conversation"),
+      dateKey: localDateKey(now),
+      title: "新的对话",
+      messages: [],
+      createdAt: now,
+      updatedAt: now,
+    });
+    saveConversations([conversation, ...getConversations()]);
+    writeLocal(KEYS.activeConversation, conversation.id);
+    return conversation;
+  }
+
   function normalizeCurrentUser(user) {
     if (!user || !/^1[3-9]\d{9}$/.test(String(user.phone || ""))) return null;
     return {
@@ -940,6 +955,7 @@
     appendMessage,
     claimFreeReport,
     consumeQuota,
+    createEmptyConversation,
     createInterpretationConversation,
     createReportConversation,
     deleteProfile,

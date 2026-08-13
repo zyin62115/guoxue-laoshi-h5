@@ -632,9 +632,8 @@ professionalChartButton.addEventListener("click", () => {
   window.location.href = "./chart-prototypes.html";
 });
 interpretationButton.addEventListener("click", () => {
-  const profile = requireAiReady();
-  if (!profile) return;
-  appState.createInterpretationConversation(profile.id);
+  if (!requireAiReady()) return;
+  appState.createEmptyConversation();
   window.location.href = "./chat.html";
 });
 learningMaterialsButton.addEventListener("click", () => {

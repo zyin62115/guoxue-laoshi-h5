@@ -52,7 +52,7 @@
 - `getReportOrders()`：读取模拟订单。
 - `createReportConversation(reportId, sectionId)`：创建或恢复当天对应章节的报告会话。
 
-会话结构的可选 `context` 支持两类：既有报告上下文 `{ type: "report", reportId, sectionId, sectionTitle }`，以及 MVP 国心解读上下文 `{ type: "interpretation", profileId }`。`createInterpretationConversation(profileId)` 创建一段不含预设消息的空会话并绑定档案；用户实际发送问题后才生成回复。没有上下文的旧会话继续按原有结构读取。
+会话结构的可选 `context` 支持既有报告上下文 `{ type: "report", reportId, sectionId, sectionTitle }`，并兼容早期 MVP 写入的 `{ type: "interpretation", profileId }`。MVP 首页通过 `createEmptyConversation()` 创建一段无上下文、无预设消息的新对话；用户实际发送问题后才生成回复。
 
 `activateHomeConversation()` 用于进入首页时切换或创建当天的普通问答会话。报告章节对话通过 `report-chat.html?report=<id>&section=<id>` 独立展示和发送消息，不作为首页问答或首页对话记录的一部分；对话页返回地址固定指向对应报告章节。
 

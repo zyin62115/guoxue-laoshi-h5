@@ -628,6 +628,15 @@ button,
   background: #9b4d36;
   font-weight: 700;
 }
+.mvp-state-mark svg {
+  width: calc(52 * var(--unit));
+  height: calc(52 * var(--unit));
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .mvp-state-card strong { display: block; color: #432b20; font-size: calc(calc(30 * var(--unit)) + var(--app-font-offset)); }
 .mvp-state-card p { margin: calc(6 * var(--unit)) 0 0; color: #7b6759; font-size: calc(calc(24 * var(--unit)) + var(--app-font-offset)); line-height: 1.45; }
 .mvp-state-action {

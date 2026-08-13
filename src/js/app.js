@@ -118,13 +118,25 @@ function renderMvpState() {
   const state = appState.getMvpState();
   mvpStateCard.hidden = state.status === "ready";
   if (state.status === "logged-out") {
-    mvpStateMark.textContent = "登";
+    mvpStateMark.innerHTML = `
+      <svg viewBox="0 0 48 48">
+        <circle cx="24" cy="16" r="8" />
+        <path d="M10 40c0-8.8 6.3-14 14-14s14 5.2 14 14" />
+      </svg>
+    `;
     mvpStateTitle.textContent = "登录后获得完整解读";
     mvpStateDescription.textContent = "保存个人档案，让老师更连贯地了解你。";
     mvpStateAction.textContent = "登录";
     mvpStateAction.href = "./login.html?return=./index.html";
   } else if (state.status === "no-profile") {
-    mvpStateMark.textContent = "档";
+    mvpStateMark.innerHTML = `
+      <svg viewBox="0 0 48 48">
+        <rect x="9" y="7.5" width="30" height="33" rx="5.5" />
+        <circle cx="20" cy="20" r="4.5" />
+        <path d="M13.5 32c1.2-4 3.3-6 6.5-6s5.3 2 6.5 6" />
+        <path d="M30.5 18h4M30.5 24h4M30.5 30h4" />
+      </svg>
+    `;
     mvpStateTitle.textContent = "完善个人档案";
     mvpStateDescription.textContent = "完善出生信息，让老师更准确地为您解读。";
     mvpStateAction.textContent = "填写档案";

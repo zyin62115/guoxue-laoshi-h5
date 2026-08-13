@@ -418,7 +418,7 @@ button,
   width: 100%;
   height: calc(516 * var(--unit));
   grid-template-columns: calc(326 * var(--unit)) minmax(0, calc(535 * var(--unit)));
-  align-items: center;
+  grid-template-rows: 86% 14%;
 }
 
 .hero-left {
@@ -427,7 +427,7 @@ button,
   left: 0;
   width: calc(334 * var(--unit));
   height: calc(516 * var(--unit));
-  grid-row: 1;
+  grid-row: 1 / -1;
   grid-column: 1;
   object-fit: cover;
   -webkit-mask-image: linear-gradient(to bottom, #000 0 86%, transparent 100%);
@@ -468,6 +468,7 @@ button,
   width: calc(535 * var(--unit));
   grid-row: 1;
   grid-column: 2;
+  align-self: end;
   flex-direction: column;
 }
 

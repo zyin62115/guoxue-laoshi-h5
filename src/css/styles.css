@@ -8,6 +8,7 @@
   --blue: #2397d3;
   --app-font-offset: 0px;
   --app-page-max-width: 941px;
+  --app-topbar-height: 64px;
   --unit: min(0.1062699256vw, 1px);
   --app-font-caption: max(calc(14 * var(--unit)), 10px);
   --app-font-secondary: max(calc(16 * var(--unit)), 11px);
@@ -93,7 +94,7 @@ body.home-page {
   grid-template-columns: max(calc(78 * var(--unit)), 50px) 1fr auto;
   align-items: center;
   width: min(100%, var(--app-page-max-width));
-  min-height: calc(env(safe-area-inset-top, 0px) + max(calc(106 * var(--unit)), 68px));
+  height: calc(env(safe-area-inset-top, 0px) + var(--app-topbar-height));
   margin: auto;
   padding: env(safe-area-inset-top, 0px) max(calc(36 * var(--unit)), 18px) 0;
   border-bottom: 1px solid rgba(220, 192, 164, 0.45);
@@ -185,7 +186,7 @@ body.home-page {
   width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top, 0px) + max(calc(142 * var(--unit)), 92px))
+  padding: calc(env(safe-area-inset-top, 0px) + var(--app-topbar-height) + 24px)
     max(calc(54 * var(--unit)), 18px) max(calc(50 * var(--unit)), 28px);
 }
 
@@ -1279,16 +1280,12 @@ button:focus-visible {
 }
 
 .settings-shell .collection-header {
-  grid-template-columns:
-    max(calc(66 * var(--unit)), 44px)
-    minmax(0, 1fr)
-    max(calc(66 * var(--unit)), 44px);
-  min-height: max(calc(78 * var(--unit)), 52px);
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
 }
 
 .settings-shell .profile-back {
-  width: max(calc(66 * var(--unit)), 44px);
-  height: max(calc(66 * var(--unit)), 44px);
+  width: 44px;
+  height: 44px;
 }
 
 .settings-shell .profile-back::before {
@@ -2168,7 +2165,7 @@ body.drawer-open {
   min-height: 100svh;
   margin: 0 auto;
   padding:
-    calc(env(safe-area-inset-top, 0px) + 20px)
+    env(safe-area-inset-top, 0px)
     clamp(18px, 5vw, 42px)
     calc(env(safe-area-inset-bottom, 0px) + 34px);
 }
@@ -2177,7 +2174,7 @@ body.drawer-open {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr) 44px;
   align-items: center;
-  min-height: max(calc(68 * var(--unit)), 52px);
+  height: var(--app-topbar-height);
 }
 
 .profile-back {
@@ -2415,7 +2412,7 @@ body.drawer-open {
   min-height: 100svh;
   margin: 0 auto;
   padding:
-    calc(env(safe-area-inset-top, 0px) + 20px)
+    env(safe-area-inset-top, 0px)
     clamp(18px, 5vw, 42px)
     calc(env(safe-area-inset-bottom, 0px) + 34px);
 }
@@ -2424,7 +2421,7 @@ body.drawer-open {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr) 54px;
   align-items: center;
-  min-height: max(calc(68 * var(--unit)), 52px);
+  height: var(--app-topbar-height);
 }
 
 .collection-header > div {
@@ -2606,7 +2603,7 @@ body.drawer-open {
   gap: 8px;
   align-items: center;
   width: min(100%, var(--app-page-max-width));
-  min-height: calc(env(safe-area-inset-top, 0px) + 68px);
+  height: calc(env(safe-area-inset-top, 0px) + var(--app-topbar-height));
   padding: env(safe-area-inset-top, 0px) 12px 0;
   border-bottom: 1px solid rgba(184, 130, 83, 0.16);
   background: rgba(255, 249, 241, 0.95);
@@ -2687,7 +2684,7 @@ body.drawer-open {
   width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top, 0px) + 88px) 16px calc(env(safe-area-inset-bottom, 0px) + 128px);
+  padding: calc(env(safe-area-inset-top, 0px) + var(--app-topbar-height) + 20px) 16px calc(env(safe-area-inset-bottom, 0px) + 128px);
 }
 
 .report-chat-intro {
@@ -2825,7 +2822,7 @@ body.drawer-open {
   width: min(100%, var(--app-page-max-width));
   min-height: 100svh;
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top, 0px) + 74px) 16px 42px;
+  padding: calc(env(safe-area-inset-top, 0px) + var(--app-topbar-height) + 10px) 16px 42px;
 }
 
 .interpretation-page.has-report-purchase .interpretation-shell {
@@ -2841,7 +2838,7 @@ body.drawer-open {
   grid-template-columns: 44px 1fr auto;
   align-items: center;
   width: min(100%, var(--app-page-max-width));
-  min-height: calc(env(safe-area-inset-top, 0px) + 64px);
+  height: calc(env(safe-area-inset-top, 0px) + var(--app-topbar-height));
   padding: env(safe-area-inset-top, 0px) 12px 0;
   border-bottom: 1px solid rgba(184, 130, 83, 0.16);
   background: rgba(255, 249, 241, 0.94);

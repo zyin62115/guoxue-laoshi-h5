@@ -9,6 +9,7 @@
   --blue: #2397d3;
   --app-font-offset: 0px;
   --app-page-max-width: 941px;
+  --app-topbar-height: 64px;
   --unit: min(0.1062699256vw, 1px);
   --page-gutter: max(calc(36 * var(--unit)), 18px);
   --serif: "STSong", "Songti SC", "Noto Serif CJK SC", "SimSun", serif;
@@ -48,13 +49,13 @@ button { color: inherit; font: inherit; }
 
 .chart-header {
   position: relative;
-  height: calc(max(calc(36 * var(--unit)), 18px, env(safe-area-inset-top)) + max(calc(72 * var(--unit)), 48px));
+  height: calc(env(safe-area-inset-top, 0px) + var(--app-topbar-height));
   margin: 0 calc(-1 * var(--page-gutter));
-  padding: max(calc(36 * var(--unit)), 18px, env(safe-area-inset-top)) var(--page-gutter) 0;
+  padding: env(safe-area-inset-top, 0px) var(--page-gutter) 0;
 }
 .back-button {
   position: absolute;
-  top: max(calc(36 * var(--unit)), 18px, env(safe-area-inset-top));
+  top: calc(env(safe-area-inset-top, 0px) + (var(--app-topbar-height) - max(calc(60 * var(--unit)), 40px)) / 2);
   z-index: 4;
   width: max(calc(60 * var(--unit)), 40px);
   height: max(calc(60 * var(--unit)), 40px);
@@ -69,7 +70,7 @@ button { color: inherit; font: inherit; }
 }
 .back-button { left: max(calc(34 * var(--unit)), 17px); }
 .back-button svg { width: max(calc(38 * var(--unit)), 25px); fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
-.header-copy { position: relative; z-index: 3; height: max(calc(60 * var(--unit)), 40px); display: grid; place-items: center; }
+.header-copy { position: relative; z-index: 3; height: var(--app-topbar-height); display: grid; place-items: center; }
 .header-copy h1 { margin: 0; font-family: var(--serif); font-size: calc(max(calc(32 * var(--unit)), 21px) + var(--app-font-offset)); line-height: 1.1; letter-spacing: .08em; text-indent: .08em; }
 
 .consultation-poster {

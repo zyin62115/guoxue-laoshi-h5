@@ -6,6 +6,7 @@
   --orange: #de6a0a;
   --app-font-offset: 0px;
   --app-page-max-width: 941px;
+  --app-topbar-height: 64px;
   --unit: min(0.1062699256vw, 1px);
   --page-gutter: max(calc(36 * var(--unit)), 18px);
   --serif: "STSong", "Songti SC", "Noto Serif CJK SC", "SimSun", serif;
@@ -42,9 +43,9 @@ button { color: inherit; border: 0; background: none; }
 }
 
 .calendar-header {
-  min-height: max(calc(150 * var(--unit)), 88px);
+  height: calc(env(safe-area-inset-top, 0px) + var(--app-topbar-height));
   margin: 0 calc(-1 * var(--page-gutter));
-  padding: max(calc(34 * var(--unit)), 17px, env(safe-area-inset-top)) var(--page-gutter) max(calc(24 * var(--unit)), 12px);
+  padding: env(safe-area-inset-top, 0px) var(--page-gutter) 0;
   display: grid;
   grid-template-columns: max(calc(64 * var(--unit)), 42px) 1fr max(calc(64 * var(--unit)), 42px);
   gap: max(calc(20 * var(--unit)), 10px);

@@ -531,14 +531,15 @@ button,
 }
 
 .guidance {
-  width: auto;
+  width: calc(440 * var(--unit) + 14 * var(--app-font-offset));
   margin: calc(11 * var(--unit)) 0 0 calc(22 * var(--unit));
   font-family: var(--serif);
-  font-size: calc(calc(36 * var(--unit)) + var(--app-font-offset));
+  font-size: calc(calc(31.5 * var(--unit)) + var(--app-font-offset));
   font-weight: 600;
-  line-height: calc(56 * var(--unit));
+  line-height: calc(51 * var(--unit));
   letter-spacing: calc(0.5 * var(--unit));
-  text-align: left;
+  text-align: justify;
+  text-align-last: left;
 }
 
 .guidance span {

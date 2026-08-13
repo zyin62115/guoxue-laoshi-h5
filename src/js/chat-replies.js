@@ -30,7 +30,15 @@
   const fallback =
     "你所问之事，不妨先从正心开始：看清自己的真实愿望，也看清眼前的条件与限制。\n\n把大问题拆成今天能够完成的一小步，做完再观其变化。顺势而为，并非等待，而是在合适的方向上稳稳前行。";
 
-  function getReply(question, context = null) {
+  function getReply(question, context = null, hasImage = false) {
+    if (hasImage) {
+      const imageReply = question
+        ? `我已收到你上传的图片和补充问题“${question}”。当前为前端演示，我暂时不能识别图片内容；你可以继续用文字描述图片中希望咨询的部分。`
+        : "我已收到你上传的图片。当前为前端演示，我暂时不能识别图片内容；你可以继续用文字描述图片中希望咨询的部分。";
+      return context
+        ? `关于《${context.sectionTitle}》，${imageReply}`
+        : imageReply;
+    }
     const matched = rules.find((rule) =>
       rule.keywords.some((keyword) => question.includes(keyword)),
     );

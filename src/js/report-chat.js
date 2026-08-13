@@ -18,15 +18,23 @@ const profileTrigger = document.querySelector("#report-profile-trigger");
 const profileAvatar = document.querySelector("#report-profile-avatar");
 const profileName = document.querySelector("#report-profile-name");
 const toast = document.querySelector("#report-chat-toast");
+const imageUploadButton = document.querySelector("#report-image-upload");
+const imageInput = document.querySelector("#report-image-input");
+const imagePreview = document.querySelector("#report-image-preview");
+const imagePreviewImage = document.querySelector("#report-image-preview-image");
+const imagePreviewName = document.querySelector("#report-image-preview-name");
+const imageRemoveButton = document.querySelector("#report-image-remove");
 let conversation = null;
 let replyTimer = null;
 let toastTimer = null;
 let isReplying = false;
 let isComposing = false;
+let imageComposer = null;
+let isSending = false;
 
 function renderReportProfile() {
   const name = report?.profileSnapshot?.name || "报告档案";
-  profileName.textContent = name;
+  profileName.textContent = reportChatState.formatProfileDisplayName(name, "报告档案");
   profileAvatar.textContent = Array.from(name)[0] || "档";
   profileTrigger.removeAttribute("aria-controls");
   profileTrigger.removeAttribute("aria-expanded");
@@ -74,6 +82,7 @@ function createMessageRow(message) {
   const bubble = document.createElement("div");
   bubble.className = "inline-message-bubble";
   bubble.textContent = message.content;
+  window.GuoxueImageAttachments.appendToBubble(bubble, message);
   body.append(bubble);
   row.append(body);
   return row;
@@ -112,13 +121,14 @@ function syncQuota() {
   reportChatState.renderPromotionBadge(quotaDisplay);
   const exhausted = quota.remaining <= 0;
   dock.classList.toggle("is-exhausted", exhausted);
-  questionInput.disabled = exhausted;
+  questionInput.disabled = exhausted || isSending;
+  imageComposer?.setDisabled(exhausted || isReplying || isSending);
   sendButton.disabled = exhausted;
 }
 
 function syncSendButton() {
   sendButton.disabled =
-    !questionInput.value.trim() || isReplying || questionInput.disabled;
+    (!questionInput.value.trim() && !imageComposer?.hasImage()) || isReplying || isSending || questionInput.disabled;
 }
 
 function scrollToLatest(behavior = "smooth") {
@@ -127,11 +137,11 @@ function scrollToLatest(behavior = "smooth") {
   });
 }
 
-function finishReply(question) {
+function finishReply(question, hasImage = false) {
   if (!activateConversation()) return;
   reportChatState.appendMessage(
     "assistant",
-    window.GuoxueChatReplies.getReply(question, conversation.context),
+    window.GuoxueChatReplies.getReply(question, conversation.context, hasImage),
   );
   isReplying = false;
   renderMessages();
@@ -139,26 +149,48 @@ function finishReply(question) {
   scrollToLatest();
 }
 
-function submitQuestion() {
-  if (isReplying || isComposing) return;
+async function submitQuestion() {
+  if (isReplying || isComposing || isSending) return;
   const question = questionInput.value.trim();
-  if (!question) return;
+  if (!question && !imageComposer.hasImage()) return;
+  if (!activateConversation()) return;
+  let attachment = null;
+  isSending = true;
+  syncQuota();
+  syncSendButton();
+  try {
+    attachment = await imageComposer.save();
+  } catch {
+    isSending = false;
+    syncQuota();
+    syncSendButton();
+    showToast("图片保存失败，请重试");
+    return;
+  }
   if (!reportChatState.consumeQuota()) {
+    isSending = false;
     syncQuota();
     showToast("今日免费对话次数已用完");
     return;
   }
-  if (!activateConversation()) return;
-  reportChatState.appendMessage("user", question);
+  isSending = false;
+  reportChatState.appendMessage("user", question, attachment ? [attachment] : []);
   questionInput.value = "";
+  imageComposer.clear();
   isReplying = true;
   renderMessages();
   messageList.append(createThinkingRow());
   syncQuota();
   syncSendButton();
   scrollToLatest();
-  replyTimer = window.setTimeout(() => finishReply(question), 700);
+  replyTimer = window.setTimeout(() => finishReply(question, Boolean(attachment)), 700);
 }
+
+imageComposer = window.GuoxueImageAttachments.bindComposer({
+  dock, uploadButton: imageUploadButton, fileInput: imageInput,
+  preview: imagePreview, previewImage: imagePreviewImage, previewName: imagePreviewName,
+  removeButton: imageRemoveButton, onChange: syncSendButton, showError: showToast,
+});
 
 if (!report || !section) {
   pageTitle.textContent = "未找到报告章节";

@@ -26,6 +26,12 @@ const guideGood = document.querySelector("#guide-good");
 const guideAvoid = document.querySelector("#guide-avoid");
 const drawerUserAvatar = document.querySelector("#drawer-user-avatar");
 const drawerTitle = document.querySelector("#drawer-title");
+const imageUploadButton = document.querySelector("#home-image-upload");
+const imageInput = document.querySelector("#home-image-input");
+const imagePreview = document.querySelector("#home-image-preview");
+const imagePreviewImage = document.querySelector("#home-image-preview-image");
+const imagePreviewName = document.querySelector("#home-image-preview-name");
+const imageRemoveButton = document.querySelector("#home-image-remove");
 
 let isComposing = false;
 let scrollTicking = false;
@@ -35,6 +41,8 @@ let drawerGesture = null;
 let suppressClickUntil = 0;
 let dailyGuideTimer = null;
 let isProfileMenuOpen = false;
+let imageComposer = null;
+let isSending = false;
 
 function closeProfileMenu() {
   isProfileMenuOpen = false;
@@ -45,7 +53,7 @@ function closeProfileMenu() {
 function renderProfileSwitcher() {
   const profiles = appState.getProfiles();
   const activeProfile = appState.getActiveProfile();
-  profileName.textContent = activeProfile?.name || "选择档案";
+  profileName.textContent = appState.formatProfileDisplayName(activeProfile?.name);
   profileAvatar.textContent = activeProfile ? Array.from(activeProfile.name)[0] : "档";
 
   const items = profiles.map((profile) => {
@@ -228,7 +236,7 @@ pressables.forEach((element) => {
 function syncActionState() {
   const hasQuestion = questionInput.value.trim().length > 0;
   const exhausted = appState.getQuota().remaining <= 0;
-  const canSend = hasQuestion && !exhausted;
+  const canSend = (hasQuestion || imageComposer?.hasImage()) && !exhausted && !isSending;
 
   actionButton.disabled = !canSend;
 }
@@ -239,6 +247,7 @@ function syncQuotaState() {
 
   voiceDock.classList.toggle("is-exhausted", exhausted);
   questionInput.disabled = exhausted;
+  imageComposer?.setDisabled(exhausted || isSending);
   quotaGuide.hidden = !exhausted;
   questionInput.placeholder = exhausted
     ? "限时免费体验已结束"
@@ -246,23 +255,37 @@ function syncQuotaState() {
   syncActionState();
 }
 
-function submitQuestion() {
-  if (isComposing) return;
+async function submitQuestion() {
+  if (isComposing || isSending) return;
 
   const content = questionInput.value.trim();
-  if (!content) {
+  if (!content && !imageComposer.hasImage()) {
     syncActionState();
     return;
   }
 
+  let attachment = null;
+  isSending = true;
+  questionInput.disabled = true;
+  imageComposer.setDisabled(true);
+  syncActionState();
+  try {
+    attachment = await imageComposer.save();
+  } catch {
+    isSending = false;
+    syncQuotaState();
+    showToast("图片保存失败，请重试");
+    return;
+  }
   const quota = appState.consumeQuota();
   if (!quota) {
+    isSending = false;
     syncQuotaState();
     return;
   }
-
-  appState.appendMessage("user", content);
+  appState.appendMessage("user", content, attachment ? [attachment] : []);
   questionInput.value = "";
+  imageComposer.clear();
   window.location.href = "./chat.html";
 }
 
@@ -290,6 +313,18 @@ function showToast(message) {
     appToast.classList.remove("is-visible");
   }, 1800);
 }
+
+imageComposer = window.GuoxueImageAttachments.bindComposer({
+  dock: voiceDock,
+  uploadButton: imageUploadButton,
+  fileInput: imageInput,
+  preview: imagePreview,
+  previewImage: imagePreviewImage,
+  previewName: imagePreviewName,
+  removeButton: imageRemoveButton,
+  onChange: syncActionState,
+  showError: showToast,
+});
 
 function dateGroupLabel(dateKey) {
   const today = new Date();

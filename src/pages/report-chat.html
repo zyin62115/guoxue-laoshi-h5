@@ -37,6 +37,11 @@
     </main>
 
     <div class="voice-dock report-chat-dock" id="report-chat-dock" aria-label="对话工具栏">
+      <div class="image-preview-card" id="report-image-preview" hidden>
+        <img id="report-image-preview-image" alt="待发送图片预览" />
+        <span><strong>已选择 1 张图片</strong><small id="report-image-preview-name"></small></span>
+        <button id="report-image-remove" type="button" aria-label="移除已选择的图片">×</button>
+      </div>
       <div class="profile-switcher">
         <button id="report-profile-trigger" class="profile-switch-button report-profile-display" type="button" aria-label="当前报告档案" disabled>
           <span class="profile-switch-avatar" id="report-profile-avatar" aria-hidden="true">档</span>
@@ -45,6 +50,10 @@
         </button>
       </div>
       <div class="text-input-shell">
+        <button class="image-upload-button pressable" id="report-image-upload" type="button" aria-label="上传图片">
+          <svg viewBox="0 0 28 28" aria-hidden="true"><rect x="3.5" y="5" width="21" height="18" rx="3" /><circle cx="10" cy="11" r="2" /><path d="m5.5 20 5.5-5 4 3 3.5-4 4 6" /></svg>
+        </button>
+        <input class="sr-only" id="report-image-input" type="file" accept="image/jpeg,image/png,image/webp" />
         <input class="text-input" id="report-chat-question" type="text" placeholder="继续问老师" autocomplete="off" aria-label="输入章节问题" />
       </div>
       <button class="dock-icon send-button home-action pressable" id="report-chat-send" type="button" aria-label="发送问题" disabled>
@@ -59,6 +68,7 @@
     <div class="app-toast" id="report-chat-toast" role="status" aria-live="polite"></div>
 
     <script src="../js/shared.js"></script>
+    <script src="../js/image-attachments.js"></script>
     <script src="../js/chat-replies.js"></script>
     <script src="../js/report-chat.js"></script>
     <script src="../js/navigation.js"></script>

@@ -13,11 +13,28 @@ const messageList = document.querySelector("#inline-message-list");
 const reportContext = document.querySelector("#report-chat-context");
 const reportContextTitle = document.querySelector("#report-chat-context-title");
 const reportContextLink = document.querySelector("#report-chat-context-link");
+const imageUploadButton = document.querySelector("#chat-image-upload");
+const imageInput = document.querySelector("#chat-image-input");
+const imagePreview = document.querySelector("#chat-image-preview");
+const imagePreviewImage = document.querySelector("#chat-image-preview-image");
+const imagePreviewName = document.querySelector("#chat-image-preview-name");
+const imageRemoveButton = document.querySelector("#chat-image-remove");
+const chatToast = document.querySelector("#chat-toast");
 
 let isComposing = false;
 let isReplying = false;
 let replyTimer = null;
 let isProfileMenuOpen = false;
+let toastTimer = null;
+let imageComposer = null;
+let isSending = false;
+
+function showToast(message) {
+  window.clearTimeout(toastTimer);
+  chatToast.textContent = message;
+  chatToast.classList.add("is-visible");
+  toastTimer = window.setTimeout(() => chatToast.classList.remove("is-visible"), 1800);
+}
 
 function closeProfileMenu() {
   isProfileMenuOpen = false;
@@ -28,7 +45,7 @@ function closeProfileMenu() {
 function renderProfileSwitcher() {
   const profiles = chatState.getProfiles();
   const activeProfile = chatState.getActiveProfile();
-  profileName.textContent = activeProfile?.name || "选择档案";
+  profileName.textContent = chatState.formatProfileDisplayName(activeProfile?.name);
   profileAvatar.textContent = activeProfile ? Array.from(activeProfile.name)[0] : "档";
 
   const items = profiles.map((profile) => {
@@ -113,6 +130,7 @@ function createMessageRow(message) {
   const bubble = document.createElement("div");
   bubble.className = "inline-message-bubble";
   bubble.textContent = message.content;
+  window.GuoxueImageAttachments.appendToBubble(bubble, message);
   body.append(bubble);
   row.append(body);
   return row;
@@ -154,7 +172,7 @@ function scrollToLatest(behavior = "smooth") {
 function syncActionState() {
   const hasQuestion = questionInput.value.trim().length > 0;
   const exhausted = chatState.getQuota().remaining <= 0;
-  const canSend = hasQuestion && !exhausted && !isReplying;
+  const canSend = (hasQuestion || imageComposer?.hasImage()) && !exhausted && !isReplying && !isSending;
   actionButton.disabled = !canSend;
 }
 
@@ -162,7 +180,8 @@ function syncQuotaState() {
   const quota = chatState.getQuota();
   const exhausted = quota.remaining <= 0;
   voiceDock.classList.toggle("is-exhausted", exhausted);
-  questionInput.disabled = exhausted || isReplying;
+  questionInput.disabled = exhausted || isReplying || isSending;
+  imageComposer?.setDisabled(exhausted || isReplying || isSending);
   quotaGuide.hidden = !exhausted;
   questionInput.placeholder = exhausted
     ? "今日免费对话次数已用完"
@@ -194,11 +213,11 @@ function addThinkingRow() {
   messageList.append(row);
 }
 
-function finishReply(question) {
+function finishReply(question, hasImage = false) {
   document.querySelector("#inline-thinking-row")?.remove();
   const message = chatState.appendMessage(
     "assistant",
-    window.GuoxueChatReplies.getReply(question, chatState.getActiveConversation()?.context),
+    window.GuoxueChatReplies.getReply(question, chatState.getActiveConversation()?.context, hasImage),
   );
   messageList.append(createMessageRow(message));
   isReplying = false;
@@ -208,28 +227,41 @@ function finishReply(question) {
   if (!questionInput.disabled) questionInput.focus({ preventScroll: true });
 }
 
-function scheduleReply(question) {
+function scheduleReply(question, hasImage = false) {
   if (isReplying) return;
   isReplying = true;
   syncQuotaState();
   addThinkingRow();
   scrollToLatest("auto");
-  replyTimer = window.setTimeout(() => finishReply(question), 700);
+  replyTimer = window.setTimeout(() => finishReply(question, hasImage), 700);
 }
 
-function submitQuestion() {
-  if (isReplying || isComposing) return;
+async function submitQuestion() {
+  if (isReplying || isComposing || isSending) return;
   const content = questionInput.value.trim();
-  if (!content) {
+  if (!content && !imageComposer.hasImage()) {
     syncActionState();
     return;
   }
+  let attachment = null;
+  isSending = true;
+  syncQuotaState();
+  try {
+    attachment = await imageComposer.save();
+  } catch {
+    isSending = false;
+    syncQuotaState();
+    showToast("图片保存失败，请重试");
+    return;
+  }
   if (!chatState.consumeQuota()) {
+    isSending = false;
     syncQuotaState();
     return;
   }
+  isSending = false;
   const previousConversationId = chatState.getActiveConversation()?.id;
-  const message = chatState.appendMessage("user", content);
+  const message = chatState.appendMessage("user", content, attachment ? [attachment] : []);
   const currentConversationId = chatState.getActiveConversation()?.id;
   if (previousConversationId && previousConversationId !== currentConversationId) {
     renderHistory();
@@ -237,10 +269,17 @@ function submitQuestion() {
     messageList.append(createMessageRow(message));
   }
   questionInput.value = "";
+  imageComposer.clear();
   syncQuotaState();
   scrollToLatest();
-  scheduleReply(content);
+  scheduleReply(content, Boolean(attachment));
 }
+
+imageComposer = window.GuoxueImageAttachments.bindComposer({
+  dock: voiceDock, uploadButton: imageUploadButton, fileInput: imageInput,
+  preview: imagePreview, previewImage: imagePreviewImage, previewName: imagePreviewName,
+  removeButton: imageRemoveButton, onChange: syncActionState, showError: showToast,
+});
 
 questionInput.addEventListener("input", syncActionState);
 questionInput.addEventListener("compositionstart", () => {
@@ -287,4 +326,4 @@ renderProfileSwitcher();
 syncQuotaState();
 scrollToLatest("auto");
 const lastMessage = history.at(-1);
-if (lastMessage?.role === "user") scheduleReply(lastMessage.content);
+if (lastMessage?.role === "user") scheduleReply(lastMessage.content, Boolean(lastMessage.attachments?.length));

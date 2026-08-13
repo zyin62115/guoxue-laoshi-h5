@@ -410,14 +410,32 @@ button,
   -webkit-user-drag: none;
 }
 
+.guide-alignment {
+  position: absolute;
+  top: calc(74 * var(--unit));
+  left: 0;
+  display: grid;
+  width: 100%;
+  height: calc(516 * var(--unit));
+  grid-template-columns: calc(326 * var(--unit)) minmax(0, calc(535 * var(--unit)));
+  align-items: center;
+}
+
 .hero-left {
+  position: relative;
   top: calc(74 * var(--unit));
   left: 0;
   width: calc(334 * var(--unit));
   height: calc(516 * var(--unit));
+  grid-row: 1;
+  grid-column: 1;
   object-fit: cover;
   -webkit-mask-image: linear-gradient(to bottom, #000 0 86%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0 86%, transparent 100%);
+}
+
+.guide-alignment .hero-left {
+  top: 0;
 }
 
 .birds {
@@ -445,14 +463,24 @@ button,
   mix-blend-mode: multiply;
 }
 
+.guide-panel {
+  display: flex;
+  width: calc(535 * var(--unit));
+  grid-row: 1;
+  grid-column: 2;
+  flex-direction: column;
+}
+
+.guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .guide-heading {
-  position: absolute;
-  top: calc(214 * var(--unit));
-  left: calc(326 * var(--unit));
   display: flex;
   align-items: center;
   height: calc(64 * var(--unit));
-  transform: translateY(16px);
 }
 
 .guide-heading img {
@@ -472,11 +500,8 @@ button,
 }
 
 .date-badge {
-  position: absolute;
-  top: calc(210 * var(--unit));
-  right: calc(95 * var(--unit));
-  z-index: 5;
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   width: max-content;
@@ -493,7 +518,6 @@ button,
   white-space: nowrap;
   user-select: none;
   pointer-events: auto;
-  transform: translateY(calc(var(--content-lift) + 16px));
 }
 
 .date-badge time,
@@ -506,11 +530,8 @@ button,
 }
 
 .guidance {
-  position: absolute;
-  top: calc(289 * var(--unit));
-  left: calc(326 * var(--unit));
   width: calc(440 * var(--unit) + 14 * var(--app-font-offset));
-  margin: 0;
+  margin: calc(11 * var(--unit)) 0 0 calc(22 * var(--unit));
   font-family: var(--serif);
   font-size: calc(calc(31.5 * var(--unit)) + var(--app-font-offset));
   font-weight: 600;
@@ -518,7 +539,6 @@ button,
   letter-spacing: calc(0.5 * var(--unit));
   text-align: justify;
   text-align-last: left;
-  transform: translate(5%, 16px);
 }
 
 .guidance span {
@@ -526,18 +546,15 @@ button,
 }
 
 .advice-row {
-  position: absolute;
-  top: calc(460 * var(--unit));
-  left: calc(340 * var(--unit));
   display: flex;
   align-items: center;
   height: calc(53 * var(--unit));
+  margin: calc(17 * var(--unit)) 0 0 calc(14 * var(--unit));
   font-family: var(--serif);
   font-size: calc(calc(27 * var(--unit)) + var(--app-font-offset));
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
-  transform: translateY(16px);
 }
 
 .advice {
@@ -984,6 +1001,7 @@ button,
 
 .profile-switcher {
   position: relative;
+  min-width: 0;
   flex: 0 0 auto;
 }
 
@@ -992,8 +1010,9 @@ button,
   align-items: center;
   gap: calc(7 * var(--unit));
   height: calc(72 * var(--unit));
-  width: max(calc(172 * var(--unit)), 112px);
-  max-width: none;
+  width: fit-content;
+  min-width: max-content;
+  max-width: 100%;
   padding: 0 calc(12 * var(--unit)) 0 calc(6 * var(--unit));
   border: calc(1 * var(--unit)) solid rgba(204, 176, 143, 0.22);
   border-radius: calc(38 * var(--unit));
@@ -1017,12 +1036,10 @@ button,
 }
 
 .profile-switch-name {
-  min-width: 0;
-  overflow: hidden;
+  flex: 0 0 auto;
   color: #43331f;
   font-family: var(--serif);
   font-size: calc(max(calc(24 * var(--unit)), 12px) + var(--app-font-offset));
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -3938,7 +3955,7 @@ body.drawer-open {
 }
 
 @media (min-width: 700px) {
-  .hero-left {
+  .guide-alignment {
     top: calc(112 * var(--unit));
   }
 

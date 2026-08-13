@@ -34,7 +34,7 @@ let isSending = false;
 
 function renderReportProfile() {
   const name = report?.profileSnapshot?.name || "报告档案";
-  profileName.textContent = name;
+  profileName.textContent = reportChatState.formatProfileDisplayName(name, "报告档案");
   profileAvatar.textContent = Array.from(name)[0] || "档";
   profileTrigger.removeAttribute("aria-controls");
   profileTrigger.removeAttribute("aria-expanded");

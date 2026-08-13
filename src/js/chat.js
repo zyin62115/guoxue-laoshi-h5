@@ -45,7 +45,7 @@ function closeProfileMenu() {
 function renderProfileSwitcher() {
   const profiles = chatState.getProfiles();
   const activeProfile = chatState.getActiveProfile();
-  profileName.textContent = activeProfile?.name || "选择档案";
+  profileName.textContent = chatState.formatProfileDisplayName(activeProfile?.name);
   profileAvatar.textContent = activeProfile ? Array.from(activeProfile.name)[0] : "档";
 
   const items = profiles.map((profile) => {

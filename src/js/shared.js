@@ -96,6 +96,12 @@
     );
   }
 
+  function formatProfileDisplayName(name, fallback = "选择档案") {
+    const characters = Array.from(String(name || "").trim());
+    if (!characters.length) return fallback;
+    return characters.length > 2 ? `${characters.slice(0, 2).join("")}…` : characters.join("");
+  }
+
   function normalizeAttachments(attachments) {
     if (!Array.isArray(attachments)) return [];
     return attachments
@@ -871,6 +877,7 @@
     deleteProfile,
     dismissClaimPrompt,
     ensureChatStartedAt,
+    formatProfileDisplayName,
     getActiveConversation,
     getActiveProfile,
     getActiveProfileId,

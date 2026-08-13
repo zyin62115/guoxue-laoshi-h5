@@ -1,4 +1,7 @@
 const preferencesState = window.GuoxuePreferences;
+if (!window.GuoxueApp.isLoggedIn()) {
+  window.location.replace("./login.html?return=./settings.html");
+}
 const profileForm = document.querySelector("#settings-profile-form");
 const nicknameInput = document.querySelector("#settings-nickname");
 const nicknameAvatar = document.querySelector("#settings-nickname-avatar");

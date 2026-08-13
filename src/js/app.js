@@ -26,6 +26,7 @@ const guideGood = document.querySelector("#guide-good");
 const guideAvoid = document.querySelector("#guide-avoid");
 const drawerUserAvatar = document.querySelector("#drawer-user-avatar");
 const drawerTitle = document.querySelector("#drawer-title");
+const drawerProfileLink = drawerTitle.closest("a");
 const imageUploadButton = document.querySelector("#home-image-upload");
 const imageInput = document.querySelector("#home-image-input");
 const imagePreview = document.querySelector("#home-image-preview");
@@ -110,8 +111,11 @@ function renderUserPreferences() {
   const preferences = window.GuoxuePreferences.getPreferences();
   const user = appState.getCurrentUser();
   const displayName = user ? preferences.nickname : "访客";
+  const settingsUrl = user ? "./settings.html" : "./login.html?return=./settings.html";
   drawerTitle.textContent = displayName;
   drawerUserAvatar.querySelector("b").textContent = Array.from(displayName)[0];
+  drawerUserAvatar.href = settingsUrl;
+  drawerProfileLink.href = settingsUrl;
 }
 
 function renderMvpState() {

@@ -70,6 +70,8 @@ body {
 }
 
 body.home-page {
+  --app-page-max-width: 414px;
+  --unit: min(0.1062699256vw, 0.439957492px);
   min-height: 100svh;
   overflow-x: hidden;
   overflow-y: auto;
@@ -1554,6 +1556,10 @@ button:focus-visible {
   border-top: 1.5px solid #a37d63;
   border-right: 1.5px solid #a37d63;
   transform: rotate(45deg);
+}
+
+.home-page .scroll-top-button {
+  right: max(calc((100vw - 414px) / 2 + 16px), 16px);
 }
 
 .section-link {
@@ -3471,42 +3477,7 @@ button:focus-visible {
   }
 }
 
-@media (min-width: 480px) {
-  .home-guide-chat .inline-message-row {
-    margin-bottom: max(calc(24 * var(--unit)), 18px);
-  }
-
-  .home-guide-chat .inline-message-row.user .inline-message-body {
-    max-width: 86%;
-  }
-
-  .home-guide-chat .inline-message-row.assistant .inline-message-body {
-    width: calc(100% - max(calc(61 * var(--unit)), 62px));
-  }
-
-  .home-guide-chat .inline-teacher-avatar {
-    width: max(calc(49 * var(--unit)), 50px);
-    height: max(calc(49 * var(--unit)), 50px);
-    margin-right: max(calc(12 * var(--unit)), 12px);
-  }
-
-  .home-guide-chat .inline-speaker-name {
-    margin-bottom: max(calc(7 * var(--unit)), 6px);
-    font-size: calc(max(calc(16 * var(--unit)), 14px) + var(--app-font-offset));
-  }
-
-  .home-guide-chat .inline-message-bubble {
-    padding: max(calc(15 * var(--unit)), 15px) max(calc(19 * var(--unit)), 19px);
-    font-size: calc(max(calc(20 * var(--unit)), 18px) + var(--app-font-offset));
-    line-height: 1.7;
-  }
-}
-
 @media (min-width: 700px) {
-  .guide-alignment {
-    top: calc(112 * var(--unit));
-  }
-
   .design-canvas,
   .chat-shell,
   .profile-page-shell,

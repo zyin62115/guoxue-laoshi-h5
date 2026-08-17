@@ -3471,6 +3471,37 @@ button:focus-visible {
   }
 }
 
+@media (min-width: 560px) {
+  .home-guide-chat .inline-message-row {
+    margin-bottom: max(calc(24 * var(--unit)), 18px);
+  }
+
+  .home-guide-chat .inline-message-row.user .inline-message-body {
+    max-width: 82%;
+  }
+
+  .home-guide-chat .inline-message-row.assistant .inline-message-body {
+    width: calc(100% - max(calc(61 * var(--unit)), 60px));
+  }
+
+  .home-guide-chat .inline-teacher-avatar {
+    width: max(calc(49 * var(--unit)), 48px);
+    height: max(calc(49 * var(--unit)), 48px);
+    margin-right: max(calc(12 * var(--unit)), 12px);
+  }
+
+  .home-guide-chat .inline-speaker-name {
+    margin-bottom: max(calc(7 * var(--unit)), 6px);
+    font-size: calc(max(calc(16 * var(--unit)), 13px) + var(--app-font-offset));
+  }
+
+  .home-guide-chat .inline-message-bubble {
+    padding: max(calc(15 * var(--unit)), 15px) max(calc(19 * var(--unit)), 19px);
+    font-size: calc(max(calc(20 * var(--unit)), 17px) + var(--app-font-offset));
+    line-height: 1.7;
+  }
+}
+
 @media (min-width: 700px) {
   .guide-alignment {
     top: calc(112 * var(--unit));

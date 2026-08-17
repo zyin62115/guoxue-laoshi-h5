@@ -437,7 +437,7 @@ button,
   white-space: nowrap;
   user-select: none;
   pointer-events: auto;
-  transform: translateX(20%);
+  transform: translateX(15%);
 }
 
 .date-badge::before {

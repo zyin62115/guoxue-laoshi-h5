@@ -71,7 +71,7 @@ body {
 
 body.home-page {
   --app-page-max-width: 414px;
-  --content-lift: 0px;
+  --content-lift: calc(-74 * var(--unit));
   --unit: min(0.1062699256vw, 0.439957492px);
   min-height: 100svh;
   overflow-x: hidden;

@@ -3478,6 +3478,10 @@ button:focus-visible {
 }
 
 @media (min-width: 700px) {
+  .home-page .guide-alignment {
+    top: calc(112 * var(--unit));
+  }
+
   .design-canvas,
   .chat-shell,
   .profile-page-shell,

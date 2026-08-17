@@ -76,7 +76,7 @@ function renderDailyGuide() {
   const guide = DAILY_GUIDES[getDailyGuideIndex(now)];
   guideDate.dateTime = localDateKey(now);
   guideDateText.textContent = formatGuideDate(now);
-  guideContent.textContent = guide.lines.join("\n");
+  guideContent.textContent = guide.lines.join("");
   guideGood.textContent = guide.good;
   guideAvoid.textContent = guide.avoid;
 

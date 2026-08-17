@@ -461,9 +461,11 @@ button,
 }
 
 .guidance span {
-  display: block;
+  display: -webkit-box;
   overflow: hidden;
-  white-space: pre;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .advice-row {

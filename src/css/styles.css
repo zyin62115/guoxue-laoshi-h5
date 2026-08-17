@@ -638,7 +638,7 @@ button,
 
 .home-guide-chat {
   margin-top: calc(36 * var(--unit));
-  padding-bottom: calc(56 * var(--unit));
+  padding-bottom: 0;
 }
 
 .home-guide-chat .inline-message-row:last-child {
@@ -664,7 +664,7 @@ button,
 }
 
 .home-guide-answer .home-guide-examples-title {
-  margin-top: max(calc(20 * var(--unit)), 14px);
+  margin-top: 0;
 }
 
 .home-guide-examples {

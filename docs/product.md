@@ -71,7 +71,8 @@
 **底部提问栏**
 
 - 输入文字或选择图片后发送按钮启用；支持 Enter 发送，并拦截中文输入法组合态。
-- 点击发送后直接跳转外部国心解读页；文字和图片不拼入 URL，也不写入本地会话或 IndexedDB。
+- 点击发送后直接跳转外部国心解读页；有文字时去除首尾空白并通过 `question` 参数传递，同时选择的图片不跨站传递。纯图片发送仍跳转，但不添加 `question` 参数。发送前不写入本地会话或 IndexedDB。
+- 国心解读端应解析并在登录期间保留 `question`；登录成功或已登录时只将问题回填到聊天输入框，不自动发送，等待用户自行确认发送。
 - 右上角「限时免费」为静态运营标签。
 
 ### 2. 万年历 `calendar.html`
@@ -240,7 +241,7 @@ chart-entry.html                              │  └─► wechat-simulator（
 | 首页   | 专业排盘卡             | `chart-prototypes.html`                                                 | JS 跳转                    |
 | 首页   | 国心解读卡             | `https://gx.yipuwh.com/h6/pages/jiedu/chat?isShowPay=0&projectCode=qingzhou` | JS 跳转                 |
 | 首页   | 学习资料卡             | `wechat-simulator.html?context=learning-materials&return=./index.html`  | JS 跳转                    |
-| 首页   | 文字或图片发送          | 同一外部国心解读页                                                        | 不保存本地数据，直接跳转           |
+| 首页   | 文字或图片发送          | 同一外部国心解读页；文字使用 `question` 参数传递                              | 不保存本地数据，直接跳转           |
 | 对话页  | 报告上下文「返回查看报告」     | `interpretation.html?report=…#report-section-…`                         | 链接                       |
 | 国心解读 | 顶部「报告」            | `reports.html`                                                          | JS 跳转                    |
 | 国心解读 | 「新增」              | `profile.html?return=interpretation`                                    | 链接                       |
@@ -262,7 +263,9 @@ chart-entry.html                              │  └─► wechat-simulator（
 
 ```
 首页 → 直接输入文字或选择图片 → 点击发送（或文字输入后按 Enter）
-→ 跳转外部国心解读页，不读取登录/档案状态，不保存本地消息或图片
+→ 有文字时以 `question` 参数跳转外部国心解读页，纯图片时不带该参数
+→ 解读端解析并跨登录保留参数 → 登录成功或已登录时回填输入框
+→ 不自动发送，等待用户自行点击发送；首页不读取登录/档案状态，也不保存本地消息或图片
 ```
 
 **流程 B — 生成并解锁报告（付费主线）**

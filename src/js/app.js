@@ -105,12 +105,19 @@ function syncActionState() {
   actionButton.disabled = !(questionInput.value.trim() || imageComposer?.hasImage());
 }
 
+function buildConsultationUrl(question) {
+  const consultationUrl = new URL(CONSULTATION_URL);
+  if (question) consultationUrl.searchParams.set("question", question);
+  return consultationUrl.toString();
+}
+
 function openConsultation() {
-  if (!questionInput.value.trim() && !imageComposer?.hasImage()) {
+  const question = questionInput.value.trim();
+  if (!question && !imageComposer?.hasImage()) {
     syncActionState();
     return;
   }
-  window.location.assign(CONSULTATION_URL);
+  window.location.assign(buildConsultationUrl(question));
 }
 
 function syncScrollTopButton() {

@@ -70,14 +70,16 @@ body {
 }
 
 body.home-page {
-  height: 100svh;
-  overflow: hidden;
-  overscroll-behavior: none;
+  min-height: 100svh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
 }
 
 .home-page .page-shell {
-  height: 100svh;
-  overflow: hidden;
+  height: auto;
+  min-height: 100svh;
+  overflow: visible;
 }
 
 .chat-page {
@@ -253,7 +255,7 @@ button,
 }
 
 .topbar {
-  position: fixed;
+  position: absolute;
   top: calc(env(safe-area-inset-top, 0px) + calc(18 * var(--unit)));
   left: 50%;
   z-index: 30;

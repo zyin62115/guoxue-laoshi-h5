@@ -252,24 +252,6 @@ button,
     radial-gradient(ellipse at 88% 15%, rgba(255, 250, 242, 0.12), transparent 25%);
 }
 
-.design-canvas::after {
-  position: absolute;
-  top: calc(88 * var(--unit));
-  left: 0;
-  z-index: 3;
-  width: calc(158 * var(--unit));
-  height: calc(92 * var(--unit));
-  pointer-events: none;
-  content: "";
-  background: linear-gradient(
-    to bottom,
-    #fdf2e6 0%,
-    rgba(253, 242, 230, 0.94) 22%,
-    rgba(253, 242, 230, 0.5) 58%,
-    rgba(253, 242, 230, 0) 100%
-  );
-}
-
 .topbar {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px) + calc(18 * var(--unit)));
@@ -368,8 +350,6 @@ button,
   grid-row: 1 / -1;
   grid-column: 1;
   object-fit: cover;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0 86%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0 86%, transparent 100%);
 }
 
 .guide-alignment .hero-left {
@@ -469,7 +449,7 @@ button,
 }
 
 .guidance {
-  width: calc(440 * var(--unit) + 14 * var(--app-font-offset));
+  width: calc(513 * var(--unit));
   margin: calc(11 * var(--unit)) 0 0 calc(22 * var(--unit));
   font-family: var(--serif);
   font-size: calc(calc(31.5 * var(--unit)) + var(--app-font-offset));

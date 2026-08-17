@@ -636,6 +636,41 @@ button,
   display: none;
 }
 
+.home-guide-chat {
+  margin-top: calc(36 * var(--unit));
+  padding-bottom: calc(56 * var(--unit));
+}
+
+.home-guide-chat .inline-message-row:last-child {
+  margin-bottom: 0;
+}
+
+.home-guide-chat .inline-message-row.assistant .inline-message-body {
+  width: calc(100% - max(calc(61 * var(--unit)), 46px));
+  max-width: none;
+}
+
+.home-guide-answer p {
+  margin: 0;
+}
+
+.home-guide-answer strong {
+  color: #8c4b22;
+  font-weight: 700;
+}
+
+.home-guide-answer .home-guide-examples-title {
+  margin-top: max(calc(20 * var(--unit)), 14px);
+}
+
+.home-guide-examples {
+  display: grid;
+  gap: max(calc(7 * var(--unit)), 5px);
+  margin: max(calc(10 * var(--unit)), 7px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
 .chat-start-time {
   display: block;
   width: max-content;

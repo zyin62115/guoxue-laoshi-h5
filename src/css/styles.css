@@ -650,7 +650,7 @@ button,
   max-width: none;
 }
 
-.home-guide-answer {
+.inline-message-bubble.home-guide-answer {
   white-space: normal;
 }
 

@@ -280,22 +280,6 @@ button,
   transform: translateX(-50%);
 }
 
-.topbar::before {
-  position: fixed;
-  top: calc(0px - env(safe-area-inset-top, 0px) - calc(18 * var(--unit)));
-  left: 50%;
-  z-index: -1;
-  width: min(100vw, var(--app-page-max-width));
-  height: calc(env(safe-area-inset-top, 0px) + calc(88 * var(--unit)));
-  content: "";
-  border: 0;
-  background: #fdf2e6;
-  box-shadow: none;
-  transform: translateX(-50%);
-  backdrop-filter: blur(calc(12 * var(--unit)));
-  -webkit-backdrop-filter: blur(calc(12 * var(--unit)));
-}
-
 .icon-button {
   position: absolute;
   display: grid;
@@ -497,7 +481,9 @@ button,
 }
 
 .guidance span {
-  display: inline;
+  display: block;
+  overflow: hidden;
+  white-space: pre;
 }
 
 .advice-row {

@@ -57,12 +57,13 @@ function formatGuideDate(date) {
       formatter.formatToParts(date).map((part) => [part.type, part.value]),
     );
     if (parts.month && parts.day) {
-      return `${parts.month}${lunarDayName(parts.day)}`;
+      const lunarYear = parts.yearName || parts.relatedYear || parts.year || "";
+      return `${lunarYear ? `${lunarYear}年` : ""}${parts.month}${lunarDayName(parts.day)}`;
     }
   } catch {
     // 不支持农历日历的浏览器回退到本地公历日期。
   }
-  return `${date.getMonth() + 1}月${date.getDate()}日`;
+  return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
 }
 
 function getDailyGuideIndex(date) {

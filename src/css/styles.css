@@ -650,6 +650,10 @@ button,
   max-width: none;
 }
 
+.home-guide-answer {
+  white-space: normal;
+}
+
 .home-guide-answer p {
   margin: 0;
 }
